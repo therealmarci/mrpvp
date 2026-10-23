@@ -1,0 +1,343 @@
+﻿# ==============================================================================
+#   MRpvp - Kits
+# ==============================================================================
+#   Was Spieler im Duell bekommen. Nach Änderungen: /mrpvp reload
+#   (Später auch im Spiel über den Kit-Editor im Admin-Menü bearbeitbar.)
+#
+#   Pro Kit:
+#     name         Anzeigename (MiniMessage)
+#     icon         Item im Auswahl-Menü
+#     description  Zeilen unter dem Namen im Menü
+#     permission   leer = jeder mit mrpvp.use, sonst z.B. "mrpvp.kit.netherite"
+#     items        Slot -> Item
+#     rules        (optional) was das Kit an der Runde ändert:
+#                    damage: false     Treffer machen keinen Schaden, nur Rückstoß (Sumo, Boxing)
+#                    hits-to-win: 100  wer zuerst so oft trifft, gewinnt (Boxing)
+#                    regen: false      natürliche Regeneration fest an/aus (sonst wählen die Spieler)
+#                    hunger: false     Hunger fest an/aus (sonst wählen die Spieler)
+#                    arenas: [sumo]    nur in diesen Arenen
+#                    build: true       braucht eine Arena, in der gebaut werden darf
+#
+#   Slots: 0-8 = Hotbar, 9-35 = Inventar, helmet, chestplate, leggings, boots, offhand
+#
+#   Item:
+#     type          Material (https://jd.papermc.io/paper/org/bukkit/Material.html)
+#     amount        Anzahl (Standard 1)
+#     enchantments  Verzauberung: Stufe, z.B. { sharpness: 2, unbreaking: 3 }
+#     name          eigener Name (MiniMessage), optional
+#     unbreakable   true = geht nicht kaputt
+#     potion        bei Tränken / Pfeilen: Trank-Typ, z.B. strong_healing, swiftness, long_fire_resistance
+#     data          (vom Kit-Editor) komplettes Item als Base64 - ersetzt alle Angaben oben
+#
+#   Gelöschte Standard-Kits kommen nicht von selbst zurück (später: "Standard wiederherstellen" im Admin-Menü).
+# ==============================================================================
+
+kits:
+  klassisch:
+    name: "<white>Klassisch"
+    icon: IRON_SWORD
+    description:
+      - "<gray>Eisenrüstung, Eisenschwert,"
+      - "<gray>Bogen mit 16 Pfeilen und Schild."
+    permission: ""
+    items:
+      helmet: { type: IRON_HELMET }
+      chestplate: { type: IRON_CHESTPLATE }
+      leggings: { type: IRON_LEGGINGS }
+      boots: { type: IRON_BOOTS }
+      offhand: { type: SHIELD }
+      0: { type: IRON_SWORD }
+      1: { type: BOW }
+      2: { type: COOKED_BEEF, amount: 16 }
+      9: { type: ARROW, amount: 16 }
+
+  diamant:
+    name: "<aqua>Diamant"
+    icon: DIAMOND_SWORD
+    description:
+      - "<gray>Diamantrüstung (Schutz II),"
+      - "<gray>Diamantschwert (Schärfe II), Bogen,"
+      - "<gray>Schild und 2 goldene Äpfel."
+    permission: ""
+    items:
+      helmet: { type: DIAMOND_HELMET, enchantments: { protection: 2 } }
+      chestplate: { type: DIAMOND_CHESTPLATE, enchantments: { protection: 2 } }
+      leggings: { type: DIAMOND_LEGGINGS, enchantments: { protection: 2 } }
+      boots: { type: DIAMOND_BOOTS, enchantments: { protection: 2 } }
+      offhand: { type: SHIELD }
+      0: { type: DIAMOND_SWORD, enchantments: { sharpness: 2 } }
+      1: { type: BOW, enchantments: { power: 1 } }
+      2: { type: GOLDEN_APPLE, amount: 2 }
+      3: { type: COOKED_BEEF, amount: 16 }
+      9: { type: ARROW, amount: 24 }
+
+  netherite:
+    name: "<dark_red>Netherite"
+    icon: NETHERITE_SWORD
+    description:
+      - "<gray>Netherite-Rüstung (Schutz IV),"
+      - "<gray>Netherite-Schwert (Schärfe V), Armbrust,"
+      - "<gray>Schild und 4 goldene Äpfel."
+    permission: ""
+    items:
+      helmet: { type: NETHERITE_HELMET, enchantments: { protection: 4 } }
+      chestplate: { type: NETHERITE_CHESTPLATE, enchantments: { protection: 4 } }
+      leggings: { type: NETHERITE_LEGGINGS, enchantments: { protection: 4 } }
+      boots: { type: NETHERITE_BOOTS, enchantments: { protection: 4 } }
+      offhand: { type: SHIELD }
+      0: { type: NETHERITE_SWORD, enchantments: { sharpness: 5 } }
+      1: { type: CROSSBOW, enchantments: { quick_charge: 2 } }
+      2: { type: GOLDEN_APPLE, amount: 4 }
+      3: { type: COOKED_BEEF, amount: 16 }
+      9: { type: ARROW, amount: 32 }
+
+  bogen:
+    name: "<green>Bogen"
+    icon: BOW
+    description:
+      - "<gray>Lederrüstung, Bogen (Stärke III,"
+      - "<gray>Unendlichkeit) und ein Holzschwert."
+    permission: ""
+    items:
+      helmet: { type: LEATHER_HELMET }
+      chestplate: { type: LEATHER_CHESTPLATE }
+      leggings: { type: LEATHER_LEGGINGS }
+      boots: { type: LEATHER_BOOTS }
+      0: { type: BOW, enchantments: { power: 3, infinity: 1 } }
+      1: { type: WOODEN_SWORD }
+      2: { type: COOKED_BEEF, amount: 16 }
+      9: { type: ARROW, amount: 1 }
+
+  streitkolben:
+    name: "<gold>Streitkolben"
+    icon: MACE
+    description:
+      - "<gray>Eisenrüstung, Streitkolben,"
+      - "<gray>8 Windkugeln und Schild."
+    permission: ""
+    items:
+      helmet: { type: IRON_HELMET }
+      chestplate: { type: IRON_CHESTPLATE }
+      leggings: { type: IRON_LEGGINGS }
+      boots: { type: IRON_BOOTS }
+      offhand: { type: SHIELD }
+      0: { type: MACE }
+      1: { type: WIND_CHARGE, amount: 8 }
+      2: { type: IRON_SWORD }
+      3: { type: COOKED_BEEF, amount: 16 }
+
+  elytra:
+    name: "<light_purple>Elytra & Streitkolben"
+    icon: ELYTRA
+    description:
+      - "<gray>Elytra, Raketen und Streitkolben -"
+      - "<gray>hoch fliegen, von oben zuschlagen."
+    permission: ""
+    items:
+      helmet: { type: NETHERITE_HELMET, enchantments: { protection: 3 } }
+      chestplate: { type: ELYTRA, unbreakable: true }
+      leggings: { type: NETHERITE_LEGGINGS, enchantments: { protection: 3 } }
+      boots: { type: NETHERITE_BOOTS, enchantments: { protection: 3, feather_falling: 4 } }
+      offhand: { type: FIREWORK_ROCKET, amount: 64 }
+      0: { type: MACE, enchantments: { density: 3 } }
+      1: { type: NETHERITE_SWORD, enchantments: { sharpness: 3 } }
+      2: { type: WIND_CHARGE, amount: 16 }
+      3: { type: GOLDEN_APPLE, amount: 4 }
+      4: { type: COOKED_BEEF, amount: 16 }
+
+  uhc:
+    name: "<gold>UHC"
+    icon: GOLDEN_APPLE
+    description:
+      - "<gray>Diamant- und Eisenrüstung, Bogen und"
+      - "<gray>Goldäpfel - <red>keine natürliche Regeneration</red>."
+    permission: ""
+    rules:
+      regen: false
+    items:
+      helmet: { type: DIAMOND_HELMET, enchantments: { protection: 2 } }
+      chestplate: { type: DIAMOND_CHESTPLATE, enchantments: { protection: 2 } }
+      leggings: { type: IRON_LEGGINGS, enchantments: { protection: 2 } }
+      boots: { type: DIAMOND_BOOTS, enchantments: { protection: 2 } }
+      offhand: { type: SHIELD }
+      0: { type: DIAMOND_SWORD, enchantments: { sharpness: 3 } }
+      1: { type: BOW, enchantments: { power: 2 } }
+      2: { type: FISHING_ROD }
+      3: { type: GOLDEN_APPLE, amount: 6 }
+      4: { type: COOKED_BEEF, amount: 32 }
+      9: { type: ARROW, amount: 32 }
+
+  build-uhc:
+    name: "<yellow>Build-UHC"
+    icon: LAVA_BUCKET
+    description:
+      - "<gray>UHC mit Blöcken, Wasser und Lava -"
+      - "<gray>nur in Arenen, in denen gebaut werden darf."
+    permission: ""
+    rules:
+      regen: false
+      build: true
+    items:
+      helmet: { type: DIAMOND_HELMET, enchantments: { protection: 2 } }
+      chestplate: { type: DIAMOND_CHESTPLATE, enchantments: { protection: 2 } }
+      leggings: { type: DIAMOND_LEGGINGS, enchantments: { protection: 2 } }
+      boots: { type: DIAMOND_BOOTS, enchantments: { protection: 2 } }
+      offhand: { type: COBBLESTONE, amount: 64 }
+      0: { type: DIAMOND_SWORD, enchantments: { sharpness: 3 } }
+      1: { type: BOW, enchantments: { power: 3 } }
+      2: { type: FISHING_ROD }
+      3: { type: GOLDEN_APPLE, amount: 6 }
+      4: { type: WATER_BUCKET }
+      5: { type: LAVA_BUCKET }
+      6: { type: OAK_PLANKS, amount: 64 }
+      7: { type: DIAMOND_PICKAXE, enchantments: { efficiency: 3 } }
+      8: { type: DIAMOND_AXE, enchantments: { efficiency: 3 } }
+      9: { type: ARROW, amount: 32 }
+      10: { type: WATER_BUCKET }
+      11: { type: LAVA_BUCKET }
+      12: { type: COOKED_BEEF, amount: 32 }
+      13: { type: COBBLESTONE, amount: 64 }
+
+  sumo:
+    name: "<white>Sumo"
+    icon: SLIME_BALL
+    description:
+      - "<gray>Kein Schaden, nur Rückstoß:"
+      - "<gray>wer von der Plattform fällt, verliert."
+    permission: ""
+    rules:
+      damage: false
+      hunger: false
+      arenas: [sumo]
+    items: {}
+
+  boxing:
+    name: "<red>Boxing"
+    icon: DIAMOND_SWORD
+    description:
+      - "<gray>Kein Schaden - wer zuerst"
+      - "<white>100</white> <gray>Treffer landet, gewinnt."
+    permission: ""
+    rules:
+      damage: false
+      hits-to-win: 100
+      hunger: false
+    items:
+      0: { type: DIAMOND_SWORD, enchantments: { sharpness: 1 } }
+
+  nodebuff:
+    name: "<dark_aqua>NoDebuff"
+    icon: SPLASH_POTION
+    description:
+      - "<gray>Diamantrüstung, Heiltränke (Wurf),"
+      - "<gray>Enderperlen, Schnelligkeit und Feuerschutz."
+    permission: ""
+    items:
+      helmet: { type: DIAMOND_HELMET, enchantments: { protection: 2, unbreaking: 3 } }
+      chestplate: { type: DIAMOND_CHESTPLATE, enchantments: { protection: 2, unbreaking: 3 } }
+      leggings: { type: DIAMOND_LEGGINGS, enchantments: { protection: 2, unbreaking: 3 } }
+      boots: { type: DIAMOND_BOOTS, enchantments: { protection: 2, unbreaking: 3, feather_falling: 4 } }
+      0: { type: DIAMOND_SWORD, enchantments: { sharpness: 3, fire_aspect: 2, unbreaking: 3 } }
+      1: { type: ENDER_PEARL, amount: 16 }
+      2: { type: POTION, potion: strong_swiftness }
+      3: { type: POTION, potion: long_fire_resistance }
+      4: { type: SPLASH_POTION, potion: strong_healing }
+      5: { type: SPLASH_POTION, potion: strong_healing }
+      6: { type: SPLASH_POTION, potion: strong_healing }
+      7: { type: SPLASH_POTION, potion: strong_healing }
+      8: { type: COOKED_BEEF, amount: 64 }
+      9: { type: SPLASH_POTION, potion: strong_healing }
+      10: { type: SPLASH_POTION, potion: strong_healing }
+      11: { type: SPLASH_POTION, potion: strong_healing }
+      12: { type: SPLASH_POTION, potion: strong_healing }
+      13: { type: SPLASH_POTION, potion: strong_healing }
+      14: { type: SPLASH_POTION, potion: strong_healing }
+      15: { type: SPLASH_POTION, potion: strong_healing }
+      16: { type: SPLASH_POTION, potion: strong_healing }
+      17: { type: POTION, potion: strong_swiftness }
+      18: { type: SPLASH_POTION, potion: strong_healing }
+      19: { type: SPLASH_POTION, potion: strong_healing }
+      20: { type: SPLASH_POTION, potion: strong_healing }
+      21: { type: SPLASH_POTION, potion: strong_healing }
+      22: { type: SPLASH_POTION, potion: strong_healing }
+      23: { type: SPLASH_POTION, potion: strong_healing }
+      24: { type: SPLASH_POTION, potion: strong_healing }
+      25: { type: SPLASH_POTION, potion: strong_healing }
+      26: { type: POTION, potion: strong_swiftness }
+      27: { type: SPLASH_POTION, potion: strong_healing }
+      28: { type: SPLASH_POTION, potion: strong_healing }
+      29: { type: SPLASH_POTION, potion: strong_healing }
+      30: { type: SPLASH_POTION, potion: strong_healing }
+      31: { type: SPLASH_POTION, potion: strong_healing }
+      32: { type: SPLASH_POTION, potion: strong_healing }
+      33: { type: SPLASH_POTION, potion: strong_healing }
+      34: { type: SPLASH_POTION, potion: strong_healing }
+      35: { type: POTION, potion: strong_swiftness }
+
+  crystal:
+    name: "<dark_purple>Crystal"
+    icon: END_CRYSTAL
+    description:
+      - "<gray>Netherite, Endkristalle, Obsidian,"
+      - "<gray>Ankerpunkte - nur in Bau-Arenen."
+    permission: ""
+    rules:
+      build: true
+    items:
+      helmet: { type: NETHERITE_HELMET, enchantments: { protection: 4, unbreaking: 3 } }
+      chestplate: { type: NETHERITE_CHESTPLATE, enchantments: { protection: 4, unbreaking: 3 } }
+      leggings: { type: NETHERITE_LEGGINGS, enchantments: { blast_protection: 4, unbreaking: 3 } }
+      boots: { type: NETHERITE_BOOTS, enchantments: { protection: 4, unbreaking: 3, feather_falling: 4 } }
+      offhand: { type: TOTEM_OF_UNDYING }
+      0: { type: NETHERITE_SWORD, enchantments: { sharpness: 5 } }
+      1: { type: END_CRYSTAL, amount: 64 }
+      2: { type: OBSIDIAN, amount: 64 }
+      3: { type: RESPAWN_ANCHOR, amount: 16 }
+      4: { type: GLOWSTONE, amount: 64 }
+      5: { type: ENCHANTED_GOLDEN_APPLE, amount: 8 }
+      6: { type: ENDER_PEARL, amount: 16 }
+      7: { type: EXPERIENCE_BOTTLE, amount: 64 }
+      8: { type: NETHERITE_PICKAXE, enchantments: { efficiency: 5 } }
+      9: { type: TOTEM_OF_UNDYING }
+      10: { type: TOTEM_OF_UNDYING }
+      11: { type: TOTEM_OF_UNDYING }
+      12: { type: END_CRYSTAL, amount: 64 }
+      13: { type: OBSIDIAN, amount: 64 }
+
+  axt:
+    name: "<gray>Axt & Schild"
+    icon: DIAMOND_AXE
+    description:
+      - "<gray>Diamantrüstung, Diamantaxt und Schild -"
+      - "<gray>Schild zerschlagen, dann zuschlagen."
+    permission: ""
+    items:
+      helmet: { type: DIAMOND_HELMET, enchantments: { protection: 2 } }
+      chestplate: { type: DIAMOND_CHESTPLATE, enchantments: { protection: 2 } }
+      leggings: { type: DIAMOND_LEGGINGS, enchantments: { protection: 2 } }
+      boots: { type: DIAMOND_BOOTS, enchantments: { protection: 2 } }
+      offhand: { type: SHIELD }
+      0: { type: DIAMOND_AXE, enchantments: { sharpness: 2 } }
+      1: { type: DIAMOND_SWORD }
+      2: { type: CROSSBOW }
+      3: { type: GOLDEN_APPLE, amount: 3 }
+      4: { type: COOKED_BEEF, amount: 16 }
+      9: { type: ARROW, amount: 16 }
+
+  dreizack:
+    name: "<aqua>Dreizack"
+    icon: TRIDENT
+    description:
+      - "<gray>Dreizack mit Treue - werfen, zurückholen,"
+      - "<gray>wieder werfen. Eisenrüstung, Schild."
+    permission: ""
+    items:
+      helmet: { type: IRON_HELMET, enchantments: { protection: 1 } }
+      chestplate: { type: IRON_CHESTPLATE, enchantments: { protection: 1 } }
+      leggings: { type: IRON_LEGGINGS, enchantments: { protection: 1 } }
+      boots: { type: IRON_BOOTS, enchantments: { protection: 1 } }
+      offhand: { type: SHIELD }
+      0: { type: TRIDENT, enchantments: { loyalty: 3, impaling: 2 } }
+      1: { type: IRON_SWORD }
+      2: { type: GOLDEN_APPLE, amount: 2 }
+      3: { type: COOKED_BEEF, amount: 16 }

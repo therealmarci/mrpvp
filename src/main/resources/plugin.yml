@@ -1,0 +1,101 @@
+name: MRpvp
+version: '${version}'
+main: at.marcelr.mrpvp.MRPvp
+api-version: '${mcVersion}'
+softdepend: [MRadmin, MRtoolbar, MRsleep]
+# SQLite-Treiber für plugins/MRpvp/mrpvp.db - Paper lädt ihn beim ersten Start herunter (Ordner libraries/).
+libraries:
+  - org.xerial:sqlite-jdbc:${sqliteVersion}
+author: _therealmarci
+website: https://github.com/${githubRepository}
+description: Duelle in eigenen Arenen - Einladung, Kits, eigene Statistik, nichts zählt zur Vanilla-Statistik.
+
+commands:
+  duel:
+    description: Öffnet das Duell-Menü (mit Spielername direkt die Einladung an diesen Spieler).
+    usage: /duel [spieler]
+    aliases: [pvp, duell]
+  mrpvp:
+    description: Verwaltung von MRpvp für die Konsole (im Spiel läuft alles über die Menüs).
+    usage: /mrpvp <version|reload|debug>
+
+permissions:
+  mrpvp.player:
+    description: Alle Spieler-Rechte auf einmal - z.B. für die Default-Gruppe in LuckPerms.
+    default: true
+    children:
+      mrpvp.use: true
+  mrpvp.use:
+    description: Duelle - /duel öffnen, herausfordern und Einladungen annehmen. Kits mit eigenem Recht (kits.yml "permission") brauchen das zusätzlich.
+    default: true
+  mrpvp.bypass.cooldown:
+    description: Ohne Wartezeit zwischen zwei Einladungen.
+    default: op
+  mrpvp.bypass.commands:
+    description: Alle Befehle auch im Duell (sonst nur duel.allowed-commands).
+    default: false
+  mrpvp.admin:
+    description: Alle Admin-Rechte von MRpvp.
+    default: op
+    children:
+      mrpvp.admin.gui: true
+      mrpvp.admin.arena: true
+      mrpvp.admin.games: true
+      mrpvp.admin.restore: true
+      mrpvp.admin.spectate: true
+      mrpvp.admin.stop: true
+      mrpvp.admin.kits: true
+      mrpvp.admin.players: true
+      mrpvp.admin.ban: true
+      mrpvp.admin.reset: true
+      mrpvp.admin.review: true
+      mrpvp.admin.defaults: true
+      mrpvp.admin.reload: true
+      mrpvp.admin.debug: true
+      mrpvp.admin.update: true
+      mrpvp.bypass.cooldown: true
+  mrpvp.admin.gui:
+    description: Admin-Menü öffnen (/duel admin oder Knopf im Duell-Menü). Aktionen darin brauchen ihr eigenes Recht.
+    default: op
+  mrpvp.admin.arena:
+    description: Arenen verwalten - neue Arenen bauen, bearbeiten (Editor im Kreativmodus), aktivieren, Pool, löschen.
+    default: op
+  mrpvp.admin.games:
+    description: Alle Spiele ansehen - Ergebnisse, Kampf-Log und die gesicherten Inventare (beim Betreten und am Ende).
+    default: op
+  mrpvp.admin.restore:
+    description: Einen noch offenen gesicherten Zustand sofort zurückgeben (ersetzt das aktuelle Inventar des Spielers).
+    default: op
+  mrpvp.admin.spectate:
+    description: Laufenden Duellen im Zuschauermodus zusehen (Admin-Menü -> Live).
+    default: op
+  mrpvp.admin.stop:
+    description: Laufende Duelle abbrechen (zählen nicht, beide bekommen alles zurück).
+    default: op
+  mrpvp.admin.kits:
+    description: Kits im Kit-Editor bearbeiten, anlegen und löschen.
+    default: op
+  mrpvp.admin.players:
+    description: Spieler-Verwaltung im Admin-Menü öffnen.
+    default: op
+  mrpvp.admin.ban:
+    description: Spieler von Duellen sperren und Sperren aufheben.
+    default: op
+  mrpvp.admin.reset:
+    description: Die Duell-Statistik eines Spielers zurücksetzen.
+    default: op
+  mrpvp.admin.review:
+    description: Auffällige Runden prüfen - werten oder verwerfen (Admin-Menü -> Prüfen, MRadmin-Web). Bekommt auch die Hinweise dazu.
+    default: op
+  mrpvp.admin.defaults:
+    description: Standard-Kits und Standard-Arenen wiederherstellen.
+    default: op
+  mrpvp.admin.reload:
+    description: /mrpvp reload
+    default: op
+  mrpvp.admin.debug:
+    description: /mrpvp debug - Zustand sichern/zurückgeben testen und gespeicherte Zustände ansehen.
+    default: op
+  mrpvp.admin.update:
+    description: Hinweis beim Betreten des Servers, wenn ein Update verfügbar ist.
+    default: op
