@@ -1,18 +1,17 @@
 name: 🐞 Fehler melden
 description: Etwas funktioniert nicht wie erwartet.
-labels: [bug]
+labels: []
 body:
   - type: markdown
     attributes:
       value: |
-        Danke fürs Melden! Bitte prüfe vorher mit `/mrpvp debug`, ob der Spieler zur Quote zählt
-        (häufigste Ursache: LuckPerms-Wildcard `*` enthält `mrpvp.exempt`).
+        Danke fürs Melden! Bitte vorher `/mrpvp debug` (Konsole) ausführen und die Ausgabe unten einfügen.
   - type: input
     id: version
     attributes:
       label: MRpvp-Version
       description: Ausgabe von `/mrpvp version`
-      placeholder: "0.9.4"
+      placeholder: "0.1.0"
     validations:
       required: true
   - type: input
@@ -35,8 +34,8 @@ body:
     attributes:
       label: Schritte zum Nachstellen
       placeholder: |
-        1. /time set 13000
-        2. Spieler A legt sich hin
+        1. /duel Spieler
+        2. ...
         3. ...
   - type: textarea
     id: logs
