@@ -2,6 +2,7 @@ package at.marcelr.mrpvp.gui;
 
 import at.marcelr.mrpvp.MRPvp;
 import at.marcelr.mrpvp.game.Bans;
+import at.marcelr.mrpvp.util.Npcs;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -26,7 +27,7 @@ public final class PlayersMenu extends Menu {
     @Override
     protected void draw() {
         var m = plugin.messages();
-        List<Player> online = Bukkit.getOnlinePlayers().stream()
+        List<Player> online = Bukkit.getOnlinePlayers().stream().filter(p -> !Npcs.is(p))
                 .sorted(Comparator.comparing(Player::getName, String.CASE_INSENSITIVE_ORDER)).map(p -> (Player) p).toList();
         int pages = Math.max(1, (online.size() + PER_PAGE - 1) / PER_PAGE);
         page = Math.clamp(page, 0, pages - 1);

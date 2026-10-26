@@ -665,6 +665,8 @@ update-reason-no-release: "Keine veröffentlichte Version gefunden"
 update-reason-no-repository: "Kein GitHub-Repository hinterlegt"
 
 # ------------------------------------------------------------------ MRadmin & Überwachung
+# Hinweis auf der Startseite der MRadmin-Weboberfläche (reiner Text). Platzhalter: <count>
+web-alert-reviews: "<count> Duell-Runde(n) warten auf eine Prüfung"
 mradmin-summary:
   - "<gray>Laufende Duelle: <white><games>"
   - "<gray>Belegte Arenen: <white><arenas>"

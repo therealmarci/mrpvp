@@ -1,7 +1,6 @@
 package at.marcelr.mrpvp;
 
-import at.marcelr.mrpvp.api.MRadminBridge;
-import at.marcelr.mrpvp.api.MRtoolbarBelts;
+import at.marcelr.mrpvp.api.MRadminLink;
 import at.marcelr.mrpvp.arena.ArenaProtection;
 import at.marcelr.mrpvp.arena.BuiltinArenas;
 import at.marcelr.mrpvp.arena.DefaultArena;
@@ -65,8 +64,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
     private final EditorManager editor = new EditorManager(this);
     private final Spectators spectators = new Spectators(this);
     private final Bans bans = new Bans(this);
-    private final MRtoolbarBelts toolbar = new MRtoolbarBelts(getLogger());
-    private final MRadminBridge admin = new MRadminBridge(getLogger());
+    private final MRadminLink admin = new MRadminLink(this);
     private final Monitor monitor = new Monitor(this);
     private final Reviews reviews = new Reviews(this);
     private Database database;
@@ -124,6 +122,9 @@ public final class MRPvp extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ProtectionListener(this), this);
         getServer().getPluginManager().registerEvents(menuListener, this);
         getServer().getPluginManager().registerEvents(this, this);
+        // Optional: MRadmin (module API) - dashboard, player menu, server health, web interface, admin mode.
+        getServer().getPluginManager().registerEvents(admin, this);
+        admin.connect();
         register("mrpvp", new MRPvpCommand(this));
         register("duel", new DuelCommand(this));
     }
@@ -245,7 +246,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
         return spectators;
     }
 
-    public MRadminBridge admin() {
+    public MRadminLink admin() {
         return admin;
     }
 
@@ -255,10 +256,6 @@ public final class MRPvp extends JavaPlugin implements Listener {
 
     public Monitor monitor() {
         return monitor;
-    }
-
-    public MRtoolbarBelts toolbar() {
-        return toolbar;
     }
 
     public Bans bans() {

@@ -665,6 +665,8 @@ update-reason-no-release: "no published version found"
 update-reason-no-repository: "no GitHub repository configured"
 
 # ------------------------------------------------------------------ MRadmin & monitor
+# Hint on the start page of MRadmin's web interface (plain text). Placeholder: <count>
+web-alert-reviews: "<count> duel round(s) waiting for a review"
 mradmin-summary:
   - "<gray>Running duels: <white><games>"
   - "<gray>Arenas in use: <white><arenas>"

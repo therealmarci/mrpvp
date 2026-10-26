@@ -6,6 +6,7 @@ import at.marcelr.mrpvp.UpdateChecker;
 import at.marcelr.mrpvp.snapshot.Snapshot;
 import at.marcelr.mrpvp.snapshot.SnapshotStore;
 import at.marcelr.mrpvp.snapshot.StateKeeper;
+import at.marcelr.mrpvp.util.Npcs;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -192,7 +193,7 @@ public final class MRPvpCommand implements TabExecutor {
             options.addAll(List.of("arena", "leave", "state"));
         } else if (args.length == 3 && args[0].equalsIgnoreCase("debug") && args[1].equalsIgnoreCase("state")
                 && sender.hasPermission(PERM_DEBUG)) {
-            Bukkit.getOnlinePlayers().forEach(p -> options.add(p.getName()));
+            Bukkit.getOnlinePlayers().stream().filter(p -> !Npcs.is(p)).forEach(p -> options.add(p.getName()));
         }
         String start = args.length == 0 ? "" : args[args.length - 1].toLowerCase(Locale.ROOT);
         return options.stream().filter(option -> option.toLowerCase(Locale.ROOT).startsWith(start)).toList();

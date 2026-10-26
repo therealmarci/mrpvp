@@ -78,7 +78,7 @@ public final class StateKeeper implements Listener {
         changing.add(player.getUniqueId());
         try {
             Snapshot taken = PlayerState.capture(player, purpose, gameId, Snapshot.Phase.JOIN,
-                    plugin.toolbar().belts(player));
+                    plugin.admin().toolbarBelts(player));
             Snapshot stored;
             try {
                 stored = db().call(c -> SnapshotStore.insert(c, taken));
@@ -98,7 +98,7 @@ public final class StateKeeper implements Listener {
 
     /**
      * Whether MRpvp has the player's inventory right now: inside the arena world, or just saving / giving back.
-     * Other plugins must not touch the inventory then ({@code MRpvpApi.inGame}).
+     * Other plugins must not touch the inventory then (MRadmin module API, {@code busy}).
      */
     public boolean busy(Player player) {
         UUID id = player.getUniqueId();

@@ -10,6 +10,7 @@ group = "at.marcelr"
 val pluginVersion = project.version.toString()
 val mcVersion = providers.gradleProperty("mcVersion").get()
 val paperApi = providers.gradleProperty("paperApi").get()
+val mradminApi = providers.gradleProperty("mradminApi").get()
 version = "mc$mcVersion-v$pluginVersion"
 
 val modrinthProjectId = providers.gradleProperty("modrinthProjectId").get()
@@ -19,12 +20,22 @@ val sqliteVersion = providers.gradleProperty("sqliteVersion").get()
 val isPrerelease = pluginVersion.let { it.startsWith("0.") || it.contains("-") }
 
 repositories {
+    // Lokal gebaute MRadmin-API (gradlew :api:publishToMavenLocal in MRadmin) hat Vorrang vor JitPack.
+    mavenLocal {
+        content { includeGroup("com.github.therealmarci") }
+    }
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://jitpack.io") {
+        content { includeGroupByRegex("com\\.github\\.therealmarci.*") }
+    }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$paperApi")
+    // Optional: MRadmin (Modul-API). Nur zum Kompilieren - zur Laufzeit kommen die Klassen aus MRadmin, und nur wenn es
+    // installiert ist (siehe api/MRadminLink).
+    compileOnly("com.github.therealmarci:mradmin:$mradminApi")
 
     testImplementation("org.xerial:sqlite-jdbc:$sqliteVersion")
 

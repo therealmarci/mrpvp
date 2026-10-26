@@ -35,7 +35,7 @@ import java.util.UUID;
 
 /**
  * Plain data (maps, lists, strings, numbers) for MRadmin's web interface - no MRpvp or Bukkit types leave this
- * class. Called by {@link MRadminHook#web} on the server thread. MRadmin checks the permissions (MRpvp's own:
+ * class. Called by {@link MRadminModule} on the server thread. MRadmin checks the permissions (MRpvp's own:
  * mrpvp.admin.gui to look, .games for rounds with inventories, .stop / .ban / .reset / .restore for actions).
  * <pre>
  *  overview                      running rounds (live), invitations, slots, arenas, alerts, totals

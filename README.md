@@ -59,14 +59,19 @@ Kits mit Elytra).
   die Runde nach 7 Tagen (einstellbar unter `review.*`).
 
 ## Zusammenarbeit mit anderen Plugins
-MRpvp läuft **allein**. Die folgenden Plugins erkennt es automatisch, keins ist Pflicht und keins braucht MRpvp:
+MRpvp läuft **allein** – kein anderes Plugin ist Pflicht, und keins braucht MRpvp. Die MR-Plugins sprechen
+**über MRadmin** miteinander (Modul-Schnittstelle): Ohne MRadmin bekommen sie voneinander nichts mit. Was welche
+Plugins braucht:
 
-| Plugin | Was passiert |
+| Funktion | Braucht |
 |---|---|
-| **MRadmin** | Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, Discord-Admin-Log. Im Web eine Seite **Duelle**: live mit Herzen und Mini-Karte, alle Runden mit Inventaren, Kampf-Log und Wiedergabe, Prüfen. Im Adminmodus kann man kein Duell starten. |
-| **MRtoolbar** | Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert und im gesicherten Inventar angezeigt. |
-| **MRsleep** | Spieler im Duell zählen nicht zur Schlafquote, die Arena-Welt wird nie verwaltet. |
-| **MRchunks** | In der Arena-Welt lassen sich keine Chunkloader setzen. |
+| Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, Hinweis „Runden warten auf eine Prüfung“ auf der Startseite im Web | MRadmin |
+| Seite **Duelle** im Web: live mit Herzen und Mini-Karte, alle Runden mit Inventaren, Kampf-Log und Wiedergabe, Prüfen | MRadmin |
+| Auffällige Runden im Discord-Admin-Log | MRadmin |
+| Im Adminmodus kann man kein Duell starten | MRadmin |
+| Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert und im gesicherten Inventar angezeigt | MRadmin + MRtoolbar |
+| Spieler im Duell zählen nicht zur Schlafquote, die Arena-Welt wird nie verwaltet | MRadmin + MRsleep |
+| In der Arena-Welt lassen sich keine Chunkloader setzen | MRadmin + MRchunks |
 
 ## Befehle
 | Befehl | Permission | Funktion |
