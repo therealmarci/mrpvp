@@ -277,7 +277,6 @@ public final class SlotManager implements ArenaProvider {
 
     private ArenaInstance instance(Slot slot, ArenaTemplate t) {
         Location origin = origin(slot.index);
-        World w = origin.getWorld();
         Location spawn1 = at(origin, t.spawn1());
         Location spawn2 = at(origin, t.spawn2());
         BoundingBox region = new BoundingBox(origin.getX(), origin.getY(), origin.getZ(),
