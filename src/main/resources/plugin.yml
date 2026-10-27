@@ -44,6 +44,7 @@ permissions:
       mrpvp.admin.restore: true
       mrpvp.admin.spectate: true
       mrpvp.admin.stop: true
+      mrpvp.admin.pause: true
       mrpvp.admin.kits: true
       mrpvp.admin.players: true
       mrpvp.admin.ban: true
@@ -70,7 +71,10 @@ permissions:
     description: Watch running duels in spectator mode (admin menu -> Live).
     default: op
   mrpvp.admin.stop:
-    description: Cancel running duels (they do not count, both get everything back).
+    description: Cancel running duels (they do not count, both get everything back) or declare the winner.
+    default: op
+  mrpvp.admin.pause:
+    description: Pause running duels (both frozen, nobody takes damage, the time stands) and resume them.
     default: op
   mrpvp.admin.kits:
     description: Edit, create and delete kits in the kit editor.

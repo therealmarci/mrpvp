@@ -10,6 +10,8 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 ## [Unveröffentlicht]
 
 ### Neu
+- **Duelle live steuern:** Ein Klick auf ein Duell in Admin-Menü → Live öffnet seine Steuerung: zuschauen (über der Arena oder direkt bei einem der Spieler), **pausieren/fortsetzen** (beide eingefroren, kein Schaden, die Zeit steht - neue Permission `mrpvp.admin.pause`), **Sieger bestimmen** (das Duell endet, der Spieler gewinnt das Match, die Runde zählt als Sieg ohne Kill/Tod) und abbrechen (`mrpvp.admin.stop`). Bisher: Klick = zuschauen, Shift-Klick = abbrechen.
+- **Runden nachträglich aus der Wertung nehmen:** In den Details einer Runde nimmt `mrpvp.admin.review` eine gewertete Runde aus der Statistik (mit optionalem Grund) und kann sie später wieder werten - auch verworfene Runden aus der Prüfung. Die Statistik beider Spieler wird neu berechnet; Konsole und MRadmins Discord-Admin-Log bekommen einen Eintrag. Geht auch in der MRadmin-Weboberfläche.
 - **Alle Server auf die Sprache des Spielers:** Bestehende Configs mit fest eingestellter Sprache (`language: de`/`en`) werden auf `language: auto` umgestellt - jeder Spieler bekommt die Sprache seines Minecraft-Clients, wie bei MRsleep, MRchunks und MRadmin.
 - **Server-Sprache (`server-language`):** Texte ohne einzelnen Empfänger wie die Discord-Meldungen zu auffälligen Runden (über MRadmin) kommen in dieser Sprache (Standard `en`).
 - **Automatische Umstellung:** Bestehende Configs bekommen `language: auto`; eine bisher fest eingestellte Sprache wird zur `server-language`, damit z.B. die Discord-Logs eines deutschen Servers deutsch bleiben.

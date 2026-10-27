@@ -134,6 +134,34 @@ public final class Reviews {
         });
     }
 
+    /**
+     * Takes a counted round out of the statistics, or counts a removed / discarded one again (statistics are built
+     * again). Logged on the console and - like reviews - in MRadmin's Discord admin log.
+     *
+     * @param note optional reason
+     * @return false (completed) if the round was not in that state
+     */
+    public CompletableFuture<Boolean> setCounted(long id, boolean count, String by, String note) {
+        long now = System.currentTimeMillis();
+        String clean = note == null ? "" : note.replaceAll("\\p{Cntrl}", " ").strip();
+        String stored = clean.length() > 200 ? clean.substring(0, 200) : clean;
+        return plugin.database().submit(c -> StatsStore.setCounted(c, id, count, by, stored, now)).thenApply(changed -> {
+            if (changed) {
+                plugin.getLogger().info(by + (count ? " counted round #" + id + " again"
+                        : " took round #" + id + " out of the statistics") + (stored.isEmpty() ? "." : ": " + stored));
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    String key = count ? "admin-log-recounted" : "admin-log-uncounted";
+                    Object[] values = {"id", id, "admin", by, "note", stored.isEmpty() ? "-" : stored};
+                    if (plugin.settings().monitor().discord()) {
+                        plugin.admin().adminLog(plugin.messages().server(() -> plugin.messages().plain(key, values)));
+                    }
+                    plugin.admin().webEvent("game", String.valueOf(id), false);
+                });
+            }
+            return changed;
+        });
+    }
+
     /** Rounds nobody decided about within review.auto-days. */
     private void autoDecide() {
         Settings.ReviewSettings s = plugin.settings().review();

@@ -510,3 +510,16 @@ Befehle sind nur Einstiegspunkte in die GUIs:
   (`Game.pause/resume`, `elapsed` ohne Pausen), Bossbar mit Restzeit; zurück → Countdown, weiter. Einmal pro Match und
   Spieler, nur solange der Gegner da ist; sonst / ohne Rückkehr → Niederlage. Zwischen zwei Runden wartet die nächste
   Runde genauso. StateKeeper behält die Sicherung so lange (`waitingFor`, Login gibt nichts zurück).
+
+### Nachtrag – Admin-Steuerung, Wertung, Anti-Farming, Arenen-Vorrat (2026-10-27, Issues #7-#9), Test im Spiel ausstehend
+- **Live-Steuerung** (`gui/LiveGameMenu`, Klick in Admin → Live): zuschauen über der Arena oder bei einem Spieler
+  (`Spectators#watchAt`), Pause durch einen Admin (`Game#adminPause`: Zustand PAUSED ohne `waitingFor`,
+  `waitUntil = MAX`; ein Quit während der Pause wird zur normalen Reconnect-Pause), Sieger bestimmen
+  (`GameManager#adminWin`, EndReason `ADMIN_WIN`, Match vorbei, zählt als Sieg ohne Kill/Tod), abbrechen.
+  Permission `mrpvp.admin.pause` neu, Sieger/Abbrechen über `mrpvp.admin.stop`.
+- **Wertung nachträglich:** `StatsStore#setCounted` (games.review = `REMOVED` bzw. `APPROVED`, `review_note` =
+  optionaler Grund, Tabellenversion 6), danach `rebuild` beider Spieler. Wieder werten geht für `REMOVED` und
+  `REJECTED`. Spiel: Runden-Details (`GameMenu`), Web: Aktionen `uncount`/`recount`; Discord-Admin-Log über MRadmin.
+- **Anti-Farming** (`game/FarmingCheck`, reine Logik mit Tests): nur einseitige Serien (`monitor.farming.*`),
+  Tagesgrenze pro Gegner Standard 50.
+- **Arenen-Vorrat:** nach der Runde nur bis `pool` neu aufbauen, Überschuss beim Auffüllen abbauen.

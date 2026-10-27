@@ -99,6 +99,9 @@ public final class GameMenu extends Menu {
         }
         if (admin && row.pending() && viewer.hasPermission(at.marcelr.mrpvp.game.Reviews.PERM_REVIEW)) {
             reviewButtons();
+        } else if (admin && viewer.hasPermission(at.marcelr.mrpvp.game.Reviews.PERM_REVIEW)
+                && (row.counted() || row.mayCountAgain())) {
+            countButton();
         }
     }
 
@@ -111,6 +114,41 @@ public final class GameMenu extends Menu {
                 click -> decide(true));
         set(41, Items.of(Material.RED_CONCRETE).name(m.item("gui-review-discard"))
                 .lore(m.lore("gui-review-discard-lore")).build(), click -> decide(false));
+    }
+
+    /** Afterwards: take a counted round out of the statistics (with an optional reason) or count it again. */
+    private void countButton() {
+        var m = plugin.messages();
+        String by = row.reviewedBy() == null ? "-" : row.reviewedBy();
+        String note = row.reviewNote() == null ? "-" : row.reviewNote();
+        if (row.counted()) {
+            set(40, Items.of(Material.RED_DYE).name(m.item("gui-game-uncount"))
+                    .lore(m.lore("gui-game-uncount-lore")).build(), click -> {
+                clickSound();
+                TextPrompt.ask(plugin, viewer, "prompt-uncount", "", 200,
+                        reason -> setCounted(false, reason), this::open);
+            });
+        } else {
+            set(40, Items.of(Material.LIME_DYE).name(m.item("gui-game-recount"))
+                    .lore(m.lore(row.removed() ? "gui-game-recount-lore" : "gui-game-recount-rejected-lore",
+                            tag("admin", by), tag("note", note))).build(),
+                    click -> new ConfirmMenu(plugin, viewer, m.item("gui-game-recount-confirm", tag("id", id)),
+                            () -> setCounted(true, null), this::open).open());
+        }
+    }
+
+    private void setCounted(boolean count, String note) {
+        plugin.reviews().setCounted(id, count, viewer.getName(), note).whenComplete((changed, error) ->
+                Bukkit.getScheduler().runTask(plugin, () -> plugin.messages().run(viewer, () -> {
+                    if (error != null || !Boolean.TRUE.equals(changed)) {
+                        plugin.messages().send(viewer, "game-count-failed");
+                    } else {
+                        plugin.messages().send(viewer, count ? "game-recounted" : "game-uncounted", tag("id", id));
+                        successSound();
+                    }
+                    reload();
+                    open();
+                })));
     }
 
     private void decide(boolean count) {

@@ -10,7 +10,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which texts to renew on updates.
-lang-version: 7
+lang-version: 8
 
 prefix: "<dark_gray>[<red>MRpvp</red>]</dark_gray> "
 no-permission: "<prefix><red>You don't have permission to do that."
@@ -65,6 +65,7 @@ end-reason-quit: "opponent left the server"
 end-reason-timeout: "time is up"
 end-reason-surrender: "gave up"
 end-reason-admin: "stopped by an admin"
+end-reason-admin_win: "decided by an admin"
 end-reason-border: "fell out of the arena"
 end-reason-shutdown: "server is stopping"
 end-reason-crash: "server crash"
@@ -541,8 +542,7 @@ gui-live-entry-lore:
   - "<gray>Time: <white><time>"
   - "<gray>Kit: <white><kit></white> · Arena: <white><arena></white> <dark_gray>(slot <slot>)"
   - ""
-  - "<green>Click: watch"
-  - "<red>Shift-click: stop"
+  - "<green>Click: control <gray>(watch, pause, end)"
 gui-live-state-countdown: "<yellow>countdown"
 gui-live-state-running: "<green>fighting"
 gui-live-state-ending: "<gray>ending"
@@ -552,6 +552,72 @@ reconnect-subtitle: "<gray><player> has <white><seconds> s</white> to come back"
 bar-paused: "<light_purple><player> lost the connection <dark_gray>|</dark_gray> <gray>waiting <white><seconds> s"
 gui-live-state-paused: "<light_purple>Paused"
 gui-live-stop: "<red>Stop game #<id>?"
+
+# --- Live control of a duel (admin menu → Live → game) ---
+gui-livegame-title: "Game #<id>"
+gui-live-state-admin_paused: "<light_purple>paused by an admin"
+gui-livegame-info:
+  - "<gray>State: <state>"
+  - "<gray><one>: <red><health1>❤"
+  - "<gray><two>: <red><health2>❤"
+  - "<gray>Time: <white><time></white> · round <white><round>"
+  - "<gray>Kit: <white><kit></white> · Arena: <white><arena></white> <dark_gray>(slot <slot>)"
+gui-livegame-watch: "<aqua>Watch"
+gui-livegame-watch-lore:
+  - "<gray>As a spectator above the arena."
+  - "<gray>Your inventory is saved."
+gui-livegame-watch-at: "<aqua>Go to <player>"
+gui-livegame-watch-at-lore:
+  - "<gray>As a spectator right next to this player."
+gui-livegame-pause: "<light_purple>Pause"
+gui-livegame-pause-lore:
+  - "<gray>Both are frozen, nobody takes"
+  - "<gray>damage, the time stands."
+gui-livegame-resume: "<green>Resume"
+gui-livegame-resume-lore:
+  - "<gray>Paused by <white><admin>"
+  - "<gray>After a short countdown it goes on."
+gui-livegame-win: "<gold><player> wins"
+gui-livegame-win-lore:
+  - "<gray>Ends the duel: <white><player></white> wins"
+  - "<gray>the match. The round counts as a win"
+  - "<gray>(without kill and death)."
+gui-livegame-win-confirm: "<gold>Declare <player> the winner?"
+gui-livegame-stop: "<red>Stop"
+gui-livegame-stop-lore:
+  - "<gray>The round does not count,"
+  - "<gray>both get everything back."
+admin-pause-title: "<light_purple>Paused"
+admin-pause-subtitle: "<gray>An admin (<white><admin></white>) paused the duel"
+bar-admin-paused: "<light_purple>Paused by <admin> <dark_gray>|</dark_gray> <gray>nobody takes damage"
+admin-paused: "<prefix><gray>Game <white>#<id></white> is paused."
+admin-resumed: "<prefix><green>Game <white>#<id></white> goes on."
+admin-pause-not-running: "<prefix><red>You can only pause during the fight."
+admin-resume-not-paused: "<prefix><red>The game is not paused by an admin."
+# --- Taking rounds out of the statistics afterwards (game details) ---
+gui-game-uncount: "<red>Take out of the statistics"
+gui-game-uncount-lore:
+  - "<gray>The round no longer counts - the statistics"
+  - "<gray>of both players are built again."
+  - "<gray>You can give a reason."
+gui-game-recount: "<green>Count again"
+gui-game-recount-lore:
+  - "<gray>Taken out of the statistics by <white><admin>"
+  - "<gray>Reason: <white><note>"
+  - "<gray>Click: counts again."
+gui-game-recount-rejected-lore:
+  - "<gray>Discarded in the review by <white><admin>"
+  - "<gray>Click: counts after all."
+gui-game-recount-confirm: "<green>Count round #<id> again?"
+prompt-uncount-title: "Take out of the statistics"
+prompt-uncount-hint: "Optional: why does the round not count? You may leave it empty."
+prompt-uncount-label: "Reason"
+game-uncounted: "<prefix><gray>Round <white>#<id></white> no longer counts - the statistics were built again."
+game-recounted: "<prefix><green>Round <white>#<id></white> counts again - the statistics were built again."
+game-count-failed: "<prefix><red>That did not work - the round was changed meanwhile."
+# Discord admin log (through MRadmin), server language. Placeholders: <id>, <admin>, <note>
+admin-log-uncounted: "Game #<id>: <admin> took the round out of the statistics (reason: <note>)."
+admin-log-recounted: "Game #<id>: <admin> counted the round again."
 spectate-started: "<prefix><gray>You are watching game <white>#<id></white> (<white><one></white> against <white><two></white>). Stop: /duel"
 spectate-ended: "<prefix><gray>Game <white>#<id></white> is over - you are back."
 spectate-leave-first: "<prefix><red>Stop watching first (/duel)."

@@ -51,8 +51,12 @@ Im Duell-Menü sieht jeder Spieler seine Statistik (gesamt und pro Kit), die **B
 
 ### Admin-Menü
 `/duel admin` öffnet das Admin-Menü. Von dort aus:
-- **Live** laufenden Duellen zusehen oder sie abbrechen
-- **Runden** ansehen - mit Kampf-Log und den gesicherten Inventaren (vor und nach der Runde) - und offene Rückgaben sofort ausführen
+- **Live** laufende Duelle steuern - ein Klick auf ein Duell öffnet seine Steuerung:
+  - **Zuschauen** über der Arena oder direkt **bei Spieler 1 / Spieler 2** (als Zuschauer, dein Inventar wird gesichert)
+  - **Pausieren / Fortsetzen:** beide werden eingefroren, niemand nimmt Schaden, die Zeit steht
+  - **Sieger bestimmen:** z.B. wenn jemand einen Bug ausnutzt - das Duell endet, der gewählte Spieler gewinnt das Match, die Runde zählt als Sieg (ohne Kill und Tod)
+  - **Abbrechen:** zählt nicht, beide bekommen alles zurück
+- **Runden** ansehen - mit Kampf-Log und den gesicherten Inventaren (vor und nach der Runde) - und offene Rückgaben sofort ausführen. Eine gewertete Runde lässt sich hier nachträglich **aus der Wertung nehmen** (mit optionalem Grund) und später **wieder werten** - die Statistik beider Spieler wird jeweils neu berechnet.
 - **Prüfen:** auffällige Runden werten oder verwerfen
 - **Spieler** verwalten, von Duellen sperren, Statistik zurücksetzen
 - **Kits** und **Arenen** bearbeiten, **Standard wiederherstellen**
@@ -98,9 +102,10 @@ Auffällige Runden zählen nicht einfach nicht - sie **warten auf eine Entscheid
 | `mrpvp.admin.kits` | OP | Kit-Editor |
 | `mrpvp.admin.games` | OP | Alle Runden mit Kampf-Log und gesicherten Inventaren |
 | `mrpvp.admin.restore` | OP | Offene Rückgabe sofort ausführen |
-| `mrpvp.admin.spectate` · `stop` | OP | Duellen zusehen · Duelle abbrechen |
+| `mrpvp.admin.spectate` · `stop` | OP | Duellen zusehen · Duelle abbrechen oder den Sieger bestimmen |
+| `mrpvp.admin.pause` | OP | Duelle pausieren und fortsetzen |
 | `mrpvp.admin.players` · `ban` · `reset` | OP | Spieler-Verwaltung · sperren · Statistik zurücksetzen |
-| `mrpvp.admin.review` | OP | Auffällige Runden prüfen (bekommt auch die Hinweise) |
+| `mrpvp.admin.review` | OP | Auffällige Runden prüfen (bekommt auch die Hinweise), Runden nachträglich aus der Wertung nehmen oder wieder werten |
 | `mrpvp.admin.defaults` | OP | Standard-Kits und -Arenen wiederherstellen |
 | `mrpvp.admin.reload` · `debug` · `update` | OP | `/mrpvp reload` · `/mrpvp debug` · Update-Hinweis beim Betreten |
 
