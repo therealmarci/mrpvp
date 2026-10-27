@@ -19,6 +19,7 @@ public final class AdminMenu extends Menu {
     public static final String PERM_GAMES = "mrpvp.admin.games";
     public static final String PERM_RESTORE = "mrpvp.admin.restore";
     public static final String PERM_STOP = "mrpvp.admin.stop";
+    public static final String PERM_PAUSE = "mrpvp.admin.pause";
     public static final String PERM_KITS = "mrpvp.admin.kits";
     public static final String PERM_PLAYERS = "mrpvp.admin.players";
     public static final String PERM_BAN = "mrpvp.admin.ban";
@@ -38,7 +39,7 @@ public final class AdminMenu extends Menu {
                         tag("bans", plugin.bans().all().size()))).build());
         set(10, Items.of(Material.ENDER_EYE).name(m.item("gui-admin-live", tag("count", plugin.games().games().size())))
                 .lore(m.lore("gui-admin-live-lore")).build(), click -> {
-            if (allowed(Spectators.PERM_SPECTATE) || viewer.hasPermission(PERM_STOP)) {
+            if (allowed(Spectators.PERM_SPECTATE) || viewer.hasPermission(PERM_STOP) || viewer.hasPermission(PERM_PAUSE)) {
                 clickSound();
                 new LiveMenu(plugin, viewer).open();
             }

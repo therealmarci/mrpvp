@@ -3,39 +3,39 @@ version: '${version}'
 main: at.marcelr.mrpvp.MRPvp
 api-version: '${mcVersion}'
 softdepend: [MRadmin, MRtoolbar, MRsleep]
-# SQLite-Treiber für plugins/MRpvp/mrpvp.db - Paper lädt ihn beim ersten Start herunter (Ordner libraries/).
+# SQLite driver for plugins/MRpvp/mrpvp.db - Paper downloads it on the first start (folder libraries/).
 libraries:
   - org.xerial:sqlite-jdbc:${sqliteVersion}
 author: _therealmarci
 website: ${website}/docs/${websiteSlug}/
-description: Duelle in eigenen Arenen - Einladung, Kits, eigene Statistik, nichts zählt zur Vanilla-Statistik.
+description: Duels in dedicated arenas - invites, kits, own statistics, nothing counts towards the vanilla statistics.
 
 commands:
   duel:
-    description: Öffnet das Duell-Menü (mit Spielername direkt die Einladung an diesen Spieler).
-    usage: /duel [spieler]
+    description: Opens the duel menu (with a player name directly the invite to this player).
+    usage: /duel [player]
     aliases: [pvp, duell]
   mrpvp:
-    description: Verwaltung von MRpvp für die Konsole (im Spiel läuft alles über die Menüs).
+    description: Management of MRpvp for the console (in game everything runs through the menus).
     usage: /mrpvp <version|reload|debug>
 
 permissions:
   mrpvp.player:
-    description: Alle Spieler-Rechte auf einmal - z.B. für die Default-Gruppe in LuckPerms.
+    description: All player permissions at once - e.g. for the default group in LuckPerms.
     default: true
     children:
       mrpvp.use: true
   mrpvp.use:
-    description: Duelle - /duel öffnen, herausfordern und Einladungen annehmen. Kits mit eigenem Recht (kits.yml "permission") brauchen das zusätzlich.
+    description: Duels - open /duel, challenge and accept invites. Kits with their own permission (kits.yml "permission") need it additionally.
     default: true
   mrpvp.bypass.cooldown:
-    description: Ohne Wartezeit zwischen zwei Einladungen.
+    description: No waiting time between two invites.
     default: op
   mrpvp.bypass.commands:
-    description: Alle Befehle auch im Duell (sonst nur duel.allowed-commands).
+    description: All commands also during a duel (otherwise only duel.allowed-commands).
     default: false
   mrpvp.admin:
-    description: Alle Admin-Rechte von MRpvp.
+    description: All admin permissions of MRpvp.
     default: op
     children:
       mrpvp.admin.gui: true
@@ -44,6 +44,7 @@ permissions:
       mrpvp.admin.restore: true
       mrpvp.admin.spectate: true
       mrpvp.admin.stop: true
+      mrpvp.admin.pause: true
       mrpvp.admin.kits: true
       mrpvp.admin.players: true
       mrpvp.admin.ban: true
@@ -55,47 +56,50 @@ permissions:
       mrpvp.admin.update: true
       mrpvp.bypass.cooldown: true
   mrpvp.admin.gui:
-    description: Admin-Menü öffnen (/duel admin oder Knopf im Duell-Menü). Aktionen darin brauchen ihr eigenes Recht.
+    description: Open the admin menu (/duel admin or the button in the duel menu). Actions in it need their own permission.
     default: op
   mrpvp.admin.arena:
-    description: Arenen verwalten - neue Arenen bauen, bearbeiten (Editor im Kreativmodus), aktivieren, Pool, löschen.
+    description: Manage arenas - build new arenas, edit them (editor in creative mode), activate, pool, delete.
     default: op
   mrpvp.admin.games:
-    description: Alle Spiele ansehen - Ergebnisse, Kampf-Log und die gesicherten Inventare (beim Betreten und am Ende).
+    description: View all games - results, combat log and the saved inventories (when entering and at the end).
     default: op
   mrpvp.admin.restore:
-    description: Einen noch offenen gesicherten Zustand sofort zurückgeben (ersetzt das aktuelle Inventar des Spielers).
+    description: Return a still open saved state immediately (replaces the player's current inventory).
     default: op
   mrpvp.admin.spectate:
-    description: Laufenden Duellen im Zuschauermodus zusehen (Admin-Menü -> Live).
+    description: Watch running duels in spectator mode (admin menu -> Live).
     default: op
   mrpvp.admin.stop:
-    description: Laufende Duelle abbrechen (zählen nicht, beide bekommen alles zurück).
+    description: Cancel running duels (they do not count, both get everything back) or declare the winner.
+    default: op
+  mrpvp.admin.pause:
+    description: Pause running duels (both frozen, nobody takes damage, the time stands) and resume them.
     default: op
   mrpvp.admin.kits:
-    description: Kits im Kit-Editor bearbeiten, anlegen und löschen.
+    description: Edit, create and delete kits in the kit editor.
     default: op
   mrpvp.admin.players:
-    description: Spieler-Verwaltung im Admin-Menü öffnen.
+    description: Open the player management in the admin menu.
     default: op
   mrpvp.admin.ban:
-    description: Spieler von Duellen sperren und Sperren aufheben.
+    description: Ban players from duels and lift bans.
     default: op
   mrpvp.admin.reset:
-    description: Die Duell-Statistik eines Spielers zurücksetzen.
+    description: Reset a player's duel statistics.
     default: op
   mrpvp.admin.review:
-    description: Auffällige Runden prüfen - werten oder verwerfen (Admin-Menü -> Prüfen, MRadmin-Web). Bekommt auch die Hinweise dazu.
+    description: Review suspicious rounds - count or discard them (admin menu -> Review, MRadmin web). Also gets the notices about them.
     default: op
   mrpvp.admin.defaults:
-    description: Standard-Kits und Standard-Arenen wiederherstellen.
+    description: Restore default kits and default arenas.
     default: op
   mrpvp.admin.reload:
     description: /mrpvp reload
     default: op
   mrpvp.admin.debug:
-    description: /mrpvp debug - Zustand sichern/zurückgeben testen und gespeicherte Zustände ansehen.
+    description: /mrpvp debug - test saving/returning the state and view saved states.
     default: op
   mrpvp.admin.update:
-    description: Hinweis beim Betreten des Servers, wenn ein Update verfügbar ist.
+    description: Notice when joining the server if an update is available.
     default: op

@@ -51,8 +51,12 @@ Im Duell-Menü sieht jeder Spieler seine Statistik (gesamt und pro Kit), die **B
 
 ### Admin-Menü
 `/duel admin` öffnet das Admin-Menü. Von dort aus:
-- **Live** laufenden Duellen zusehen oder sie abbrechen
-- **Runden** ansehen - mit Kampf-Log und den gesicherten Inventaren (vor und nach der Runde) - und offene Rückgaben sofort ausführen
+- **Live** laufende Duelle steuern - ein Klick auf ein Duell öffnet seine Steuerung:
+  - **Zuschauen** über der Arena oder direkt **bei Spieler 1 / Spieler 2** (als Zuschauer, dein Inventar wird gesichert)
+  - **Pausieren / Fortsetzen:** beide werden eingefroren, niemand nimmt Schaden, die Zeit steht
+  - **Sieger bestimmen:** z.B. wenn jemand einen Bug ausnutzt - das Duell endet, der gewählte Spieler gewinnt das Match, die Runde zählt als Sieg (ohne Kill und Tod)
+  - **Abbrechen:** zählt nicht, beide bekommen alles zurück
+- **Runden** ansehen - mit Kampf-Log und den gesicherten Inventaren (vor und nach der Runde) - und offene Rückgaben sofort ausführen. Eine gewertete Runde lässt sich hier nachträglich **aus der Wertung nehmen** (mit optionalem Grund) und später **wieder werten** - die Statistik beider Spieler wird jeweils neu berechnet.
 - **Prüfen:** auffällige Runden werten oder verwerfen
 - **Spieler** verwalten, von Duellen sperren, Statistik zurücksetzen
 - **Kits** und **Arenen** bearbeiten, **Standard wiederherstellen**
@@ -62,6 +66,7 @@ Mitgeliefert: **Klassisch, Diamant, Netherite, Bogen, Streitkolben, Elytra & Str
 - Bearbeiten im Spiel mit dem **Kit-Editor** (Admin-Menü → Kits) oder lesbar in `kits.yml`.
 - Kit-Regeln: kein Schaden bzw. nur Rückstoß (Sumo, Boxing), Sieg nach Treffern, feste Regeneration oder Hunger, nur bestimmte Arenen, braucht eine Bau-Arena.
 - Ein Kit kann eine eigene Permission haben (`permission` in `kits.yml`), z.B. für VIP-Kits.
+- **Name und Beschreibung pro Sprache:** In `kits.yml` entweder ein Text für alle Sprachen oder `name: { de: "<white>Klassisch", en: "<white>Classic" }` - jeder Spieler sieht seine Sprache, fehlt sie, gilt Englisch. Die Standard-Kits sind deutsch und englisch. Im Kit-Editor änderst du Name und Beschreibung in deiner eigenen Sprache, die anderen bleiben.
 
 ### Arenen
 Mitgeliefert: **Standard**, **Sumo** (Plattform über dem Void), **Bau-Arena** (Bauen erlaubt) und **XXL-Himmel** (schwebende Inseln, nur für Kits mit Elytra).
@@ -97,9 +102,10 @@ Auffällige Runden zählen nicht einfach nicht - sie **warten auf eine Entscheid
 | `mrpvp.admin.kits` | OP | Kit-Editor |
 | `mrpvp.admin.games` | OP | Alle Runden mit Kampf-Log und gesicherten Inventaren |
 | `mrpvp.admin.restore` | OP | Offene Rückgabe sofort ausführen |
-| `mrpvp.admin.spectate` · `stop` | OP | Duellen zusehen · Duelle abbrechen |
+| `mrpvp.admin.spectate` · `stop` | OP | Duellen zusehen · Duelle abbrechen oder den Sieger bestimmen |
+| `mrpvp.admin.pause` | OP | Duelle pausieren und fortsetzen |
 | `mrpvp.admin.players` · `ban` · `reset` | OP | Spieler-Verwaltung · sperren · Statistik zurücksetzen |
-| `mrpvp.admin.review` | OP | Auffällige Runden prüfen (bekommt auch die Hinweise) |
+| `mrpvp.admin.review` | OP | Auffällige Runden prüfen (bekommt auch die Hinweise), Runden nachträglich aus der Wertung nehmen oder wieder werten |
 | `mrpvp.admin.defaults` | OP | Standard-Kits und -Arenen wiederherstellen |
 | `mrpvp.admin.reload` · `debug` · `update` | OP | `/mrpvp reload` · `/mrpvp debug` · Update-Hinweis beim Betreten |
 
@@ -108,15 +114,19 @@ Alles steht kommentiert in `plugins/MRpvp/config.yml`. Änderungen übernimmst d
 
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
-| `language` | `auto` | `auto` = wie im Minecraft-Client des Spielers, sonst `de` oder `en` |
+| `language` | `auto` | `auto` = wie im Minecraft-Client des Spielers, sonst `de` oder `en` für alle |
+| `fallback-language` | `en` | Für Spieler, deren Minecraft-Sprache keine eigene Datei hat |
+| `server-language` | `en` | Texte ohne einzelnen Empfänger: Discord-Meldungen zu auffälligen Runden (über MRadmin) |
 | `duel.options.wins` · `.minutes` | `[1,2,3,5]` · `[3,5,10,15]` | Auswahl im Einladungsmenü |
 | `duel.reconnect-seconds` | `20` | Wartezeit bei Verbindungsabbruch, `0` = sofort verloren |
 | `duel.allowed-commands` | `msg`, `r` … | Befehle, die im Duell erlaubt sind |
 | `arenas.pool-per-template` | `1` | Bereite Kopien pro Arena |
-| `stats.max-counted-per-opponent-per-day` | `5` | Mehr Runden gegen denselben Gegner pro Tag sind auffällig |
+| `stats.max-counted-per-opponent-per-day` | `50` | Mehr Runden gegen denselben Gegner pro Tag warten auf eine Prüfung |
+| `monitor.farming.*` | 8 Runden / 60 min, 90 %, 20 % | Statistik-Farmen: so viele Runden desselben Paars in dieser Zeit, **und** derselbe gewinnt mindestens 90 %, **und** der andere macht höchstens 20 % des Schadens. Ausgeglichene Runden unter Freunden sind nie verdächtig. |
 | `review.auto-days` | `7` | Nach so vielen Tagen zählt eine ungeprüfte Runde automatisch |
 | `protection.restore-statistics` | `true` | Minecraft-Statistik nach der Runde auf den Stand davor |
 | `history.days` · `.snapshot-days` | `30` · `90` | Wie lange Kampf-Logs und gesicherte Inventare bleiben |
+| `gui.ban-durations` | `1d`, `7d`, `permanent` | Schnellauswahl für Duell-Sperren auf der Spielerseite der MRadmin-Weboberfläche |
 
 Alle Texte stehen in `plugins/MRpvp/lang/<sprache>.yml` ([MiniMessage](https://docs.advntr.dev/minimessage/format.html)), die Kits in `kits.yml`, die Arenen unter `templates/`, Runden und Statistik in der Datenbank `mrpvp.db`.
 
@@ -128,6 +138,7 @@ MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr 
 | Funktion | Braucht |
 |---|---|
 | Seite **Duelle** in der Weboberfläche: live mit Herzen und Mini-Karte, alle Runden mit Inventaren, Kampf-Log und Wiedergabe, Prüfen | MRadmin |
+| Kachel **Duelle** auf der Spielerseite der Weboberfläche: Statistik, laufende und letzte Runden, Sperre | MRadmin |
 | Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, auffällige Runden im Discord-Log | MRadmin |
 | Im Admin-Modus kann man kein Duell starten | MRadmin |
 | Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert | MRadmin + MRtoolbar |

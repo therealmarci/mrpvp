@@ -22,7 +22,17 @@ public final class GameQueries {
      */
     public record GameRow(long id, String arena, int slot, String kit, long startedAt, Long endedAt, String result, String reason,
                           UUID winner, String stoppedBy, boolean counted, String review, String flags,
-                          String reviewedBy, List<PlayerLine> players) {
+                          String reviewedBy, String reviewNote, List<PlayerLine> players) {
+
+        /** Counted before, an admin took it out of the statistics. */
+        public boolean removed() {
+            return "REMOVED".equals(review);
+        }
+
+        /** Not counted because an admin decided so (removed, or discarded in the review) - may count again. */
+        public boolean mayCountAgain() {
+            return !counted && ("REMOVED".equals(review) || "REJECTED".equals(review));
+        }
 
         /** Waits for an admin. */
         public boolean pending() {
@@ -89,7 +99,7 @@ public final class GameQueries {
         for (GameRow row : rows) {
             withPlayers.add(new GameRow(row.id(), row.arena(), row.slot(), row.kit(), row.startedAt(), row.endedAt(), row.result(),
                     row.reason(), row.winner(), row.stoppedBy(), row.counted(), row.review(), row.flags(), row.reviewedBy(),
-                    players(c, row.id())));
+                    row.reviewNote(), players(c, row.id())));
         }
         return withPlayers;
     }
@@ -164,7 +174,7 @@ public final class GameQueries {
         return new GameRow(rs.getLong("id"), rs.getString("arena"), rs.getInt("slot"), rs.getString("kit"), rs.getLong("started_at"),
                 endedAt, rs.getString("result"), rs.getString("end_reason"), uuid(rs.getString("winner")),
                 rs.getString("stopped_by"), rs.getInt("counted") != 0, rs.getString("review"), rs.getString("flags"),
-                rs.getString("reviewed_by"), players);
+                rs.getString("reviewed_by"), rs.getString("review_note"), players);
     }
 
     private static UUID uuid(String value) {

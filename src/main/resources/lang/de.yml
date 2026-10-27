@@ -10,7 +10,7 @@
 # ==============================================================================
 
 # Nicht ändern - damit erkennt das Plugin bei Updates, welche Texte erneuert werden müssen.
-lang-version: 6
+lang-version: 8
 
 prefix: "<dark_gray>[<red>MRpvp</red>]</dark_gray> "
 no-permission: "<prefix><red>Dazu hast du keine Berechtigung."
@@ -65,6 +65,7 @@ end-reason-quit: "Gegner hat den Server verlassen"
 end-reason-timeout: "Zeit abgelaufen"
 end-reason-surrender: "aufgegeben"
 end-reason-admin: "von einem Admin beendet"
+end-reason-admin_win: "von einem Admin entschieden"
 end-reason-border: "aus der Arena gefallen"
 end-reason-shutdown: "Server wird gestoppt"
 end-reason-crash: "Server-Absturz"
@@ -541,8 +542,7 @@ gui-live-entry-lore:
   - "<gray>Zeit: <white><time>"
   - "<gray>Kit: <white><kit></white> · Arena: <white><arena></white> <dark_gray>(Platz <slot>)"
   - ""
-  - "<green>Klicken: zuschauen"
-  - "<red>Shift-Klick: abbrechen"
+  - "<green>Klicken: steuern <gray>(zuschauen, pausieren, beenden)"
 gui-live-state-countdown: "<yellow>Countdown"
 gui-live-state-running: "<green>Kampf"
 gui-live-state-ending: "<gray>Ende"
@@ -552,6 +552,72 @@ reconnect-subtitle: "<gray><player> hat <white><seconds> s</white>, um zurückzu
 bar-paused: "<light_purple><player> hat die Verbindung verloren <dark_gray>|</dark_gray> <gray>wartet noch <white><seconds> s"
 gui-live-state-paused: "<light_purple>Pausiert"
 gui-live-stop: "<red>Spiel #<id> abbrechen?"
+
+# --- Live-Steuerung eines Duells (Admin-Menü → Live → Spiel) ---
+gui-livegame-title: "Spiel #<id>"
+gui-live-state-admin_paused: "<light_purple>Pausiert von einem Admin"
+gui-livegame-info:
+  - "<gray>Status: <state>"
+  - "<gray><one>: <red><health1>❤"
+  - "<gray><two>: <red><health2>❤"
+  - "<gray>Zeit: <white><time></white> · Runde <white><round>"
+  - "<gray>Kit: <white><kit></white> · Arena: <white><arena></white> <dark_gray>(Platz <slot>)"
+gui-livegame-watch: "<aqua>Zuschauen"
+gui-livegame-watch-lore:
+  - "<gray>Als Zuschauer über die Arena."
+  - "<gray>Dein Inventar wird gesichert."
+gui-livegame-watch-at: "<aqua>Zu <player>"
+gui-livegame-watch-at-lore:
+  - "<gray>Als Zuschauer direkt zu diesem Spieler."
+gui-livegame-pause: "<light_purple>Pausieren"
+gui-livegame-pause-lore:
+  - "<gray>Beide werden eingefroren, niemand"
+  - "<gray>nimmt Schaden, die Zeit steht."
+gui-livegame-resume: "<green>Fortsetzen"
+gui-livegame-resume-lore:
+  - "<gray>Pausiert von <white><admin>"
+  - "<gray>Nach einem kurzen Countdown geht es weiter."
+gui-livegame-win: "<gold><player> gewinnt"
+gui-livegame-win-lore:
+  - "<gray>Beendet das Duell: <white><player></white> gewinnt"
+  - "<gray>das Match. Die Runde zählt als Sieg"
+  - "<gray>(ohne Kill und Tod)."
+gui-livegame-win-confirm: "<gold><player> zum Sieger erklären?"
+gui-livegame-stop: "<red>Abbrechen"
+gui-livegame-stop-lore:
+  - "<gray>Die Runde zählt nicht,"
+  - "<gray>beide bekommen alles zurück."
+admin-pause-title: "<light_purple>Pause"
+admin-pause-subtitle: "<gray>Ein Admin (<white><admin></white>) hat das Duell angehalten"
+bar-admin-paused: "<light_purple>Pausiert von <admin> <dark_gray>|</dark_gray> <gray>niemand nimmt Schaden"
+admin-paused: "<prefix><gray>Spiel <white>#<id></white> ist pausiert."
+admin-resumed: "<prefix><green>Spiel <white>#<id></white> geht weiter."
+admin-pause-not-running: "<prefix><red>Pausieren geht nur während des Kampfes."
+admin-resume-not-paused: "<prefix><red>Das Spiel ist nicht von einem Admin pausiert."
+# --- Partien nachträglich aus der Wertung nehmen (Spiel-Details) ---
+gui-game-uncount: "<red>Aus der Wertung nehmen"
+gui-game-uncount-lore:
+  - "<gray>Die Runde zählt nicht mehr - die Statistik"
+  - "<gray>beider Spieler wird neu berechnet."
+  - "<gray>Du kannst einen Grund angeben."
+gui-game-recount: "<green>Wieder werten"
+gui-game-recount-lore:
+  - "<gray>Aus der Wertung genommen von <white><admin>"
+  - "<gray>Grund: <white><note>"
+  - "<gray>Klicken: zählt wieder."
+gui-game-recount-rejected-lore:
+  - "<gray>Bei der Prüfung verworfen von <white><admin>"
+  - "<gray>Klicken: zählt doch."
+gui-game-recount-confirm: "<green>Runde #<id> wieder werten?"
+prompt-uncount-title: "Aus der Wertung nehmen"
+prompt-uncount-hint: "Optional: warum zählt die Runde nicht? Leer lassen geht auch."
+prompt-uncount-label: "Grund"
+game-uncounted: "<prefix><gray>Runde <white>#<id></white> zählt nicht mehr - die Statistik wurde neu berechnet."
+game-recounted: "<prefix><green>Runde <white>#<id></white> zählt wieder - die Statistik wurde neu berechnet."
+game-count-failed: "<prefix><red>Das ging nicht - die Runde wurde inzwischen schon geändert."
+# Discord-Admin-Log (über MRadmin), Server-Sprache. Platzhalter: <id>, <admin>, <note>
+admin-log-uncounted: "Spiel #<id>: <admin> hat die Runde aus der Wertung genommen (Grund: <note>)."
+admin-log-recounted: "Spiel #<id>: <admin> hat die Runde wieder in die Wertung genommen."
 spectate-started: "<prefix><gray>Du schaust Spiel <white>#<id></white> zu (<white><one></white> gegen <white><two></white>). Beenden: /duel"
 spectate-ended: "<prefix><gray>Spiel <white>#<id></white> ist vorbei - du bist zurück."
 spectate-leave-first: "<prefix><red>Erst das Zuschauen beenden (/duel)."
@@ -692,7 +758,7 @@ alert-quit: "Server mitten im Kampf verlassen"
 alert-border: "Viele Versuche, die Arena zu verlassen"
 alert-hit: "Auffällig starker Treffer"
 alert-idle: "Lange Runde ohne Treffer"
-monitor-farming: "Spiel #<id>: <one> und <two> haben <detail> Runden in einer Stunde gespielt - Statistik-Farmen?"
+monitor-farming: "Spiel #<id>: <one> und <two> haben <detail> Runden in kurzer Zeit gespielt, fast immer mit demselben Sieger und kaum Gegenwehr - Statistik-Farmen?"
 monitor-quit: "Spiel #<id> (<one> gegen <two>): <detail> hat mitten im Kampf den Server verlassen."
 monitor-border: "Spiel #<id> (<one> gegen <two>): viele Versuche, die Arena zu verlassen - <detail>."
 monitor-hit: "Spiel #<id> (<one> gegen <two>): auffällig starker Treffer - <detail>."

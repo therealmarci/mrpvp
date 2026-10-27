@@ -1,95 +1,99 @@
 ﻿# ==============================================================================
-#   MRpvp - Konfiguration
+#   MRpvp - Configuration
 # ==============================================================================
-#   Nach Änderungen:  /mrpvp reload   (kein Neustart nötig)
-#   Im Spiel läuft alles über die Menüs: /duel
+#   After changes:   /mrpvp reload   (no restart needed)
+#   In game everything runs through the menus: /duel
+#   Help & docs:     https://mrtechnology.marcelr.at/docs/mrpvp/
 #
-#   Texte & Nachrichten: lang/de.yml bzw. lang/en.yml.
-#   Daten (Spiele, gesicherte Inventare, Statistik): plugins/MRpvp/mrpvp.db (SQLite).
+#   Texts & messages: lang/de.yml or lang/en.yml.
+#   Data (games, saved inventories, statistics): plugins/MRpvp/mrpvp.db (SQLite).
 #
-#   Diese Datei ist UTF-8-kodiert. Falls Umlaute (ä, ö, ü) falsch angezeigt werden,
-#   im Editor die Kodierung auf "UTF-8" stellen.
+#   This file is UTF-8 encoded. If special characters (ä, ö, ü) look wrong,
+#   set the encoding in your editor to "UTF-8".
 # ==============================================================================
 
-# Nicht ändern - wird für automatische Config-Updates verwendet.
-config-version: 6
+# Do not change - used for automatic config updates.
+config-version: 9
 
-# Sprache der Texte (Menüs, Nachrichten). Die Texte stehen in plugins/MRpvp/lang/<sprache>.yml.
-#   auto = jeder Spieler bekommt die Sprache, die er in Minecraft eingestellt hat.
-#          Deutsch (auch Österreich/Schweiz) -> de.yml, alle anderen -> fallback-language.
-#   de / en / ... = feste Sprache für alle Spieler.
-# Die Konsole ist immer Englisch. Eigene Sprache: Datei kopieren (z.B. fr.yml) und übersetzen.
+# Language of the texts (menus, messages). The texts are in plugins/MRpvp/lang/<language>.yml.
+#   auto = every player gets the language set in their Minecraft client.
+#          German (also Austria/Switzerland) -> de.yml, English -> en.yml, a language without a file -> fallback-language.
+#   de / en / ... = fixed language for all players.
+# The console is always English. Own language: copy a file (e.g. as fr.yml) and translate it.
 language: auto
 
-# Sprache für Spieler, deren Minecraft-Sprache keine eigene Datei hat.
+# Language for players whose Minecraft language has no file of its own.
 fallback-language: en
 
+# Language of texts that are not meant for a single player: Discord logs and suspicious rounds (via MRadmin).
+server-language: en
+
 
 # ------------------------------------------------------------------------------
-#   1) ARENA-WELT & ARENEN
+#   1) ARENA WORLD & ARENAS
 # ------------------------------------------------------------------------------
-# MRpvp legt die Welt beim ersten Start selbst an (leere Void-Welt) und setzt ihre Regeln bei jedem Start:
-# keine Mobs, kein Tag/Nacht-Wechsel, kein Wetter, keine Advancement-/Todesnachrichten, PvP an.
-# Ein Welt-Manager wie Multiverse ist nicht nötig - falls einer läuft, die Welt dort nicht verwalten lassen.
+# MRpvp creates the world itself on first start (empty void world) and sets its rules on every start:
+# no mobs, no day/night cycle, no weather, no advancement/death messages, PvP on.
+# A world manager like Multiverse is not needed - if one is running, do not let it manage this world.
 arena-world:
-  # Ordnername der Welt. Eine Änderung gilt erst nach einem Neustart (die alte Welt bleibt liegen).
+  # Folder name of the world. A change only applies after a restart (the old world stays where it is).
   name: mrpvp_arenas
-  # easy, normal oder hard. "peaceful" geht nicht - dort würden Spieler im Kampf ständig heilen.
+  # easy, normal or hard. "peaceful" does not work - players would keep healing during the fight.
   difficulty: normal
-  # Feste Tageszeit in Ticks: 0 = Morgen, 6000 = Mittag, 13000 = Abend, 18000 = Mitternacht.
+  # Fixed time of day in ticks: 0 = morning, 6000 = noon, 13000 = evening, 18000 = midnight.
   time: 6000
 
 
 arenas:
-  # Wie viele Arenen pro Vorlage fertig aufgebaut bereitstehen (für neue Vorlagen; pro Arena im Admin-Menü
-  # änderbar). Ein Duell startet dann ohne Wartezeit und ohne Lag. 0 = erst beim Duell aufbauen.
+  # How many arenas per template stand ready, already built (for new templates; changeable per arena in the
+  # admin menu). A duel then starts without waiting and without lag. 0 = build only when the duel starts.
   pool-per-template: 1
-  # Höchstens so viele Arenen gleichzeitig (alle Vorlagen zusammen) - mehr Duelle warten.
+  # At most this many arenas at the same time (all templates together) - further duels wait.
   max-slots: 32
-  # Abstand zwischen zwei Arenen in Blöcken (damit man sich nicht sieht).
+  # Distance between two arenas in blocks (so players cannot see each other).
   spacing: 1000
-  # Größte Arena, die der Editor speichert (Breite x/z und Höhe). Größere Arenen brauchen beim Aufbauen
-  # spürbar mehr Zeit auf einmal - bis 64 x 48 x 64 ist unkritisch.
+  # Largest arena the editor saves (width x/z and height). Bigger arenas take noticeably more time
+  # at once when being built - up to 64 x 48 x 64 is fine.
   max-width: 64
   max-height: 48
-  # Luft über einer Arena, die Spieler nutzen dürfen (Elytra, Streitkolben) - wer höher fliegt, wird
-  # zurückgesetzt. Höchstens 200 (Bauhöhe der Welt).
+  # Air above an arena players may use (elytra, mace) - whoever flies higher is
+  # reset. At most 200 (build height of the world).
   headroom: 150
 
 
 # ------------------------------------------------------------------------------
-#   2) DUELLE
+#   2) DUELS
 # ------------------------------------------------------------------------------
 duel:
-  # So lange bleibt eine Einladung offen (Sekunden).
+  # How long an invite stays open (seconds).
   invite-seconds: 30
-  # Wartezeit zwischen zwei Einladungen desselben Spielers (Sekunden). Ohne Wartezeit: mrpvp.bypass.cooldown
+  # Waiting time between two invites of the same player (seconds). Without waiting time: mrpvp.bypass.cooldown
   invite-cooldown-seconds: 10
-  # Countdown vor dem Kampf (Sekunden, Spieler sind solange eingefroren). 0 = sofort.
+  # Countdown before the fight (seconds, players are frozen meanwhile). 0 = immediately.
   countdown-seconds: 3
-  # Was Spieler beim Herausfordern einstellen können (Menü nach der Kit-Auswahl).
+  # What players can set when challenging (menu after picking the kit).
   options:
-    # Siege bis Gewinn ("first to"): Auswahl und Vorgabe. 1 = eine Runde.
+    # Wins needed ("first to"): choices and default. 1 = one round.
     wins: [1, 2, 3, 5]
     default-wins: 1
-    # Zeitlimit pro Runde in Minuten - danach unentschieden.
+    # Time limit per round in minutes - after that it is a draw.
     minutes: [3, 5, 10, 15]
     default-minutes: 10
-    # Vorgaben für Hunger und natürliche Regeneration. Kits können sie festlegen (z.B. UHC ohne Regeneration).
+    # Defaults for hunger and natural regeneration. Kits can fix them (e.g. UHC without regeneration).
     default-hunger: true
     default-regen: true
-  # Pause nach dem Ende, bevor beide ihre Sachen zurückbekommen (Sekunden).
+  # Pause after the end before both get their things back (seconds).
   end-delay-seconds: 3
-  # Verliert ein Spieler mitten im Duell die Verbindung (Absturz, Server verlassen), wartet die Runde so lange auf
-  # ihn (Sekunden) - der Gegner ist solange eingefroren. Kommt er zurück, geht es mit dem Countdown weiter. Das geht
-  # nur einmal pro Match und Spieler; danach (oder ohne Rückkehr) hat er verloren. 0 = sofort verloren.
-  # Aufgeben (/duel leave) ist immer eine Niederlage - außer im Countdown vor der ersten Runde.
+  # If a player loses the connection in the middle of a duel (crash, leaving the server), the round waits this long
+  # for them (seconds) - the opponent is frozen meanwhile. If they come back, it continues with the countdown. This
+  # works once per match and player; after that (or without returning) they have lost. 0 = lost immediately.
+  # Giving up (/duel leave) is always a loss - except during the countdown before the first round.
   reconnect-seconds: 20
-  # Darf ein Totem der Unsterblichkeit im Kit einen Spieler retten? false = er zählt als besiegt.
+  # May a totem of undying in the kit save a player? false = they count as defeated.
   totems: true
-  # Befehle, die im Duell erlaubt sind (ohne "/"). /duel geht immer (Aufgeben).
-  # Alle anderen sind gesperrt - damit sich niemand mit /home, /spawn oder /tpa herausrettet.
-  # Ausnahme für Admins: mrpvp.bypass.commands
+  # Commands allowed during a duel (without "/"). /duel always works (giving up).
+  # All others are blocked - so nobody escapes with /home, /spawn or /tpa.
+  # Exception for admins: mrpvp.bypass.commands
   allowed-commands:
     - msg
     - tell
@@ -101,88 +105,96 @@ duel:
 
 
 # ------------------------------------------------------------------------------
-#   3) STATISTIK
+#   3) STATISTICS
 # ------------------------------------------------------------------------------
-# Eigene Duell-Statistik (K/D, Siege, Serien, Bestenliste) - völlig getrennt von der Minecraft-Statistik.
+# Separate duel statistics (K/D, wins, streaks, leaderboard) - completely apart from the Minecraft statistics.
 stats:
-  # Kürzere Runden ohne einen einzigen Treffer sind auffällig (Sekunden) - siehe review.hold "short".
+  # Shorter rounds without a single hit are suspicious (seconds) - see review.hold "short".
   min-duration-seconds: 10
-  # Mehr Runden gegen denselben Gegner innerhalb von 24 Stunden sind auffällig (Statistik-Farmen) - review.hold "limit".
-  # 0 = keine Grenze.
-  max-counted-per-opponent-per-day: 5
-  # Wer mitten im Kampf den Server verlässt, bekommt einen Tod.
+  # More rounds against the same opponent within 24 hours are suspicious (statistic farming) - review.hold "limit".
+  # 0 = no limit.
+  max-counted-per-opponent-per-day: 50
+  # Whoever leaves the server in the middle of a fight gets a death.
   quit-counts-as-death: true
-  # Wer aufgibt, bekommt einen Tod.
+  # Whoever gives up gets a death.
   surrender-counts-as-death: true
-  # Wer den Gegner aus der Arena stößt, bekommt einen Kill.
+  # Whoever knocks the opponent out of the arena gets a kill.
   border-counts-as-kill: true
-  # K/D und Siegquote erscheinen in der Bestenliste erst ab so vielen Runden.
+  # K/D and win rate only appear in the leaderboard after this many rounds.
   min-games-for-ratio: 10
 
 
-# Auffällige Runden zählen nicht einfach nicht - sie warten, bis ein Admin entscheidet (Admin-Menü → Prüfen,
-# MRadmin-Web → MRpvp → Prüfen). Bis dahin zählen sie nicht; "werten" nimmt sie nachträglich in die Statistik auf.
+# Suspicious rounds do not simply not count - they wait until an admin decides (admin menu → Review,
+# MRadmin web → MRpvp → Review). Until then they do not count; "count" adds them to the statistics afterwards.
 review:
-  # Was eine Runde zur Prüfung zurückhält:
-  #   farming = dieselben zwei Spieler sehr oft hintereinander (monitor.same-pair-per-hour)
-  #   limit   = mehr als stats.max-counted-per-opponent-per-day Runden gegen denselben Gegner an einem Tag
-  #   short   = kürzer als stats.min-duration-seconds und dabei kein einziger Treffer
-  #   hit     = ein einzelner Treffer stärker als monitor.max-hit-hearts
-  #   border  = sehr oft versucht, die Arena zu verlassen (monitor.border-tries)
-  #   idle    = lange Runde ganz ohne Treffer (monitor.idle-seconds)
-  #   quit    = jemand hat mitten im Kampf den Server verlassen
-  # Nicht aufgeführte werden nur gemeldet (Überwachung), die Runde zählt normal.
+  # What holds a round back for review:
+  #   farming = one-sided series of the same two players (monitor.farming)
+  #   limit   = more than stats.max-counted-per-opponent-per-day rounds against the same opponent in one day
+  #   short   = shorter than stats.min-duration-seconds and not a single hit
+  #   hit     = a single hit stronger than monitor.max-hit-hearts
+  #   border  = very often tried to leave the arena (monitor.border-tries)
+  #   idle    = long round without any hit (monitor.idle-seconds)
+  #   quit    = someone left the server in the middle of the fight
+  # Reasons not listed are only reported (monitoring), the round counts normally.
   hold: [farming, limit, short, hit, border, idle]
-  # Nach so vielen Tagen ohne Entscheidung wird automatisch entschieden.
+  # After this many days without a decision, it is decided automatically.
   auto-days: 7
-  # count = dann zählt sie, discard = dann zählt sie nie, none = sie wartet, bis ein Admin entscheidet.
+  # count = then it counts, discard = then it never counts, none = it waits until an admin decides.
   auto-decision: count
-  # Admins online (Recht mrpvp.admin.review) bekommen eine Nachricht, wenn eine Runde wartet - und beim Betreten
-  # des Servers, wie viele warten.
+  # Online admins (permission mrpvp.admin.review) get a message when a round is waiting - and, when joining
+  # the server, how many are waiting.
   notify: true
 
 
 # ------------------------------------------------------------------------------
-#   4) SCHUTZ
+#   4) PROTECTION
 # ------------------------------------------------------------------------------
 protection:
-  # Advancements in der Arena-Welt gar nicht erst vergeben (z.B. durch Kit-Rüstung) - kein Toast, keine Meldung.
+  # Do not grant advancements in the arena world at all (e.g. from kit armour) - no toast, no message.
   revoke-advancements: true
-  # Minecraft-Statistik (Schaden, Sprünge, gelaufene Blöcke ...) nach der Runde auf den Stand davor setzen.
-  # Tode und Kills zählen sowieso nie - im Duell stirbt niemand wirklich.
+  # Reset the Minecraft statistics (damage, jumps, blocks walked ...) to their state before the round.
+  # Deaths and kills never count anyway - nobody really dies in a duel.
   restore-statistics: true
 
 
 # ------------------------------------------------------------------------------
-#   5) VERLAUF
+#   5) HISTORY
 # ------------------------------------------------------------------------------
 history:
-  # Kampf-Log, Positionen (Mini-Karte) und Inventar beim Ende so viele Tage aufheben.
+  # Keep the combat log, positions (mini map) and the inventory at the end for this many days.
   days: 30
-  # Gesicherte Inventare (Stand beim Betreten) so viele Tage aufheben. Noch nicht zurückgegebene werden nie gelöscht.
-  # Die Runden selbst (Ergebnis, Zahlen) bleiben für die Statistik immer erhalten.
+  # Keep saved inventories (state when entering) for this many days. Ones not yet returned are never deleted.
+  # The rounds themselves (result, numbers) are always kept for the statistics.
   snapshot-days: 90
 
 
 # ------------------------------------------------------------------------------
-#   6) ÜBERWACHUNG
+#   6) MONITORING
 # ------------------------------------------------------------------------------
-# Auffällige Runden: im Admin-Menü, in MRadmin (Server-Zustand, Weboberfläche) und - wenn gewünscht - im
-# Discord-Admin-Log von MRadmin. Sie werden 24 Stunden gemerkt.
+# Suspicious rounds: in the admin menu, in MRadmin (server status, web interface) and - if wanted - in
+# MRadmin's Discord admin log. They are remembered for 24 hours.
 monitor:
   enabled: true
-  # Zusätzlich ins Discord-Admin-Log von MRadmin (auch Runden, die auf Prüfung warten; nur wenn MRadmin installiert
-  # und dort Discord eingerichtet ist).
+  # Also send them to MRadmin's Discord admin log (including rounds waiting for review; only if MRadmin is
+  # installed and Discord is set up there).
   discord: true
-  # So viele Runden derselben zwei Spieler innerhalb einer Stunde = Verdacht auf Statistik-Farmen.
-  same-pair-per-hour: 6
-  # Ein einzelner Treffer mit mindestens so vielen Herzen Schaden (Streitkolben ausgenommen - der darf das).
+  # Statistic farming: the same two players many times in a short time AND one-sided - the same player (nearly)
+  # always wins and the other hardly fights back. Even fights between friends are never suspicious, however many.
+  farming:
+    # At least this many rounds of the same two players within this many minutes ...
+    rounds: 8
+    minutes: 60
+    # ... of which the same player won at least this share (%) ...
+    winner-percent: 90
+    # ... while the other dealt at most this share (%) of all damage in these rounds.
+    max-loser-damage-percent: 20
+  # A single hit with at least this many hearts of damage (except the mace - it may do that).
   max-hit-hearts: 20
-  # So viele Versuche, in einer Runde die Arena zu verlassen.
+  # This many attempts to leave the arena in one round.
   border-tries: 10
-  # Eine Runde, die mindestens so lange dauert, ohne dass irgendwer trifft (Sekunden).
+  # A round lasting at least this long without anybody hitting (seconds).
   idle-seconds: 90
-  # Wer mitten im Kampf den Server verlässt, wird immer gemeldet.
+  # Whoever leaves the server in the middle of a fight is always reported.
 
 
 # ------------------------------------------------------------------------------
@@ -190,20 +202,22 @@ monitor:
 # ------------------------------------------------------------------------------
 update-checker:
   enabled: true
-  # Quelle: "github" (GitHub Releases, Standard) oder "modrinth"
+  # Source: "github" (GitHub Releases, default) or "modrinth"
   source: github
-  # Auch Beta-/Alpha-Versionen melden. Läuft selbst eine Vorabversion (0.x), werden sie immer gemeldet.
+  # Also report beta/alpha versions. If a pre-release (0.x) is running, they are always reported.
   include-prereleases: false
   interval-hours: 6
-  # Spieler mit "mrpvp.admin.update" beim Betreten des Servers informieren.
+  # Notify players with "mrpvp.admin.update" when they join the server.
   notify-on-join: true
 
 
 # ------------------------------------------------------------------------------
-#   8) MENÜS
+#   8) MENUS
 # ------------------------------------------------------------------------------
 gui:
-  # Wie oft offene Menüs aktualisiert werden (in Ticks, 20 = 1 Sekunde).
+  # How often open menus are refreshed (in ticks, 20 = 1 second).
   refresh-ticks: 20
-  # Klick-Sounds in den Menüs.
+  # Click sounds in the menus.
   sounds: true
+  # Quick choices for a duel ban on the player page of MRadmin's web interface ("permanent" = forever, exactly 3 entries).
+  ban-durations: ["1d", "7d", "permanent"]

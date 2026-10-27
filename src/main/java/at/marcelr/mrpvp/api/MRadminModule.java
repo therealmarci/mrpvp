@@ -50,13 +50,16 @@ final class MRadminModule implements AdminModule, WebModule {
 
     private static final Map<String, String> PERMISSIONS = Map.of(
             "games", AdminMenu.PERM_GAMES, "stop", AdminMenu.PERM_STOP, "ban", AdminMenu.PERM_BAN,
-            "reset", AdminMenu.PERM_RESET, "restore", AdminMenu.PERM_RESTORE, "review", Reviews.PERM_REVIEW);
+            "reset", AdminMenu.PERM_RESET, "restore", AdminMenu.PERM_RESTORE, "review", Reviews.PERM_REVIEW,
+            "pause", AdminMenu.PERM_PAUSE);
     /** Rounds with inventories need "games", the review list "review"; everything else only viewing. */
     private static final Map<String, String> REQUESTS = Map.of("games", "games", "game", "games", "reviews", "review");
     private static final Set<String> DATA = Set.of("overview", "live", "games", "game", "alerts", "reviews");
-    private static final Map<String, String> ACTIONS = Map.of(
-            "stop", "stop", "ban", "ban", "unban", "ban", "reset", "reset", "giveBack", "restore",
-            "count", "review", "discard", "review");
+    private static final Map<String, String> ACTIONS = Map.ofEntries(
+            Map.entry("stop", "stop"), Map.entry("win", "stop"), Map.entry("pause", "pause"), Map.entry("resume", "pause"),
+            Map.entry("ban", "ban"), Map.entry("unban", "ban"), Map.entry("reset", "reset"), Map.entry("giveBack", "restore"),
+            Map.entry("count", "review"), Map.entry("discard", "review"), Map.entry("uncount", "review"),
+            Map.entry("recount", "review"));
 
     private final MRPvp plugin;
 

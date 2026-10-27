@@ -33,6 +33,8 @@ public final class Game {
         SURRENDER,
         /** an admin stopped it */
         ADMIN,
+        /** an admin declared the winner (the match is over, the round counts as a win without kill / death) */
+        ADMIN_WIN,
         /** the loser fell out of the arena */
         BORDER,
         /** the server stopped during the round */
@@ -58,6 +60,8 @@ public final class Game {
     /** while paused (and in the countdown after a pause): since when, 0 = not paused; paused time in total */
     private long pausedAt;
     private long pausedTotal;
+    /** An admin paused the round: their name, otherwise null. */
+    private String adminPause;
     /** who the round waits for, and until when (epoch ms) */
     private UUID waitingFor;
     private long waitUntil;
@@ -159,8 +163,9 @@ public final class Game {
         return fightStart > 0;
     }
 
-    /** Waits for a player who lost the connection. */
+    /** Waits for a player who lost the connection (also ends an admin pause - now it waits for the player). */
     void pause(UUID player, long until) {
+        adminPause = null;
         state = State.PAUSED;
         if (pausedAt == 0) {
             pausedAt = System.currentTimeMillis();
@@ -169,8 +174,25 @@ public final class Game {
         waitUntil = until;
     }
 
-    /** They are back: a short countdown, then the fight goes on. */
+    /** An admin stops the time: both frozen, nobody takes damage, until an admin resumes it. */
+    void adminPause(String by) {
+        state = State.PAUSED;
+        if (pausedAt == 0) {
+            pausedAt = System.currentTimeMillis();
+        }
+        adminPause = by;
+        waitingFor = null;
+        waitUntil = Long.MAX_VALUE;
+    }
+
+    /** Who paused the round, or null if no admin did. */
+    public String adminPause() {
+        return adminPause;
+    }
+
+    /** They are back (or an admin resumes): a short countdown, then the fight goes on. */
     void resume(int seconds) {
+        adminPause = null;
         waitingFor = null;
         waitUntil = 0;
         state = State.COUNTDOWN;

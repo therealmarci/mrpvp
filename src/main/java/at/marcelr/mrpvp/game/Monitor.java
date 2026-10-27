@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Notices conspicuous rounds when they end and keeps them for a day: the same two players again and again
- * (statistics farming), leaving mid-fight, many tries to leave the arena, a single hit far stronger than a kit
+ * Notices conspicuous rounds when they end and keeps them for a day: one-sided series of the same two players
+ * (statistics farming, see {@link FarmingCheck}), leaving mid-fight, many tries to leave the arena, a single hit far stronger than a kit
  * allows, a long round without any hit. Shown in the admin menu / MRadmin (server health, web) and - if wanted -
  * in MRadmin's Discord admin log. Main thread only.
  */
@@ -27,13 +27,13 @@ public final class Monitor {
     }
 
     private static final long DAY = 24L * 60 * 60 * 1000;
-    private static final long HOUR = 60L * 60 * 1000;
     private static final int MAX_ALERTS = 200;
 
     private final MRPvp plugin;
     private final Deque<Alert> alerts = new ArrayDeque<>();
-    /** (time, "uuidA|uuidB") of rounds of the last hour, for farming */
-    private final Deque<Object[]> pairs = new ArrayDeque<>();
+    private final FarmingCheck farming = new FarmingCheck();
+    /** Pairs whose farming series was already reported (once per series; further rounds are only flagged). */
+    private final java.util.Set<String> farmingReported = new java.util.HashSet<>();
 
     public Monitor(MRPvp plugin) {
         this.plugin = plugin;
@@ -50,14 +50,15 @@ public final class Monitor {
         String one = game.one().name();
         String two = game.two().name();
 
-        String pair = pairKey(game);
-        pairs.add(new Object[] {now, pair});
-        pairs.removeIf(p -> now - (long) p[0] > HOUR);
-        long together = pairs.stream().filter(p -> p[1].equals(pair)).count();
-        if (together == s.samePairPerHour()) {
-            add(flags, now, game, Type.FARMING, one, two, String.valueOf(together));
-        } else if (together > s.samePairPerHour()) {
-            // Reported once, but every further round of the two is conspicuous too.
+        String pair = FarmingCheck.key(game.one().uuid(), game.two().uuid());
+        int series = farming.add(now, game.one().uuid(), game.one().damageDealt(), game.two().uuid(),
+                game.two().damageDealt(), winner == null ? null : winner.uuid(), s.farming());
+        if (series == 0) {
+            farmingReported.remove(pair);
+        } else if (farmingReported.add(pair)) {
+            add(flags, now, game, Type.FARMING, one, two, String.valueOf(series));
+        } else {
+            // Reported once, but every further round of the series is conspicuous too.
             flags.add(Type.FARMING.name().toLowerCase(Locale.ROOT));
         }
         if (reason == Game.EndReason.QUIT && winner != null) {
@@ -80,12 +81,6 @@ public final class Monitor {
         return flags;
     }
 
-    private static String pairKey(Game game) {
-        String a = game.one().uuid().toString();
-        String b = game.two().uuid().toString();
-        return a.compareTo(b) < 0 ? a + "|" + b : b + "|" + a;
-    }
-
     private void add(java.util.Set<String> flags, long now, Game game, Type type, String one, String two, String detail) {
         flags.add(type.name().toLowerCase(Locale.ROOT));
         Alert alert = new Alert(now, game.id(), type, one, two, detail);
@@ -98,7 +93,7 @@ public final class Monitor {
         // Console always English, Discord in the server's language.
         plugin.getLogger().info("Monitor: " + plugin.messages().console(key, values));
         if (plugin.settings().monitor().discord()) {
-            plugin.admin().adminLog(plugin.messages().plain(key, values));
+            plugin.admin().adminLog(plugin.messages().server(() -> plugin.messages().plain(key, values)));
         }
     }
 

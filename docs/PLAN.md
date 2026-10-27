@@ -289,7 +289,7 @@ Statistik der Runde und Kampf-Log. Inventar-Snapshots sehen nur Admins (Datensch
 - Kill/Tod = Spiel endet durch KILL (bzw. BORDER/Void, wenn `border-counts-as-kill`).
 - QUIT = Niederlage + Tod für den Leaver (`quit-counts-as-death`, Standard true), Sieg ohne Kill für den anderen.
 - ABORTED/ADMIN/CRASH/TIMEOUT-Unentschieden zählen nicht für K/D.
-- **Anti-Farming**: gegen denselben Gegner zählen nur `stats.max-counted-per-opponent-per-day` Spiele (Standard 5);
+- **Anti-Farming**: gegen denselben Gegner zählen nur `stats.max-counted-per-opponent-per-day` Spiele (Standard 50, früher 5; Issue #7);
   Spiele unter `stats.min-duration` (Standard 10 s) zählen nicht. Auffälliges landet in MRadmins Überwachung.
 - Daten: berechnet aus `games`/`game_players`, dazu eine Cache-Tabelle `player_stats` (uuid, kit, Werte), bei
   Spielende aktualisiert – Bestenliste ohne teure Abfragen. Admin-Button „Statistik zurücksetzen“ (Spieler oder alle,
@@ -456,7 +456,7 @@ Befehle sind nur Einstiegspunkte in die GUIs:
   `api/WebData` (overview, live, games, game, player, flags, alerts, action stop|ban|unban|reset|giveBack),
   `api/ItemView` (Items als einfache Daten), `arena/ArenaMap` (Draufsicht aus Block-Kartenfarben, pro Vorlage+Version
   gecacht), `api/MRadminBridge` (adminMode → keine Duelle im Adminmodus; webEvent gedrosselt 2/s; adminLog),
-  `game/Monitor` (Farmen, Quit im Kampf, Grenzversuche, starker Treffer ohne Streitkolben, lange Runde ohne Treffer;
+  `game/Monitor` (Farmen nur bei einseitigen Serien, `game/FarmingCheck` - Issue #7, Quit im Kampf, Grenzversuche, starker Treffer ohne Streitkolben, lange Runde ohne Treffer;
   24 h im Speicher; Konsole Englisch, Discord in Serversprache; `monitor.*`, config-version 3), Admin-Menü
   „Auffälligkeiten“.
 - **MRadmin** (beta, nicht committet): `MRadminApi` v2 (`webEvent`, `adminLog`), `WebEvents.plugin` (nur an Seiten
@@ -510,3 +510,16 @@ Befehle sind nur Einstiegspunkte in die GUIs:
   (`Game.pause/resume`, `elapsed` ohne Pausen), Bossbar mit Restzeit; zurück → Countdown, weiter. Einmal pro Match und
   Spieler, nur solange der Gegner da ist; sonst / ohne Rückkehr → Niederlage. Zwischen zwei Runden wartet die nächste
   Runde genauso. StateKeeper behält die Sicherung so lange (`waitingFor`, Login gibt nichts zurück).
+
+### Nachtrag – Admin-Steuerung, Wertung, Anti-Farming, Arenen-Vorrat (2026-10-27, Issues #7-#9), Test im Spiel ausstehend
+- **Live-Steuerung** (`gui/LiveGameMenu`, Klick in Admin → Live): zuschauen über der Arena oder bei einem Spieler
+  (`Spectators#watchAt`), Pause durch einen Admin (`Game#adminPause`: Zustand PAUSED ohne `waitingFor`,
+  `waitUntil = MAX`; ein Quit während der Pause wird zur normalen Reconnect-Pause), Sieger bestimmen
+  (`GameManager#adminWin`, EndReason `ADMIN_WIN`, Match vorbei, zählt als Sieg ohne Kill/Tod), abbrechen.
+  Permission `mrpvp.admin.pause` neu, Sieger/Abbrechen über `mrpvp.admin.stop`.
+- **Wertung nachträglich:** `StatsStore#setCounted` (games.review = `REMOVED` bzw. `APPROVED`, `review_note` =
+  optionaler Grund, Tabellenversion 6), danach `rebuild` beider Spieler. Wieder werten geht für `REMOVED` und
+  `REJECTED`. Spiel: Runden-Details (`GameMenu`), Web: Aktionen `uncount`/`recount`; Discord-Admin-Log über MRadmin.
+- **Anti-Farming** (`game/FarmingCheck`, reine Logik mit Tests): nur einseitige Serien (`monitor.farming.*`),
+  Tagesgrenze pro Gegner Standard 50.
+- **Arenen-Vorrat:** nach der Runde nur bis `pool` neu aufbauen, Überschuss beim Auffüllen abbauen.

@@ -9,8 +9,6 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Locale;
 
-import static at.marcelr.mrpvp.Messages.tag;
-
 /** All arena templates, plus "new arena". */
 public final class ArenaListMenu extends Menu {
 

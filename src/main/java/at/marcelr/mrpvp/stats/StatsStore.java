@@ -30,6 +30,8 @@ public final class StatsStore {
     public static final String REVIEW_PENDING = "PENDING";
     public static final String REVIEW_APPROVED = "APPROVED";
     public static final String REVIEW_REJECTED = "REJECTED";
+    /** An admin took the counted round out of the statistics afterwards. */
+    public static final String REVIEW_REMOVED = "REMOVED";
 
     /** One side of a round, as needed for the statistics. */
     public record Side(UUID uuid, String name, double damageDealt, double damageTaken, int arrowsShot, int arrowsHit,
@@ -220,6 +222,60 @@ public final class StatsStore {
                     for (UUID player : players) {
                         rebuild(c, player);
                     }
+                }
+            }
+            c.commit();
+            return true;
+        } catch (SQLException e) {
+            c.rollback();
+            throw e;
+        } finally {
+            c.setAutoCommit(auto);
+        }
+    }
+
+    /**
+     * An admin takes a counted round out of the statistics ({@code count} false), or counts a removed or discarded one
+     * again. The statistics of both players are built again, so streaks stay in the right order.
+     *
+     * @param note optional reason, null = none
+     * @return false if the round was not in that state (any more)
+     */
+    public static boolean setCounted(Connection c, long id, boolean count, String by, String note, long now)
+            throws SQLException {
+        boolean auto = c.getAutoCommit();
+        c.setAutoCommit(false);
+        try {
+            int changed;
+            try (PreparedStatement ps = c.prepareStatement("UPDATE games SET counted = ?, review = ?, reviewed_by = ?, "
+                    + "reviewed_at = ?, review_note = ? WHERE id = ? AND ended_at IS NOT NULL AND "
+                    + (count ? "counted = 0 AND review IN (?, ?)" : "counted = 1"))) {
+                ps.setInt(1, count ? 1 : 0);
+                ps.setString(2, count ? REVIEW_APPROVED : REVIEW_REMOVED);
+                ps.setString(3, by);
+                ps.setLong(4, now);
+                ps.setString(5, note == null || note.isBlank() ? null : note);
+                ps.setLong(6, id);
+                if (count) {
+                    ps.setString(7, REVIEW_REMOVED);
+                    ps.setString(8, REVIEW_REJECTED);
+                }
+                changed = ps.executeUpdate();
+            }
+            if (changed == 0) {
+                c.rollback();
+                return false;
+            }
+            try (PreparedStatement ps = c.prepareStatement("SELECT uuid FROM game_players WHERE game_id = ?")) {
+                ps.setLong(1, id);
+                List<UUID> players = new ArrayList<>();
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        players.add(UUID.fromString(rs.getString(1)));
+                    }
+                }
+                for (UUID player : players) {
+                    rebuild(c, player);
                 }
             }
             c.commit();

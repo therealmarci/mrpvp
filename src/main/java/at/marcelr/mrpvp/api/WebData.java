@@ -131,7 +131,7 @@ final class WebData {
             }
             Map<String, Object> s = new LinkedHashMap<>();
             s.put("index", slot.index());
-            s.put("template", slot.template());
+            s.put("template", slot.state() == SlotManager.State.PASTING && slot.pending() != null ? slot.pending() : slot.template());
             s.put("state", slot.state().name().toLowerCase(Locale.ROOT));
             s.put("pasteMillis", slot.lastPasteMillis());
             slots.add(s);
@@ -153,6 +153,7 @@ final class WebData {
         Map<String, Object> g = new LinkedHashMap<>();
         g.put("id", game.id());
         g.put("state", game.state().name().toLowerCase(Locale.ROOT));
+        g.put("adminPause", game.adminPause());
         g.put("elapsed", game.elapsed());
         g.put("kit", game.kit().id());
         g.put("kitName", plain(game.kit().name()));
@@ -280,6 +281,8 @@ final class WebData {
         g.put("review", row.review() == null ? null : row.review().toLowerCase(Locale.ROOT));
         g.put("flags", List.copyOf(new java.util.TreeSet<>(at.marcelr.mrpvp.game.Reviews.flags(row.flags()))));
         g.put("reviewedBy", row.reviewedBy());
+        g.put("reviewNote", row.reviewNote());
+        g.put("mayCountAgain", row.mayCountAgain());
         List<Map<String, Object>> players = new ArrayList<>();
         for (GameQueries.PlayerLine p : row.players()) {
             Map<String, Object> m = player(p.uuid(), p.name());
@@ -392,6 +395,8 @@ final class WebData {
         r.put("games", games);
         List<Snapshot> owed = plugin.database().call(c -> SnapshotStore.owed(c, uuid));
         r.put("owed", owed.size());
+        // Quick choices for a duel ban on the player page (ms, -1 = permanent).
+        r.put("banDurations", plugin.settings().gui().banDurations());
         return r;
     }
 
@@ -456,6 +461,41 @@ final class WebData {
                 }
                 plugin.games().stop(game, admin + " (web)");
                 return null;
+            }
+            case "pause", "resume" -> {
+                Game game = plugin.games().game(number(args.get("id")));
+                if (game == null) {
+                    return "game-not-running";
+                }
+                String error = action.equals("pause") ? plugin.games().adminPause(game, admin + " (web)")
+                        : plugin.games().adminResume(game, admin + " (web)");
+                return error == null ? null : error.equals("admin-pause-not-running") ? "game-not-fighting" : "game-not-paused";
+            }
+            case "win" -> {
+                Game game = plugin.games().game(number(args.get("id")));
+                if (game == null || game.state() == Game.State.ENDING) {
+                    return "game-not-running";
+                }
+                String side = String.valueOf(args.get("side"));
+                Fighter winner = side.equals("1") ? game.one() : side.equals("2") ? game.two() : null;
+                if (winner == null) {
+                    return "unknown-action";
+                }
+                plugin.games().adminWin(game, winner, admin + " (web)");
+                return null;
+            }
+            case "uncount", "recount" -> {
+                long id = number(args.get("id"));
+                String note = args.get("note") instanceof String n ? n : "";
+                try {
+                    Boolean changed = plugin.reviews().setCounted(id, action.equals("recount"), admin + " (web)", note).get();
+                    return Boolean.TRUE.equals(changed) ? null : "count-not-possible";
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    return "database-error";
+                } catch (java.util.concurrent.ExecutionException e) {
+                    return "database-error";
+                }
             }
             case "ban" -> {
                 UUID uuid = uuid(args.get("uuid"));

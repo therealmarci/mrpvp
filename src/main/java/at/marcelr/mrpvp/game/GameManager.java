@@ -435,6 +435,15 @@ public final class GameManager {
     private void showBars(Game game) {
         Messages m = messages();
         Match match = game.match();
+        if (game.state() == Game.State.PAUSED && game.adminPause() != null) {
+            List<Player> viewers = new ArrayList<>(plugin.spectators().watchers(game));
+            forEachFighter(game, viewers::add);
+            for (Player viewer : viewers) {
+                m.run(viewer, () -> bar.show(viewer, m.get("bar-admin-paused", tag("admin", game.adminPause())), 1f,
+                        BossBar.Color.PURPLE));
+            }
+            return;
+        }
         if (game.state() == Game.State.PAUSED) {
             long left = Math.max(0, game.waitUntil() - System.currentTimeMillis());
             Fighter gone = game.fighter(game.waitingFor());
@@ -651,8 +660,20 @@ public final class GameManager {
                     defeated(game, player, Game.EndReason.QUIT);
                 }
             }
-            // The one we waited for is still gone and now the other one leaves too: nobody wins.
-            case PAUSED -> end(game, Game.Result.ABORTED, Game.EndReason.QUIT, null, null);
+            case PAUSED -> {
+                if (game.adminPause() == null) {
+                    // The one we waited for is still gone and now the other one leaves too: nobody wins.
+                    end(game, Game.Result.ABORTED, Game.EndReason.QUIT, null, null);
+                } else if (mayWait) {
+                    // Left during an admin pause: from now on the round waits for them as usual.
+                    match.usedReconnect(id);
+                    game.pause(id, until);
+                    paused(game, player.getName(), grace);
+                    return;
+                } else {
+                    defeated(game, player, Game.EndReason.QUIT);
+                }
+            }
             case ENDING -> {
                 if (!game.last()) {
                     if (mayWait) {
@@ -719,7 +740,7 @@ public final class GameManager {
      * Decides the round. Everything is written at once; the players get their things back after the end delay.
      *
      * @param winner    null for a draw / abort
-     * @param stoppedBy admin name for {@link Game.EndReason#ADMIN}
+     * @param stoppedBy admin name for {@link Game.EndReason#ADMIN} and {@link Game.EndReason#ADMIN_WIN}
      */
     public void end(Game game, Game.Result result, Game.EndReason reason, Fighter winner, String stoppedBy) {
         if (game.state() == Game.State.ENDING) {
@@ -753,12 +774,13 @@ public final class GameManager {
         }
         boolean broken = result == Game.Result.ABORTED || reason == Game.EndReason.QUIT
                 || reason == Game.EndReason.SURRENDER || reason == Game.EndReason.ADMIN
-                || reason == Game.EndReason.SHUTDOWN || reason == Game.EndReason.ERROR;
+                || reason == Game.EndReason.ADMIN_WIN                || reason == Game.EndReason.SHUTDOWN || reason == Game.EndReason.ERROR;
         boolean over = broken || match.single() || match.decided() || match.roundsUsedUp()
                 || Bukkit.getPlayer(game.one().uuid()) == null || Bukkit.getPlayer(game.two().uuid()) == null;
         // Leaving or giving up loses the whole match; an admin stop or a shutdown ends it without winner.
         UUID matchWinner = !over ? null
-                : (reason == Game.EndReason.QUIT || reason == Game.EndReason.SURRENDER) && winner != null ? winner.uuid()
+                : (reason == Game.EndReason.QUIT || reason == Game.EndReason.SURRENDER
+                        || reason == Game.EndReason.ADMIN_WIN) && winner != null ? winner.uuid()
                 : broken ? null : match.leader() == 1 ? game.one().uuid() : match.leader() == 2 ? game.two().uuid() : null;
 
         // Conspicuous rounds do not count yet - an admin decides (review.*).
@@ -1012,6 +1034,50 @@ public final class GameManager {
         end(game, Game.Result.ABORTED, Game.EndReason.ADMIN, null, admin);
     }
 
+    /**
+     * An admin pauses a fight: both are frozen, nobody takes damage and the time stands until an admin resumes it.
+     *
+     * @return null, or a message key why not
+     */
+    public String adminPause(Game game, String admin) {
+        if (game.state() != Game.State.RUNNING) {
+            return "admin-pause-not-running";
+        }
+        game.adminPause(admin);
+        plugin.getLogger().info(admin + " paused round #" + game.id() + ".");
+        forEachOnline(game, p -> p.showTitle(Title.title(messages().get("admin-pause-title"),
+                messages().get("admin-pause-subtitle", tag("admin", admin)),
+                Title.Times.times(Duration.ofMillis(200), Duration.ofSeconds(3), Duration.ofMillis(500)))));
+        showBars(game);
+        plugin.admin().webEvent("game", String.valueOf(game.id()), false);
+        return null;
+    }
+
+    /** Ends an admin pause: a short countdown, then the fight goes on. @return null, or a message key why not */
+    public String adminResume(Game game, String admin) {
+        if (game.state() != Game.State.PAUSED || game.adminPause() == null) {
+            return "admin-resume-not-paused";
+        }
+        game.resume(Math.max(3, settings().countdown()));
+        plugin.getLogger().info(admin + " resumed round #" + game.id() + ".");
+        showCountdown(game);
+        plugin.admin().webEvent("game", String.valueOf(game.id()), false);
+        return null;
+    }
+
+    /**
+     * An admin declares the winner (e.g. the other one used a bug): the match is over and the round counts as a win -
+     * without kill or death.
+     */
+    public void adminWin(Game game, Fighter winner, String admin) {
+        if (game.state() == Game.State.ENDING) {
+            return;
+        }
+        game.match().forfeit(game.opponent(winner.uuid()).uuid());
+        plugin.getLogger().info(admin + " declared " + winner.name() + " the winner of round #" + game.id() + ".");
+        end(game, Game.Result.WIN, Game.EndReason.ADMIN_WIN, winner, admin);
+    }
+
     /** Server stops: every round ends now and is written before the database closes. */
     public void endAll() {
         for (Game game : List.copyOf(games.values())) {
@@ -1019,6 +1085,16 @@ public final class GameManager {
                 close(game);
             } else {
                 end(game, Game.Result.ABORTED, Game.EndReason.SHUTDOWN, null, null);
+            }
+        }
+    }
+
+    /** Both fighters that are online, without switching the language (e.g. to collect viewers). */
+    private static void forEachFighter(Game game, java.util.function.Consumer<Player> action) {
+        for (Fighter f : List.of(game.one(), game.two())) {
+            Player player = Bukkit.getPlayer(f.uuid());
+            if (player != null) {
+                action.accept(player);
             }
         }
     }

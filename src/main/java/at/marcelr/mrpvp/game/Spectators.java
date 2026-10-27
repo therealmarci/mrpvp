@@ -2,6 +2,7 @@ package at.marcelr.mrpvp.game;
 
 import at.marcelr.mrpvp.MRPvp;
 import at.marcelr.mrpvp.snapshot.Snapshot;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -56,6 +57,15 @@ public final class Spectators implements Listener {
         player.teleport(view(game));
         plugin.messages().send(player, "spectate-started", tag("id", game.id()), tag("one", game.one().name()),
                 tag("two", game.two().name()));
+    }
+
+    /** Like {@link #watch}, but right next to one of the fighters (null = the usual view from above). */
+    public void watchAt(Player player, Game game, Fighter at) {
+        watch(player, game);
+        Player target = at == null ? null : Bukkit.getPlayer(at.uuid());
+        if (target != null && Long.valueOf(game.id()).equals(watching.get(player.getUniqueId()))) {
+            player.teleport(target.getLocation());
+        }
     }
 
     /** Above the middle between both spawns, looking down a bit. */

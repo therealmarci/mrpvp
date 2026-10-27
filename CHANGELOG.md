@@ -9,6 +9,24 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+## [0.3.0] - 2026-10-27
+
+### Neu
+- **Duelle live steuern:** Ein Klick auf ein Duell in Admin-Menü → Live öffnet seine Steuerung: zuschauen (über der Arena oder direkt bei einem der Spieler), **pausieren/fortsetzen** (beide eingefroren, kein Schaden, die Zeit steht - neue Permission `mrpvp.admin.pause`), **Sieger bestimmen** (das Duell endet, der Spieler gewinnt das Match, die Runde zählt als Sieg ohne Kill/Tod) und abbrechen (`mrpvp.admin.stop`). Bisher: Klick = zuschauen, Shift-Klick = abbrechen.
+- **Runden nachträglich aus der Wertung nehmen:** In den Details einer Runde nimmt `mrpvp.admin.review` eine gewertete Runde aus der Statistik (mit optionalem Grund) und kann sie später wieder werten - auch verworfene Runden aus der Prüfung. Die Statistik beider Spieler wird neu berechnet; Konsole und MRadmins Discord-Admin-Log bekommen einen Eintrag. Geht auch in der MRadmin-Weboberfläche.
+- **Alle Server auf die Sprache des Spielers:** Bestehende Configs mit fest eingestellter Sprache (`language: de`/`en`) werden auf `language: auto` umgestellt - jeder Spieler bekommt die Sprache seines Minecraft-Clients, wie bei MRsleep, MRchunks und MRadmin.
+- **Server-Sprache (`server-language`):** Texte ohne einzelnen Empfänger wie die Discord-Meldungen zu auffälligen Runden (über MRadmin) kommen in dieser Sprache (Standard `en`).
+- **Automatische Umstellung:** Bestehende Configs bekommen `language: auto`; eine bisher fest eingestellte Sprache wird zur `server-language`, damit z.B. die Discord-Logs eines deutschen Servers deutsch bleiben.
+- **Kit-Namen und -Beschreibungen pro Sprache:** In `kits.yml` geht jetzt `name: { de: "...", en: "..." }` (ebenso `description`), ein einzelner Text gilt weiter für alle Sprachen. Die Standard-Kits sind deutsch und englisch - bestehende Standard-Kits mit den unveränderten deutschen Texten werden beim Start automatisch ergänzt, eigene Texte bleiben. Der Kit-Editor ändert Name und Beschreibung in der Sprache des Admins, die anderen Sprachen bleiben erhalten.
+- **Schnellauswahl für Duell-Sperren (`gui.ban-durations`):** Drei Dauern (Standard `1d`, `7d`, `permanent`), die auf der Spielerseite der MRadmin-Weboberfläche als Knöpfe erscheinen - wie bei MRsleep und MRchunks. Bestehende Configs bekommen die Einstellung automatisch (config-version 8).
+
+### Behoben & geändert
+- **Anti-Farming zu empfindlich:** Schon zweimal fünf Runden unter Freunden galten als Statistik-Farmen. Jetzt ist eine Serie nur noch verdächtig, wenn sie **einseitig** ist: mindestens 8 Runden desselben Paars in 60 Minuten, derselbe Spieler gewinnt mindestens 90 % und der andere macht höchstens 20 % des Schadens (`monitor.farming.rounds`, `.minutes`, `.winner-percent`, `.max-loser-damage-percent`; ersetzt `monitor.same-pair-per-hour`). Die Tagesgrenze pro Gegner (`stats.max-counted-per-opponent-per-day`) steht jetzt auf 50 statt 5 - bestehende Configs mit dem alten Standard werden umgestellt.
+- **Mehr Arenen bereit als im Vorrat („3 von 1 bereit“):** Nach jeder Runde wurde die Arena wieder aufgebaut und zurück in den Vorrat gelegt, auch wenn der Vorrat (`pool` der Arena) schon voll war - nach mehreren gleichzeitigen Runden waren so mehr Arenen bereit als eingestellt. Jetzt wird eine Arena nach der Runde nur aufgebaut, solange der Vorrat nicht voll ist, sonst abgeräumt; ein vorhandener Überschuss wird beim Start abgebaut.
+- **Update-Hinweis bei `/mrpvp version` doppelt:** Fand die Abfrage eine neue Version, kam zuerst der Admin-Hinweis „Für MRpvp gibt es ein Update“ und direkt danach „Neue Version verfügbar“. Jetzt kommt nur noch die Antwort auf den Befehl. Die Download-Links führen auf die Website (https://mrtechnology.marcelr.at/download/mrpvp/).
+- **Config und plugin.yml auf Englisch:** Alle Kommentare in der `config.yml` und die Beschreibungen der Befehle und Permissions in der `plugin.yml` sind jetzt englisch. Bestehende Configs bekommen die neuen Kommentare beim nächsten Start automatisch (config-version 7, Sicherung als `config.v<alt>.backup.yml`), alle Einstellungen bleiben erhalten.
+- **kits.yml:** Die Erklärung oben in der Datei ist jetzt englisch und aktuell (Kit-Editor und „Standard wiederherstellen“ gibt es bereits). Kit-Namen und -Beschreibungen sind unverändert.
+
 ## [0.2.0] - 2026-10-27
 
 ### Geändert – Lizenz, Doku, Website

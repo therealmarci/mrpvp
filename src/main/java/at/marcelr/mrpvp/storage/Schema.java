@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 final class Schema {
 
     /** Version of the tables (meta row "schema"). */
-    static final int VERSION = 5;
+    static final int VERSION = 6;
 
     private Schema() {
     }
@@ -54,6 +54,9 @@ final class Schema {
             }
             if (version < 5) {
                 createReview(c);
+            }
+            if (version < 6) {
+                createReviewNote(c);
             }
             try (Statement st = c.createStatement()) {
                 st.execute("INSERT OR REPLACE INTO meta (name, value) VALUES ('schema', '" + VERSION + "')");
@@ -170,6 +173,16 @@ final class Schema {
             st.execute("CREATE TABLE invite_prefs ("
                     + "uuid TEXT PRIMARY KEY, kit TEXT, arena TEXT, wins INTEGER NOT NULL, minutes INTEGER NOT NULL, "
                     + "hunger INTEGER NOT NULL, regen INTEGER NOT NULL)");
+        }
+    }
+
+    /**
+     * 6: admins take counted rounds out of the statistics afterwards (games.review = REMOVED) or count them again -
+     * games.review_note = their optional reason.
+     */
+    private static void createReviewNote(Connection c) throws SQLException {
+        try (Statement st = c.createStatement()) {
+            st.execute("ALTER TABLE games ADD COLUMN review_note TEXT");
         }
     }
 
