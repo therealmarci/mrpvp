@@ -1,35 +1,35 @@
 ﻿# ==============================================================================
 #   MRpvp - Kits
 # ==============================================================================
-#   Was Spieler im Duell bekommen. Nach Änderungen: /mrpvp reload
-#   (Später auch im Spiel über den Kit-Editor im Admin-Menü bearbeitbar.)
+#   What players get in a duel. After changes: /mrpvp reload
+#   Easier: edit kits in game with the kit editor (admin menu → Kits) - it writes this file.
 #
-#   Pro Kit:
-#     name         Anzeigename (MiniMessage)
-#     icon         Item im Auswahl-Menü
-#     description  Zeilen unter dem Namen im Menü
-#     permission   leer = jeder mit mrpvp.use, sonst z.B. "mrpvp.kit.netherite"
-#     items        Slot -> Item
-#     rules        (optional) was das Kit an der Runde ändert:
-#                    damage: false     Treffer machen keinen Schaden, nur Rückstoß (Sumo, Boxing)
-#                    hits-to-win: 100  wer zuerst so oft trifft, gewinnt (Boxing)
-#                    regen: false      natürliche Regeneration fest an/aus (sonst wählen die Spieler)
-#                    hunger: false     Hunger fest an/aus (sonst wählen die Spieler)
-#                    arenas: [sumo]    nur in diesen Arenen
-#                    build: true       braucht eine Arena, in der gebaut werden darf
+#   Per kit:
+#     name         display name (MiniMessage)
+#     icon         item in the selection menu
+#     description  lines below the name in the menu
+#     permission   empty = everyone with mrpvp.use, otherwise e.g. "mrpvp.kit.netherite"
+#     items        slot -> item
+#     rules        (optional) what the kit changes about the round:
+#                    damage: false     hits deal no damage, only knockback (Sumo, Boxing)
+#                    hits-to-win: 100  whoever lands this many hits first wins (Boxing)
+#                    regen: false      natural regeneration fixed on/off (otherwise the players choose)
+#                    hunger: false     hunger fixed on/off (otherwise the players choose)
+#                    arenas: [sumo]    only in these arenas
+#                    build: true       needs an arena where building is allowed
 #
-#   Slots: 0-8 = Hotbar, 9-35 = Inventar, helmet, chestplate, leggings, boots, offhand
+#   Slots: 0-8 = hotbar, 9-35 = inventory, helmet, chestplate, leggings, boots, offhand
 #
 #   Item:
-#     type          Material (https://jd.papermc.io/paper/org/bukkit/Material.html)
-#     amount        Anzahl (Standard 1)
-#     enchantments  Verzauberung: Stufe, z.B. { sharpness: 2, unbreaking: 3 }
-#     name          eigener Name (MiniMessage), optional
-#     unbreakable   true = geht nicht kaputt
-#     potion        bei Tränken / Pfeilen: Trank-Typ, z.B. strong_healing, swiftness, long_fire_resistance
-#     data          (vom Kit-Editor) komplettes Item als Base64 - ersetzt alle Angaben oben
+#     type          material (https://jd.papermc.io/paper/org/bukkit/Material.html)
+#     amount        amount (default 1)
+#     enchantments  enchantment: level, e.g. { sharpness: 2, unbreaking: 3 }
+#     name          own name (MiniMessage), optional
+#     unbreakable   true = never breaks
+#     potion        for potions / arrows: potion type, e.g. strong_healing, swiftness, long_fire_resistance
+#     data          (from the kit editor) the complete item as Base64 - replaces everything above
 #
-#   Gelöschte Standard-Kits kommen nicht von selbst zurück (später: "Standard wiederherstellen" im Admin-Menü).
+#   Deleted default kits do not come back by themselves: admin menu → "Restore defaults".
 # ==============================================================================
 
 kits:
