@@ -9,6 +9,25 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+## [0.2.0] - 2026-10-27
+
+### Geändert – Lizenz, Doku, Website
+- **MRtechnology Lizenz 1.0:** Eine einheitliche Lizenz für alle MRtechnology-Projekte. Ausdrücklich erlaubt ist jetzt auch die gewerbliche Nutzung, Weiterveröffentlichen und Verkaufen bleiben verboten, die Nutzung erfolgt auf eigenes Risiko.
+- **README überarbeitet:** Schnellstart, Auf einen Blick, Häufige Fragen, Kurzlinks zur Website (Download, Anleitung, Fehler melden).
+- **Links zur Website** [mrtechnology.marcelr.at](https://mrtechnology.marcelr.at): Update-Hinweise in Konsole und Spiel führen zur Download-Seite, `/mrpvp version` zeigt „Website | GitHub“ (statt des Modrinth-Links), `website` in der plugin.yml zeigt auf die Anleitung. Der Text `version-links` wird in den mitgelieferten Sprachdateien automatisch erneuert.
+
+### Geändert
+- **MRadmin über die Modul-API:** Das Plugin meldet sich als Modul bei MRadmin an (statt der alten
+  `MRadminHook`-Klasse). Admin-Modus, Live-Updates der Duell-Seiten und Admin-Log laufen jetzt ebenfalls über die Modul-API. Braucht MRadmin mit Modul-API; ohne MRadmin ändert sich nichts.
+- **Verbindung zu anderen MR-Plugins nur noch über MRadmin:** Duelle, Arena-Welt und MRtoolbars Gürtel teilt
+  MRpvp über MRadmin mit (vorher eigene Schnittstellen `MRpvpApi` bzw. zu `MRtoolbarApi`). Ohne MRadmin bekommen
+  MRsleep, MRtoolbar und MRchunks von Duellen nichts mehr mit, und die Gürtel werden nicht mitgesichert.
+  Neu: Hinweis „Runden warten auf eine Prüfung“ auf der Startseite der Weboberfläche.
+
+### Neu
+- **NPCs sind keine Gegner:** Dummy-Spieler von MRchunks und andere NPCs (Metadata `NPC`, z.B. Citizens) lassen sich
+  nicht zum Duell einladen und erscheinen nicht in Spielerlisten und der Tab-Vervollständigung.
+
 ## [0.1.0] - 2026-10-23
 
 Erste Testversion.

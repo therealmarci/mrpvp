@@ -9,6 +9,7 @@ import at.marcelr.mrpvp.gui.AdminMenu;
 import at.marcelr.mrpvp.gui.DuelSetupMenu;
 import at.marcelr.mrpvp.gui.MainMenu;
 import at.marcelr.mrpvp.gui.ReviewsMenu;
+import at.marcelr.mrpvp.util.Npcs;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -123,7 +124,7 @@ public final class DuelCommand implements TabExecutor {
         }
         String start = args[0].toLowerCase(Locale.ROOT);
         return Bukkit.getOnlinePlayers().stream()
-                .filter(p -> !p.equals(player) && player.canSee(p))
+                .filter(p -> !p.equals(player) && !Npcs.is(p) && player.canSee(p))
                 .map(Player::getName)
                 .filter(name -> name.toLowerCase(Locale.ROOT).startsWith(start))
                 .toList();

@@ -10,7 +10,7 @@
 # ==============================================================================
 
 # Nicht ändern - damit erkennt das Plugin bei Updates, welche Texte erneuert werden müssen.
-lang-version: 5
+lang-version: 6
 
 prefix: "<dark_gray>[<red>MRpvp</red>]</dark_gray> "
 no-permission: "<prefix><red>Dazu hast du keine Berechtigung."
@@ -656,7 +656,7 @@ version-latest: "<prefix><green>Du nutzt die aktuellste Version."
 version-outdated: "<prefix><gold>Neue Version verfügbar: <white><latest></white> <gray>(installiert: <current>) <download>"
 version-unknown: "<prefix><gray>Update-Status unbekannt: <reason>"
 version-checking: "<prefix><gray>Suche nach Updates ..."
-version-links: "<prefix><modrinth> <dark_gray>| <github>"
+version-links: "<prefix><website> <dark_gray>| <github>"
 update-download-label: "<aqua><u>[Download]</u></aqua>"
 update-join-notify: "<prefix><gold>Für MRpvp gibt es ein Update: <white><latest></white> <gray>(installiert: <current>) <download>"
 update-reason-disabled: "Update-Check ist deaktiviert"
@@ -665,6 +665,8 @@ update-reason-no-release: "Keine veröffentlichte Version gefunden"
 update-reason-no-repository: "Kein GitHub-Repository hinterlegt"
 
 # ------------------------------------------------------------------ MRadmin & Überwachung
+# Hinweis auf der Startseite der MRadmin-Weboberfläche (reiner Text). Platzhalter: <count>
+web-alert-reviews: "<count> Duell-Runde(n) warten auf eine Prüfung"
 mradmin-summary:
   - "<gray>Laufende Duelle: <white><games>"
   - "<gray>Belegte Arenen: <white><arenas>"

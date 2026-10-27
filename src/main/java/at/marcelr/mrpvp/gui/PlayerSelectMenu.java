@@ -2,6 +2,7 @@ package at.marcelr.mrpvp.gui;
 
 import at.marcelr.mrpvp.MRPvp;
 import at.marcelr.mrpvp.game.GameManager;
+import at.marcelr.mrpvp.util.Npcs;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ public final class PlayerSelectMenu extends Menu {
     protected void draw() {
         GameManager games = plugin.games();
         List<Player> players = Bukkit.getOnlinePlayers().stream()
-                .filter(p -> !p.equals(viewer) && p.hasPermission(GameManager.PERM_USE) && viewer.canSee(p))
+                .filter(p -> !p.equals(viewer) && !Npcs.is(p) && p.hasPermission(GameManager.PERM_USE) && viewer.canSee(p))
                 .sorted(Comparator.comparing(Player::getName, String.CASE_INSENSITIVE_ORDER))
                 .map(p -> (Player) p).toList();
         int pages = Math.max(1, (players.size() + PER_PAGE - 1) / PER_PAGE);

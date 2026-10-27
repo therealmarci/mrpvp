@@ -1,7 +1,6 @@
 package at.marcelr.mrpvp;
 
-import at.marcelr.mrpvp.api.MRadminBridge;
-import at.marcelr.mrpvp.api.MRtoolbarBelts;
+import at.marcelr.mrpvp.api.MRadminLink;
 import at.marcelr.mrpvp.arena.ArenaProtection;
 import at.marcelr.mrpvp.arena.BuiltinArenas;
 import at.marcelr.mrpvp.arena.DefaultArena;
@@ -49,12 +48,14 @@ public final class MRPvp extends JavaPlugin implements Listener {
     private Settings settings;
     // lang-version 2: invitations show the arena; 3: and the duel options; 4: chat buttons, review note, match totals;
     // 5: boss bar separator.
-    private final Messages messages = new Messages(5, Map.of(
+    private final Messages messages = new Messages(6, Map.of(
             2, Set.of("invite-sent", "invite-received", "gui-invites-lore"),
             3, Set.of("invite-sent", "invite-received", "gui-invites-lore", "game-starting", "gui-kits-click"),
             4, Set.of("invite-received", "invite-view-button", "end-summary-won", "end-summary-lost", "end-summary-draw",
                     "match-won", "match-lost", "match-draw", "mradmin-summary"),
-            5, Set.of("bar-part-round")));
+            5, Set.of("bar-part-round"),
+            // 6: "Website | GitHub" in /mrpvp version.
+            6, Set.of("version-links")));
     private final StateKeeper stateKeeper = new StateKeeper(this);
     private final ArenaWorld arenaWorld = new ArenaWorld(this);
     private final KitManager kits = new KitManager(this);
@@ -65,8 +66,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
     private final EditorManager editor = new EditorManager(this);
     private final Spectators spectators = new Spectators(this);
     private final Bans bans = new Bans(this);
-    private final MRtoolbarBelts toolbar = new MRtoolbarBelts(getLogger());
-    private final MRadminBridge admin = new MRadminBridge(getLogger());
+    private final MRadminLink admin = new MRadminLink(this);
     private final Monitor monitor = new Monitor(this);
     private final Reviews reviews = new Reviews(this);
     private Database database;
@@ -124,6 +124,9 @@ public final class MRPvp extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ProtectionListener(this), this);
         getServer().getPluginManager().registerEvents(menuListener, this);
         getServer().getPluginManager().registerEvents(this, this);
+        // Optional: MRadmin (module API) - dashboard, player menu, server health, web interface, admin mode.
+        getServer().getPluginManager().registerEvents(admin, this);
+        admin.connect();
         register("mrpvp", new MRPvpCommand(this));
         register("duel", new DuelCommand(this));
     }
@@ -245,7 +248,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
         return spectators;
     }
 
-    public MRadminBridge admin() {
+    public MRadminLink admin() {
         return admin;
     }
 
@@ -255,10 +258,6 @@ public final class MRPvp extends JavaPlugin implements Listener {
 
     public Monitor monitor() {
         return monitor;
-    }
-
-    public MRtoolbarBelts toolbar() {
-        return toolbar;
     }
 
     public Bans bans() {

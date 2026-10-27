@@ -11,6 +11,7 @@ import at.marcelr.mrpvp.snapshot.Snapshot;
 import at.marcelr.mrpvp.snapshot.SnapshotStore;
 import at.marcelr.mrpvp.stats.StatsRules;
 import at.marcelr.mrpvp.stats.StatsStore;
+import at.marcelr.mrpvp.util.Npcs;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -152,7 +153,7 @@ public final class GameManager {
             m.send(from, "invite-error-banned", tag("player", to.getName()));
             return false;
         }
-        if (!to.isOnline() || !to.hasPermission(PERM_USE)) {
+        if (!to.isOnline() || Npcs.is(to) || !to.hasPermission(PERM_USE)) {
             m.send(from, "invite-error-offline", tag("player", to.getName()));
             return false;
         }
