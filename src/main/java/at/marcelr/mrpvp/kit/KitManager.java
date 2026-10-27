@@ -107,9 +107,47 @@ public final class KitManager {
             plugin.getLogger().warning("kits.yml " + id + ": no items - kit skipped.");
             return null;
         }
-        return new Kit(id, k.getString("name", id), icon == null || !icon.isItem() ? Material.IRON_SWORD : icon,
-                k.getStringList("description"), k.getString("permission", "").trim(), rules,
-                items);
+        return new Kit(id, names(k, id), icon == null || !icon.isItem() ? Material.IRON_SWORD : icon,
+                descriptions(k), k.getString("permission", "").trim(), rules, items);
+    }
+
+    /** name: "..." (every language) or name: { de: "...", en: "..." }. */
+    private static Map<String, String> names(ConfigurationSection k, String id) {
+        Map<String, String> names = new LinkedHashMap<>();
+        ConfigurationSection perLanguage = k.getConfigurationSection("name");
+        if (perLanguage != null) {
+            for (String language : perLanguage.getKeys(false)) {
+                names.put(language.toLowerCase(Locale.ROOT), perLanguage.getString(language, id));
+            }
+        } else {
+            names.put(Kit.ALL, k.getString("name", id));
+        }
+        return names;
+    }
+
+    /** description: [lines] (every language) or description: { de: [lines], en: [lines] }. */
+    private static Map<String, List<String>> descriptions(ConfigurationSection k) {
+        Map<String, List<String>> descriptions = new LinkedHashMap<>();
+        ConfigurationSection perLanguage = k.getConfigurationSection("description");
+        if (perLanguage != null) {
+            for (String language : perLanguage.getKeys(false)) {
+                descriptions.put(language.toLowerCase(Locale.ROOT), List.copyOf(perLanguage.getStringList(language)));
+            }
+        } else {
+            descriptions.put(Kit.ALL, List.copyOf(k.getStringList("description")));
+        }
+        return descriptions;
+    }
+
+    /** Writes a value per language - or a plain value if it is the same for every language. */
+    private static void setLocalized(YamlConfiguration yaml, String path, Map<String, ?> values) {
+        if (values.size() == 1 && values.containsKey(Kit.ALL)) {
+            yaml.set(path, values.get(Kit.ALL));
+            return;
+        }
+        for (Map.Entry<String, ?> entry : values.entrySet()) {
+            yaml.set(path + "." + (entry.getKey().isEmpty() ? "en" : entry.getKey()), entry.getValue());
+        }
     }
 
     private static KitRules rules(ConfigurationSection r) {
@@ -209,9 +247,9 @@ public final class KitManager {
         YamlConfiguration yaml = readFile(file);
         String path = "kits." + kit.id();
         yaml.set(path, null);
-        yaml.set(path + ".name", kit.name());
+        setLocalized(yaml, path + ".name", kit.names());
         yaml.set(path + ".icon", kit.icon().name());
-        yaml.set(path + ".description", kit.description());
+        setLocalized(yaml, path + ".description", kit.descriptions());
         yaml.set(path + ".permission", kit.permission());
         writeRules(yaml, path, kit.rules());
         for (Map.Entry<KitSlot, ItemStack> entry : kit.items().entrySet()) {
@@ -291,6 +329,53 @@ public final class KitManager {
             at.marcelr.mrpvp.arena.DefaultArena.saveData(plugin, data);
         }
         return added;
+    }
+
+    /**
+     * Default kits from versions with German-only texts get the texts in all bundled languages - only if their name
+     * and description are still exactly the old German ones, so an admin's own texts stay.
+     *
+     * @return ids of the kits that got translated texts
+     */
+    public List<String> translateDefaults() throws IOException {
+        File file = new File(plugin.getDataFolder(), "kits.yml");
+        if (!file.exists()) {
+            return List.of();
+        }
+        YamlConfiguration yaml = readFile(file);
+        YamlConfiguration bundled = new YamlConfiguration();
+        try (var in = plugin.getResource("kits.yml")) {
+            if (in == null) {
+                return List.of();
+            }
+            bundled.loadFromString(ConfigUpdater.stripBom(new String(in.readAllBytes(), StandardCharsets.UTF_8)));
+        } catch (InvalidConfigurationException e) {
+            throw new IOException(e.getMessage(), e);
+        }
+        List<String> translated = new ArrayList<>();
+        ConfigurationSection defaults = bundled.getConfigurationSection("kits");
+        if (defaults == null) {
+            return translated;
+        }
+        for (String id : defaults.getKeys(false)) {
+            String path = "kits." + id;
+            boolean plainName = yaml.isString(path + ".name");
+            if (!plainName || !yaml.contains(path)) {
+                continue; // missing, or already per language
+            }
+            String germanName = defaults.getString(id + ".name.de");
+            List<String> germanDescription = defaults.getStringList(id + ".description.de");
+            if (germanName != null && germanName.equals(yaml.getString(path + ".name"))
+                    && germanDescription.equals(yaml.getStringList(path + ".description"))) {
+                yaml.set(path + ".name", defaults.getConfigurationSection(id + ".name"));
+                yaml.set(path + ".description", defaults.getConfigurationSection(id + ".description"));
+                translated.add(id);
+            }
+        }
+        if (!translated.isEmpty()) {
+            write(file, yaml);
+        }
+        return translated;
     }
 
     private static YamlConfiguration readFile(File file) throws IOException {

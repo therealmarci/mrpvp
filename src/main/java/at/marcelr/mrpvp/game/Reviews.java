@@ -73,8 +73,8 @@ public final class Reviews {
         plugin.getLogger().info("Round #" + id + " (" + one + " vs " + two + ") waits for a review: " + reasons + ".");
         plugin.admin().webEvent("review", String.valueOf(id), false);
         if (plugin.settings().monitor().discord()) {
-            plugin.admin().adminLog(plugin.messages().plain("review-discord", "id", id, "one", one, "two", two,
-                    "flags", flagNames(flags)));
+            plugin.admin().adminLog(plugin.messages().server(() -> plugin.messages().plain("review-discord", "id", id,
+                    "one", one, "two", two, "flags", flagNames(flags))));
         }
         if (!plugin.settings().review().notifyAdmins()) {
             return;

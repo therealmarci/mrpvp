@@ -100,6 +100,15 @@ public final class MRPvp extends JavaPlugin implements Listener {
         } catch (IOException e) {
             getLogger().warning("Could not add the new default kits: " + e.getMessage());
         }
+        try {
+            List<String> translated = kits.translateDefaults();
+            if (!translated.isEmpty()) {
+                getLogger().info("Default kits " + translated + " now have their names in all languages.");
+                kits.load();
+            }
+        } catch (IOException e) {
+            getLogger().warning("Could not translate the default kits: " + e.getMessage());
+        }
         templates.load();
         DefaultArena.installOnce(this);
         slots.start();
@@ -172,7 +181,8 @@ public final class MRPvp extends JavaPlugin implements Listener {
 
     private void loadConfiguration() {
         config = ConfigUpdater.load(this);
-        messages.load(this, config.getString("language", "auto"), config.getString("fallback-language", "en"));
+        messages.load(this, config.getString("language", "auto"), config.getString("fallback-language", "en"),
+                config.getString("server-language", "en"));
         settings = Settings.from(config, getLogger());
     }
 

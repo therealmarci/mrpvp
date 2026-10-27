@@ -9,6 +9,12 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+### Neu
+- **Alle Server auf die Sprache des Spielers:** Bestehende Configs mit fest eingestellter Sprache (`language: de`/`en`) werden auf `language: auto` umgestellt - jeder Spieler bekommt die Sprache seines Minecraft-Clients, wie bei MRsleep, MRchunks und MRadmin.
+- **Server-Sprache (`server-language`):** Texte ohne einzelnen Empfänger wie die Discord-Meldungen zu auffälligen Runden (über MRadmin) kommen in dieser Sprache (Standard `en`).
+- **Automatische Umstellung:** Bestehende Configs bekommen `language: auto`; eine bisher fest eingestellte Sprache wird zur `server-language`, damit z.B. die Discord-Logs eines deutschen Servers deutsch bleiben.
+- **Kit-Namen und -Beschreibungen pro Sprache:** In `kits.yml` geht jetzt `name: { de: "...", en: "..." }` (ebenso `description`), ein einzelner Text gilt weiter für alle Sprachen. Die Standard-Kits sind deutsch und englisch - bestehende Standard-Kits mit den unveränderten deutschen Texten werden beim Start automatisch ergänzt, eigene Texte bleiben. Der Kit-Editor ändert Name und Beschreibung in der Sprache des Admins, die anderen Sprachen bleiben erhalten.
+
 ### Behoben & geändert
 - **Config und plugin.yml auf Englisch:** Alle Kommentare in der `config.yml` und die Beschreibungen der Befehle und Permissions in der `plugin.yml` sind jetzt englisch. Bestehende Configs bekommen die neuen Kommentare beim nächsten Start automatisch (config-version 7, Sicherung als `config.v<alt>.backup.yml`), alle Einstellungen bleiben erhalten.
 - **kits.yml:** Die Erklärung oben in der Datei ist jetzt englisch und aktuell (Kit-Editor und „Standard wiederherstellen“ gibt es bereits). Kit-Namen und -Beschreibungen sind unverändert.

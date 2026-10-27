@@ -4,6 +4,7 @@ import at.marcelr.mrpvp.util.LanguageChoice;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.World;
@@ -24,6 +25,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
 
@@ -52,14 +54,18 @@ public final class Messages {
         this.langVersion = langVersion;
         this.changedTexts = new TreeMap<>(changedTexts);
     }
-    /** Texts of the recipient whose message is being built right now (see {@link #as}), or null. */
-    private static final ThreadLocal<YamlConfiguration> CURRENT = new ThreadLocal<>();
+    /** Language code of the recipient whose message is being built right now (see {@link #as}), or null. */
+    private static final ThreadLocal<String> CURRENT = new ThreadLocal<>();
+    /** Language outside of {@link #as}: the fixed or the server language (static for {@link #language()}). */
+    private static volatile String defaultCode = BUNDLED.getFirst();
     /** All language files of the lang folder by code ("de", "en", "fr" ...). */
     private volatile Map<String, YamlConfiguration> languages = Map.of();
     /** Code of the fixed language, or null if every player gets the language of their game. */
     private volatile String fixed;
     /** Language for players whose game language has no file. */
     private volatile String fallbackCode = BUNDLED.getFirst();
+    /** Language of texts without a player recipient (Discord, MRadmin ...). */
+    private volatile String serverCode = BUNDLED.getFirst();
     /** The English texts - the console is always English, whatever language players get. */
     private volatile YamlConfiguration english = new YamlConfiguration();
 
@@ -69,8 +75,9 @@ public final class Messages {
      * @param setting  "auto" = every player gets the language of their game (Minecraft setting), otherwise a fixed
      *                 language for everyone ("de", "en", "deutsch" ...)
      * @param fallback language for players whose game language has no file
+     * @param server   language of texts without a player recipient (Discord, MRadmin ...)
      */
-    public void load(JavaPlugin plugin, String setting, String fallback) {
+    public void load(JavaPlugin plugin, String setting, String fallback, String server) {
         File dir = new File(plugin.getDataFolder(), "lang");
         for (String code : BUNDLED) {
             if (!new File(dir, code + ".yml").exists()) {
@@ -90,8 +97,19 @@ public final class Messages {
         english = loaded.get("en");
 
         fallbackCode = LanguageChoice.resolve(loaded.keySet(), fallback, BUNDLED.getFirst());
+        serverCode = LanguageChoice.resolve(loaded.keySet(), server, fallbackCode);
         boolean auto = setting == null || setting.isBlank() || setting.trim().equalsIgnoreCase("auto");
         fixed = auto ? null : LanguageChoice.resolve(loaded.keySet(), setting, fallbackCode);
+        defaultCode = fixed != null ? fixed : serverCode;
+    }
+
+    /**
+     * The language texts are built in right now ("de", "en" ...): the recipient's one inside {@link #as}, otherwise
+     * the fixed or server language. For texts that are not in the language files, e.g. kit names in kits.yml.
+     */
+    public static String language() {
+        String current = CURRENT.get();
+        return current != null ? current : defaultCode;
     }
 
     /** Reads one language file and brings it up to date with the bundled defaults (saved if something changed). */
@@ -168,13 +186,9 @@ public final class Messages {
         return config;
     }
 
-    /** Texts for the current recipient (see {@link #as}); outside of that the fixed or fallback language. */
+    /** Texts for the current recipient (see {@link #as}); outside of that the fixed or the server language. */
     private YamlConfiguration texts() {
-        YamlConfiguration current = CURRENT.get();
-        if (current != null) {
-            return current;
-        }
-        YamlConfiguration texts = languages.get(fixed != null ? fixed : fallbackCode);
+        YamlConfiguration texts = languages.get(language());
         return texts != null ? texts : english;
     }
 
@@ -184,11 +198,13 @@ public final class Messages {
      * message - so menus, item names and placeholders are all in the same language.
      */
     public <T> T as(CommandSender recipient, Supplier<T> action) {
-        YamlConfiguration target = recipient instanceof Player player
-                ? languages.getOrDefault(languageOf(player), english)
-                : english;
-        YamlConfiguration previous = CURRENT.get();
-        CURRENT.set(target);
+        return in(recipient instanceof Player player ? languageOf(player) : "en", action);
+    }
+
+    /** Runs {@code action} with the texts of the language {@code code}. */
+    private static <T> T in(String code, Supplier<T> action) {
+        String previous = CURRENT.get();
+        CURRENT.set(code);
         try {
             return action.get();
         } finally {
@@ -206,6 +222,21 @@ public final class Messages {
             action.run();
             return null;
         });
+    }
+
+    /**
+     * Runs {@code action} with the server language - for texts without a player recipient (Discord, MRadmin ...)
+     * that are built while a command or menu of some player is running.
+     */
+    public <T> T server(Supplier<T> action) {
+        return in(fixed != null ? fixed : serverCode, action);
+    }
+
+    /** Runs {@code action} once per recipient, each time in the recipient's language (see {@link #as}). */
+    public void each(Iterable<? extends CommandSender> recipients, Consumer<CommandSender> action) {
+        for (CommandSender recipient : recipients) {
+            run(recipient, () -> action.accept(recipient));
+        }
     }
 
     /** @return the raw message, or null if it is configured as empty */
@@ -297,14 +328,9 @@ public final class Messages {
         });
     }
 
+    /** Sends the message to everyone in the world, each player in their own language. */
     public void broadcast(World world, String key, TagResolver... resolvers) {
-        if (raw(key) == null) {
-            return;
-        }
-        Component message = get(key, resolvers);
-        for (Player player : world.getPlayers()) {
-            player.sendMessage(message);
-        }
+        each(world.getPlayers(), player -> send(player, key, resolvers));
     }
 
     /** Date and time in the format of the language file (date-format). */
@@ -341,5 +367,17 @@ public final class Messages {
     /** Placeholder with a formatted component as value. */
     public static TagResolver tag(String name, Component value) {
         return Placeholder.component(name, value);
+    }
+
+    /**
+     * Placeholder whose value (text or component) is only built when the message is built - so a placeholder made
+     * for one player and sent to another is still in the recipient's language.
+     */
+    public static TagResolver lazy(String name, Supplier<?> value) {
+        return TagResolver.resolver(name, (arguments, context) -> {
+            Object result = value.get();
+            return Tag.selfClosingInserting(result instanceof Component component ? component
+                    : Component.text(String.valueOf(result)));
+        });
     }
 }

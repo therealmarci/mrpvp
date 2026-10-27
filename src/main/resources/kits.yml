@@ -5,9 +5,11 @@
 #   Easier: edit kits in game with the kit editor (admin menu → Kits) - it writes this file.
 #
 #   Per kit:
-#     name         display name (MiniMessage)
+#     name         display name (MiniMessage) - one text for every language, or one per language:
+#                    name: { de: "<white>Klassisch", en: "<white>Classic" }
+#                  Every player sees their language; a language that is missing falls back to English.
 #     icon         item in the selection menu
-#     description  lines below the name in the menu
+#     description  lines below the name in the menu - a list, or a list per language like name
 #     permission   empty = everyone with mrpvp.use, otherwise e.g. "mrpvp.kit.netherite"
 #     items        slot -> item
 #     rules        (optional) what the kit changes about the round:
@@ -34,11 +36,17 @@
 
 kits:
   klassisch:
-    name: "<white>Klassisch"
+    name:
+      de: "<white>Klassisch"
+      en: "<white>Classic"
     icon: IRON_SWORD
     description:
-      - "<gray>Eisenrüstung, Eisenschwert,"
-      - "<gray>Bogen mit 16 Pfeilen und Schild."
+      de:
+        - "<gray>Eisenrüstung, Eisenschwert,"
+        - "<gray>Bogen mit 16 Pfeilen und Schild."
+      en:
+        - "<gray>Iron armour, iron sword,"
+        - "<gray>bow with 16 arrows and shield."
     permission: ""
     items:
       helmet: { type: IRON_HELMET }
@@ -52,12 +60,19 @@ kits:
       9: { type: ARROW, amount: 16 }
 
   diamant:
-    name: "<aqua>Diamant"
+    name:
+      de: "<aqua>Diamant"
+      en: "<aqua>Diamond"
     icon: DIAMOND_SWORD
     description:
-      - "<gray>Diamantrüstung (Schutz II),"
-      - "<gray>Diamantschwert (Schärfe II), Bogen,"
-      - "<gray>Schild und 2 goldene Äpfel."
+      de:
+        - "<gray>Diamantrüstung (Schutz II),"
+        - "<gray>Diamantschwert (Schärfe II), Bogen,"
+        - "<gray>Schild und 2 goldene Äpfel."
+      en:
+        - "<gray>Diamond armour (Protection II),"
+        - "<gray>diamond sword (Sharpness II), bow,"
+        - "<gray>shield and 2 golden apples."
     permission: ""
     items:
       helmet: { type: DIAMOND_HELMET, enchantments: { protection: 2 } }
@@ -72,12 +87,19 @@ kits:
       9: { type: ARROW, amount: 24 }
 
   netherite:
-    name: "<dark_red>Netherite"
+    name:
+      de: "<dark_red>Netherite"
+      en: "<dark_red>Netherite"
     icon: NETHERITE_SWORD
     description:
-      - "<gray>Netherite-Rüstung (Schutz IV),"
-      - "<gray>Netherite-Schwert (Schärfe V), Armbrust,"
-      - "<gray>Schild und 4 goldene Äpfel."
+      de:
+        - "<gray>Netherite-Rüstung (Schutz IV),"
+        - "<gray>Netherite-Schwert (Schärfe V), Armbrust,"
+        - "<gray>Schild und 4 goldene Äpfel."
+      en:
+        - "<gray>Netherite armour (Protection IV),"
+        - "<gray>netherite sword (Sharpness V), crossbow,"
+        - "<gray>shield and 4 golden apples."
     permission: ""
     items:
       helmet: { type: NETHERITE_HELMET, enchantments: { protection: 4 } }
@@ -92,11 +114,17 @@ kits:
       9: { type: ARROW, amount: 32 }
 
   bogen:
-    name: "<green>Bogen"
+    name:
+      de: "<green>Bogen"
+      en: "<green>Bow"
     icon: BOW
     description:
-      - "<gray>Lederrüstung, Bogen (Stärke III,"
-      - "<gray>Unendlichkeit) und ein Holzschwert."
+      de:
+        - "<gray>Lederrüstung, Bogen (Stärke III,"
+        - "<gray>Unendlichkeit) und ein Holzschwert."
+      en:
+        - "<gray>Leather armour, bow (Power III,"
+        - "<gray>Infinity) and a wooden sword."
     permission: ""
     items:
       helmet: { type: LEATHER_HELMET }
@@ -109,11 +137,17 @@ kits:
       9: { type: ARROW, amount: 1 }
 
   streitkolben:
-    name: "<gold>Streitkolben"
+    name:
+      de: "<gold>Streitkolben"
+      en: "<gold>Mace"
     icon: MACE
     description:
-      - "<gray>Eisenrüstung, Streitkolben,"
-      - "<gray>8 Windkugeln und Schild."
+      de:
+        - "<gray>Eisenrüstung, Streitkolben,"
+        - "<gray>8 Windkugeln und Schild."
+      en:
+        - "<gray>Iron armour, mace,"
+        - "<gray>8 wind charges and shield."
     permission: ""
     items:
       helmet: { type: IRON_HELMET }
@@ -127,11 +161,17 @@ kits:
       3: { type: COOKED_BEEF, amount: 16 }
 
   elytra:
-    name: "<light_purple>Elytra & Streitkolben"
+    name:
+      de: "<light_purple>Elytra & Streitkolben"
+      en: "<light_purple>Elytra & Mace"
     icon: ELYTRA
     description:
-      - "<gray>Elytra, Raketen und Streitkolben -"
-      - "<gray>hoch fliegen, von oben zuschlagen."
+      de:
+        - "<gray>Elytra, Raketen und Streitkolben -"
+        - "<gray>hoch fliegen, von oben zuschlagen."
+      en:
+        - "<gray>Elytra, rockets and a mace -"
+        - "<gray>fly high, strike from above."
     permission: ""
     items:
       helmet: { type: NETHERITE_HELMET, enchantments: { protection: 3 } }
@@ -146,11 +186,17 @@ kits:
       4: { type: COOKED_BEEF, amount: 16 }
 
   uhc:
-    name: "<gold>UHC"
+    name:
+      de: "<gold>UHC"
+      en: "<gold>UHC"
     icon: GOLDEN_APPLE
     description:
-      - "<gray>Diamant- und Eisenrüstung, Bogen und"
-      - "<gray>Goldäpfel - <red>keine natürliche Regeneration</red>."
+      de:
+        - "<gray>Diamant- und Eisenrüstung, Bogen und"
+        - "<gray>Goldäpfel - <red>keine natürliche Regeneration</red>."
+      en:
+        - "<gray>Diamond and iron armour, bow and"
+        - "<gray>golden apples - <red>no natural regeneration</red>."
     permission: ""
     rules:
       regen: false
@@ -168,11 +214,17 @@ kits:
       9: { type: ARROW, amount: 32 }
 
   build-uhc:
-    name: "<yellow>Build-UHC"
+    name:
+      de: "<yellow>Build-UHC"
+      en: "<yellow>Build-UHC"
     icon: LAVA_BUCKET
     description:
-      - "<gray>UHC mit Blöcken, Wasser und Lava -"
-      - "<gray>nur in Arenen, in denen gebaut werden darf."
+      de:
+        - "<gray>UHC mit Blöcken, Wasser und Lava -"
+        - "<gray>nur in Arenen, in denen gebaut werden darf."
+      en:
+        - "<gray>UHC with blocks, water and lava -"
+        - "<gray>only in arenas where building is allowed."
     permission: ""
     rules:
       regen: false
@@ -199,11 +251,17 @@ kits:
       13: { type: COBBLESTONE, amount: 64 }
 
   sumo:
-    name: "<white>Sumo"
+    name:
+      de: "<white>Sumo"
+      en: "<white>Sumo"
     icon: SLIME_BALL
     description:
-      - "<gray>Kein Schaden, nur Rückstoß:"
-      - "<gray>wer von der Plattform fällt, verliert."
+      de:
+        - "<gray>Kein Schaden, nur Rückstoß:"
+        - "<gray>wer von der Plattform fällt, verliert."
+      en:
+        - "<gray>No damage, only knockback:"
+        - "<gray>whoever falls off the platform loses."
     permission: ""
     rules:
       damage: false
@@ -212,11 +270,17 @@ kits:
     items: {}
 
   boxing:
-    name: "<red>Boxing"
+    name:
+      de: "<red>Boxing"
+      en: "<red>Boxing"
     icon: DIAMOND_SWORD
     description:
-      - "<gray>Kein Schaden - wer zuerst"
-      - "<white>100</white> <gray>Treffer landet, gewinnt."
+      de:
+        - "<gray>Kein Schaden - wer zuerst"
+        - "<white>100</white> <gray>Treffer landet, gewinnt."
+      en:
+        - "<gray>No damage - whoever lands"
+        - "<white>100</white> <gray>hits first wins."
     permission: ""
     rules:
       damage: false
@@ -226,11 +290,17 @@ kits:
       0: { type: DIAMOND_SWORD, enchantments: { sharpness: 1 } }
 
   nodebuff:
-    name: "<dark_aqua>NoDebuff"
+    name:
+      de: "<dark_aqua>NoDebuff"
+      en: "<dark_aqua>NoDebuff"
     icon: SPLASH_POTION
     description:
-      - "<gray>Diamantrüstung, Heiltränke (Wurf),"
-      - "<gray>Enderperlen, Schnelligkeit und Feuerschutz."
+      de:
+        - "<gray>Diamantrüstung, Heiltränke (Wurf),"
+        - "<gray>Enderperlen, Schnelligkeit und Feuerschutz."
+      en:
+        - "<gray>Diamond armour, healing potions (splash),"
+        - "<gray>ender pearls, speed and fire resistance."
     permission: ""
     items:
       helmet: { type: DIAMOND_HELMET, enchantments: { protection: 2, unbreaking: 3 } }
@@ -275,11 +345,17 @@ kits:
       35: { type: POTION, potion: strong_swiftness }
 
   crystal:
-    name: "<dark_purple>Crystal"
+    name:
+      de: "<dark_purple>Crystal"
+      en: "<dark_purple>Crystal"
     icon: END_CRYSTAL
     description:
-      - "<gray>Netherite, Endkristalle, Obsidian,"
-      - "<gray>Ankerpunkte - nur in Bau-Arenen."
+      de:
+        - "<gray>Netherite, Endkristalle, Obsidian,"
+        - "<gray>Ankerpunkte - nur in Bau-Arenen."
+      en:
+        - "<gray>Netherite, end crystals, obsidian,"
+        - "<gray>respawn anchors - only in build arenas."
     permission: ""
     rules:
       build: true
@@ -305,11 +381,17 @@ kits:
       13: { type: OBSIDIAN, amount: 64 }
 
   axt:
-    name: "<gray>Axt & Schild"
+    name:
+      de: "<gray>Axt & Schild"
+      en: "<gray>Axe & Shield"
     icon: DIAMOND_AXE
     description:
-      - "<gray>Diamantrüstung, Diamantaxt und Schild -"
-      - "<gray>Schild zerschlagen, dann zuschlagen."
+      de:
+        - "<gray>Diamantrüstung, Diamantaxt und Schild -"
+        - "<gray>Schild zerschlagen, dann zuschlagen."
+      en:
+        - "<gray>Diamond armour, diamond axe and shield -"
+        - "<gray>break the shield, then strike."
     permission: ""
     items:
       helmet: { type: DIAMOND_HELMET, enchantments: { protection: 2 } }
@@ -325,11 +407,17 @@ kits:
       9: { type: ARROW, amount: 16 }
 
   dreizack:
-    name: "<aqua>Dreizack"
+    name:
+      de: "<aqua>Dreizack"
+      en: "<aqua>Trident"
     icon: TRIDENT
     description:
-      - "<gray>Dreizack mit Treue - werfen, zurückholen,"
-      - "<gray>wieder werfen. Eisenrüstung, Schild."
+      de:
+        - "<gray>Dreizack mit Treue - werfen, zurückholen,"
+        - "<gray>wieder werfen. Eisenrüstung, Schild."
+      en:
+        - "<gray>Trident with Loyalty - throw, recall,"
+        - "<gray>throw again. Iron armour, shield."
     permission: ""
     items:
       helmet: { type: IRON_HELMET, enchantments: { protection: 1 } }

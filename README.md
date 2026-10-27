@@ -62,6 +62,7 @@ Mitgeliefert: **Klassisch, Diamant, Netherite, Bogen, Streitkolben, Elytra & Str
 - Bearbeiten im Spiel mit dem **Kit-Editor** (Admin-Menü → Kits) oder lesbar in `kits.yml`.
 - Kit-Regeln: kein Schaden bzw. nur Rückstoß (Sumo, Boxing), Sieg nach Treffern, feste Regeneration oder Hunger, nur bestimmte Arenen, braucht eine Bau-Arena.
 - Ein Kit kann eine eigene Permission haben (`permission` in `kits.yml`), z.B. für VIP-Kits.
+- **Name und Beschreibung pro Sprache:** In `kits.yml` entweder ein Text für alle Sprachen oder `name: { de: "<white>Klassisch", en: "<white>Classic" }` - jeder Spieler sieht seine Sprache, fehlt sie, gilt Englisch. Die Standard-Kits sind deutsch und englisch. Im Kit-Editor änderst du Name und Beschreibung in deiner eigenen Sprache, die anderen bleiben.
 
 ### Arenen
 Mitgeliefert: **Standard**, **Sumo** (Plattform über dem Void), **Bau-Arena** (Bauen erlaubt) und **XXL-Himmel** (schwebende Inseln, nur für Kits mit Elytra).
@@ -108,7 +109,9 @@ Alles steht kommentiert in `plugins/MRpvp/config.yml`. Änderungen übernimmst d
 
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
-| `language` | `auto` | `auto` = wie im Minecraft-Client des Spielers, sonst `de` oder `en` |
+| `language` | `auto` | `auto` = wie im Minecraft-Client des Spielers, sonst `de` oder `en` für alle |
+| `fallback-language` | `en` | Für Spieler, deren Minecraft-Sprache keine eigene Datei hat |
+| `server-language` | `en` | Texte ohne einzelnen Empfänger: Discord-Meldungen zu auffälligen Runden (über MRadmin) |
 | `duel.options.wins` · `.minutes` | `[1,2,3,5]` · `[3,5,10,15]` | Auswahl im Einladungsmenü |
 | `duel.reconnect-seconds` | `20` | Wartezeit bei Verbindungsabbruch, `0` = sofort verloren |
 | `duel.allowed-commands` | `msg`, `r` … | Befehle, die im Duell erlaubt sind |

@@ -98,7 +98,7 @@ public final class Monitor {
         // Console always English, Discord in the server's language.
         plugin.getLogger().info("Monitor: " + plugin.messages().console(key, values));
         if (plugin.settings().monitor().discord()) {
-            plugin.admin().adminLog(plugin.messages().plain(key, values));
+            plugin.admin().adminLog(plugin.messages().server(() -> plugin.messages().plain(key, values)));
         }
     }
 

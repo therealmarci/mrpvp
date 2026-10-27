@@ -17,13 +17,16 @@ config-version: 7
 
 # Language of the texts (menus, messages). The texts are in plugins/MRpvp/lang/<language>.yml.
 #   auto = every player gets the language set in their Minecraft client.
-#          German (also Austria/Switzerland) -> de.yml, everything else -> fallback-language.
+#          German (also Austria/Switzerland) -> de.yml, English -> en.yml, a language without a file -> fallback-language.
 #   de / en / ... = fixed language for all players.
 # The console is always English. Own language: copy a file (e.g. as fr.yml) and translate it.
 language: auto
 
 # Language for players whose Minecraft language has no file of its own.
 fallback-language: en
+
+# Language of texts that are not meant for a single player: Discord logs and suspicious rounds (via MRadmin).
+server-language: en
 
 
 # ------------------------------------------------------------------------------

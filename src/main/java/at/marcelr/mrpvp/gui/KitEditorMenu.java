@@ -40,6 +40,11 @@ public final class KitEditorMenu extends Menu {
         String permission;
         KitRules rules = KitRules.NONE;
         final Map<KitSlot, ItemStack> items = new LinkedHashMap<>();
+        /** Name and description in all languages - the editor changes only those of {@link #language}. */
+        final Map<String, String> names = new LinkedHashMap<>();
+        final Map<String, List<String>> descriptions = new LinkedHashMap<>();
+        /** The language of whoever edits ("de", "en" ...). */
+        final String language = at.marcelr.mrpvp.Messages.language().split("_", 2)[0];
 
         private Draft(String id) {
             this.id = id;
@@ -47,6 +52,8 @@ public final class KitEditorMenu extends Menu {
 
         static Draft of(Kit kit) {
             Draft d = new Draft(kit.id());
+            d.names.putAll(kit.names());
+            d.descriptions.putAll(kit.descriptions());
             d.name = kit.name();
             d.icon = kit.icon();
             d.description = new ArrayList<>(kit.description());
@@ -66,7 +73,20 @@ public final class KitEditorMenu extends Menu {
         }
 
         Kit toKit() {
-            return new Kit(id, name, icon, List.copyOf(description), permission, rules, new LinkedHashMap<>(items));
+            return new Kit(id, withLanguage(names, name), icon, withLanguage(descriptions, List.copyOf(description)),
+                    permission, rules, new LinkedHashMap<>(items));
+        }
+
+        /** The value replaces the one of the editor's language - or the one for every language if there is only that. */
+        private <T> Map<String, T> withLanguage(Map<String, T> values, T value) {
+            Map<String, T> result = new LinkedHashMap<>(values);
+            if (result.isEmpty() || (result.size() == 1 && result.containsKey(Kit.ALL))) {
+                result.clear();
+                result.put(Kit.ALL, value);
+            } else {
+                result.put(language, value);
+            }
+            return result;
         }
     }
 
