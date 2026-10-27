@@ -392,6 +392,8 @@ final class WebData {
         r.put("games", games);
         List<Snapshot> owed = plugin.database().call(c -> SnapshotStore.owed(c, uuid));
         r.put("owed", owed.size());
+        // Quick choices for a duel ban on the player page (ms, -1 = permanent).
+        r.put("banDurations", plugin.settings().gui().banDurations());
         return r;
     }
 

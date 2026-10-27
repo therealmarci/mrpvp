@@ -13,7 +13,7 @@
 # ==============================================================================
 
 # Do not change - used for automatic config updates.
-config-version: 7
+config-version: 8
 
 # Language of the texts (menus, messages). The texts are in plugins/MRpvp/lang/<language>.yml.
 #   auto = every player gets the language set in their Minecraft client.
@@ -211,3 +211,5 @@ gui:
   refresh-ticks: 20
   # Click sounds in the menus.
   sounds: true
+  # Quick choices for a duel ban on the player page of MRadmin's web interface ("permanent" = forever, exactly 3 entries).
+  ban-durations: ["1d", "7d", "permanent"]

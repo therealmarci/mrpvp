@@ -1,9 +1,11 @@
 package at.marcelr.mrpvp;
 
 import at.marcelr.mrpvp.stats.StatsRules;
+import at.marcelr.mrpvp.util.DurationUtil;
 import org.bukkit.Difficulty;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -106,8 +108,11 @@ public record Settings(
                                  int intervalHours, boolean notifyOnJoin) {
     }
 
-    public record GuiSettings(int refreshTicks, boolean sounds) {
+    /** @param banDurations quick choices for duel bans in MRadmin's web interface, in ms ({@link #PERMANENT} = forever) */
+    public record GuiSettings(int refreshTicks, boolean sounds, List<Long> banDurations) {
     }
+
+    public static final long PERMANENT = -1L;
 
     /** Sorted, without duplicates, within limits; the fallback if nothing valid is left. */
     private static List<Integer> choices(List<Integer> values, List<Integer> fallback, int min, int max) {
@@ -205,7 +210,8 @@ public record Settings(
 
         GuiSettings gui = new GuiSettings(
                 Math.max(5, c.getInt("gui.refresh-ticks", 20)),
-                c.getBoolean("gui.sounds", true));
+                c.getBoolean("gui.sounds", true),
+                banDurations(c.getStringList("gui.ban-durations"), log));
 
         Set<String> hold = new HashSet<>();
         for (String flag : c.getStringList("review.hold")) {
@@ -218,5 +224,30 @@ public record Settings(
                 c.getBoolean("review.notify", true));
 
         return new Settings(arenaWorld, arenas, duel, stats, protection, history, monitor, review, update, gui);
+    }
+
+    /** Exactly three durations; invalid entries fall back to the default at their position. */
+    private static List<Long> banDurations(List<String> raw, Logger log) {
+        List<String> defaults = List.of("1d", "7d", "permanent");
+        List<Long> result = new ArrayList<>();
+        for (int i = 0; i < defaults.size(); i++) {
+            String value = i < raw.size() ? raw.get(i).trim() : defaults.get(i);
+            long parsed = banDuration(value);
+            if (parsed == 0) {
+                log.warning("Invalid duration '" + value + "' in gui.ban-durations, using " + defaults.get(i) + ".");
+                parsed = banDuration(defaults.get(i));
+            }
+            result.add(parsed);
+        }
+        return List.copyOf(result);
+    }
+
+    /** "permanent" -> {@link #PERMANENT}, "7d" -> ms, invalid -> 0 (parse() reports invalid as -1). */
+    private static long banDuration(String value) {
+        if (value.equalsIgnoreCase("permanent")) {
+            return PERMANENT;
+        }
+        long parsed = DurationUtil.parse(value);
+        return parsed > 0 ? parsed : 0;
     }
 }

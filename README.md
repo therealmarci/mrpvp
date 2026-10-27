@@ -120,6 +120,7 @@ Alles steht kommentiert in `plugins/MRpvp/config.yml`. Änderungen übernimmst d
 | `review.auto-days` | `7` | Nach so vielen Tagen zählt eine ungeprüfte Runde automatisch |
 | `protection.restore-statistics` | `true` | Minecraft-Statistik nach der Runde auf den Stand davor |
 | `history.days` · `.snapshot-days` | `30` · `90` | Wie lange Kampf-Logs und gesicherte Inventare bleiben |
+| `gui.ban-durations` | `1d`, `7d`, `permanent` | Schnellauswahl für Duell-Sperren auf der Spielerseite der MRadmin-Weboberfläche |
 
 Alle Texte stehen in `plugins/MRpvp/lang/<sprache>.yml` ([MiniMessage](https://docs.advntr.dev/minimessage/format.html)), die Kits in `kits.yml`, die Arenen unter `templates/`, Runden und Statistik in der Datenbank `mrpvp.db`.
 
@@ -131,6 +132,7 @@ MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr 
 | Funktion | Braucht |
 |---|---|
 | Seite **Duelle** in der Weboberfläche: live mit Herzen und Mini-Karte, alle Runden mit Inventaren, Kampf-Log und Wiedergabe, Prüfen | MRadmin |
+| Kachel **Duelle** auf der Spielerseite der Weboberfläche: Statistik, laufende und letzte Runden, Sperre | MRadmin |
 | Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, auffällige Runden im Discord-Log | MRadmin |
 | Im Admin-Modus kann man kein Duell starten | MRadmin |
 | Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert | MRadmin + MRtoolbar |
