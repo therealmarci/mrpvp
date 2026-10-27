@@ -131,7 +131,7 @@ final class WebData {
             }
             Map<String, Object> s = new LinkedHashMap<>();
             s.put("index", slot.index());
-            s.put("template", slot.template());
+            s.put("template", slot.state() == SlotManager.State.PASTING && slot.pending() != null ? slot.pending() : slot.template());
             s.put("state", slot.state().name().toLowerCase(Locale.ROOT));
             s.put("pasteMillis", slot.lastPasteMillis());
             slots.add(s);

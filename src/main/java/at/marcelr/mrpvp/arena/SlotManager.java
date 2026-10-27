@@ -83,6 +83,11 @@ public final class SlotManager implements ArenaProvider {
             return template;
         }
 
+        /** The template being pasted (state PASTING), otherwise null. */
+        public String pending() {
+            return pending;
+        }
+
         public State state() {
             return state;
         }
@@ -263,7 +268,9 @@ public final class SlotManager implements ArenaProvider {
             return;
         }
         ArenaTemplate t = templates.get(slot.template);
-        if (t == null || !t.enabled()) {
+        // Only back into the pool while it is not full - after several rounds at once there would be more ready slots
+        // than the template's pool otherwise ("3 of 1 ready").
+        if (t == null || !t.enabled() || readyCount(t) >= t.pool()) {
             enqueueClear(slot);
         } else {
             enqueuePaste(slot, t);
@@ -336,9 +343,19 @@ public final class SlotManager implements ArenaProvider {
         }
     }
 
-    /** Queues new slots until every enabled template has its pool of ready slots. */
+    /** Queues new slots until every enabled template has its pool of ready slots, and removes ready ones beyond it. */
     public void fillPools() {
         for (ArenaTemplate t : templates.enabled()) {
+            int surplus = readyCount(t) - t.pool();
+            for (Slot slot : slots.values()) {
+                if (surplus <= 0) {
+                    break;
+                }
+                if (t.id().equals(slot.template) && slot.state == State.READY) {
+                    enqueueClear(slot);
+                    surplus--;
+                }
+            }
             while (readyCount(t) < t.pool()) {
                 Slot slot = newSlot();
                 if (slot == null) {
@@ -365,19 +382,7 @@ public final class SlotManager implements ArenaProvider {
                 enqueuePaste(slot, t);
             }
         }
-        if (t != null && t.enabled()) {
-            // Too many ready ones after lowering the pool: remove the rest.
-            int surplus = readyCount(t) - t.pool();
-            for (Slot slot : slots.values()) {
-                if (surplus <= 0) {
-                    break;
-                }
-                if (id.equals(slot.template) && slot.state == State.READY) {
-                    enqueueClear(slot);
-                    surplus--;
-                }
-            }
-        }
+        // Also removes ready ones beyond a lowered pool.
         fillPools();
     }
 
