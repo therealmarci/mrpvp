@@ -16,6 +16,7 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 - **Kit-Namen und -Beschreibungen pro Sprache:** In `kits.yml` geht jetzt `name: { de: "...", en: "..." }` (ebenso `description`), ein einzelner Text gilt weiter für alle Sprachen. Die Standard-Kits sind deutsch und englisch - bestehende Standard-Kits mit den unveränderten deutschen Texten werden beim Start automatisch ergänzt, eigene Texte bleiben. Der Kit-Editor ändert Name und Beschreibung in der Sprache des Admins, die anderen Sprachen bleiben erhalten.
 
 ### Behoben & geändert
+- **Update-Hinweis bei `/mrpvp version` doppelt:** Fand die Abfrage eine neue Version, kam zuerst der Admin-Hinweis „Für MRpvp gibt es ein Update“ und direkt danach „Neue Version verfügbar“. Jetzt kommt nur noch die Antwort auf den Befehl. Die Download-Links führen auf die Website (https://mrtechnology.marcelr.at/download/mrpvp/).
 - **Config und plugin.yml auf Englisch:** Alle Kommentare in der `config.yml` und die Beschreibungen der Befehle und Permissions in der `plugin.yml` sind jetzt englisch. Bestehende Configs bekommen die neuen Kommentare beim nächsten Start automatisch (config-version 7, Sicherung als `config.v<alt>.backup.yml`), alle Einstellungen bleiben erhalten.
 - **kits.yml:** Die Erklärung oben in der Datei ist jetzt englisch und aktuell (Kit-Editor und „Standard wiederherstellen“ gibt es bereits). Kit-Namen und -Beschreibungen sind unverändert.
 
