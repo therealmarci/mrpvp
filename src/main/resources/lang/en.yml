@@ -10,7 +10,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which texts to renew on updates.
-lang-version: 6
+lang-version: 7
 
 prefix: "<dark_gray>[<red>MRpvp</red>]</dark_gray> "
 no-permission: "<prefix><red>You don't have permission to do that."
@@ -692,7 +692,7 @@ alert-quit: "Left the server mid-fight"
 alert-border: "Many tries to leave the arena"
 alert-hit: "Conspicuously strong hit"
 alert-idle: "Long round without hits"
-monitor-farming: "Game #<id>: <one> and <two> played <detail> rounds within an hour - statistics farming?"
+monitor-farming: "Game #<id>: <one> and <two> played <detail> rounds in a short time, nearly always with the same winner and hardly any resistance - statistics farming?"
 monitor-quit: "Game #<id> (<one> vs <two>): <detail> left the server mid-fight."
 monitor-border: "Game #<id> (<one> vs <two>): many tries to leave the arena - <detail>."
 monitor-hit: "Game #<id> (<one> vs <two>): conspicuously strong hit - <detail>."

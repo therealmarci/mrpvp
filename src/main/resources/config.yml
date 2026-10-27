@@ -13,7 +13,7 @@
 # ==============================================================================
 
 # Do not change - used for automatic config updates.
-config-version: 8
+config-version: 9
 
 # Language of the texts (menus, messages). The texts are in plugins/MRpvp/lang/<language>.yml.
 #   auto = every player gets the language set in their Minecraft client.
@@ -113,7 +113,7 @@ stats:
   min-duration-seconds: 10
   # More rounds against the same opponent within 24 hours are suspicious (statistic farming) - review.hold "limit".
   # 0 = no limit.
-  max-counted-per-opponent-per-day: 5
+  max-counted-per-opponent-per-day: 50
   # Whoever leaves the server in the middle of a fight gets a death.
   quit-counts-as-death: true
   # Whoever gives up gets a death.
@@ -128,7 +128,7 @@ stats:
 # MRadmin web → MRpvp → Review). Until then they do not count; "count" adds them to the statistics afterwards.
 review:
   # What holds a round back for review:
-  #   farming = the same two players very often in a row (monitor.same-pair-per-hour)
+  #   farming = one-sided series of the same two players (monitor.farming)
   #   limit   = more than stats.max-counted-per-opponent-per-day rounds against the same opponent in one day
   #   short   = shorter than stats.min-duration-seconds and not a single hit
   #   hit     = a single hit stronger than monitor.max-hit-hearts
@@ -178,8 +178,16 @@ monitor:
   # Also send them to MRadmin's Discord admin log (including rounds waiting for review; only if MRadmin is
   # installed and Discord is set up there).
   discord: true
-  # This many rounds of the same two players within one hour = suspected statistic farming.
-  same-pair-per-hour: 6
+  # Statistic farming: the same two players many times in a short time AND one-sided - the same player (nearly)
+  # always wins and the other hardly fights back. Even fights between friends are never suspicious, however many.
+  farming:
+    # At least this many rounds of the same two players within this many minutes ...
+    rounds: 8
+    minutes: 60
+    # ... of which the same player won at least this share (%) ...
+    winner-percent: 90
+    # ... while the other dealt at most this share (%) of all damage in these rounds.
+    max-loser-damage-percent: 20
   # A single hit with at least this many hearts of damage (except the mace - it may do that).
   max-hit-hearts: 20
   # This many attempts to leave the arena in one round.

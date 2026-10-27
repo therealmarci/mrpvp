@@ -95,12 +95,13 @@ public record Settings(
 
     /**
      * @param discord          also into MRadmin's Discord admin log
-     * @param samePairPerHour  this many rounds of the same two players within an hour = farming
+     * @param farming          when a series of the same two players counts as statistics farming
      * @param maxHitHearts     a single hit at least this strong is noticed (mace excluded)
      * @param borderTries      this many tries to leave the arena in one round
      * @param idleSeconds      a round at least this long without any hit
      */
-    public record MonitorSettings(boolean enabled, boolean discord, int samePairPerHour, double maxHitHearts,
+    public record MonitorSettings(boolean enabled, boolean discord, at.marcelr.mrpvp.game.FarmingCheck.Rules farming,
+                                  double maxHitHearts,
                                   int borderTries, int idleSeconds) {
     }
 
@@ -176,7 +177,7 @@ public record Settings(
 
         StatsRules stats = new StatsRules(
                 Math.clamp(c.getInt("stats.min-duration-seconds", 10), 0, 600) * 1000L,
-                Math.clamp(c.getInt("stats.max-counted-per-opponent-per-day", 5), 0, 1000),
+                Math.clamp(c.getInt("stats.max-counted-per-opponent-per-day", 50), 0, 1000),
                 c.getBoolean("stats.quit-counts-as-death", true),
                 c.getBoolean("stats.surrender-counts-as-death", true),
                 c.getBoolean("stats.border-counts-as-kill", true),
@@ -191,7 +192,11 @@ public record Settings(
         MonitorSettings monitor = new MonitorSettings(
                 c.getBoolean("monitor.enabled", true),
                 c.getBoolean("monitor.discord", true),
-                Math.clamp(c.getInt("monitor.same-pair-per-hour", 6), 2, 1000),
+                new at.marcelr.mrpvp.game.FarmingCheck.Rules(
+                        Math.clamp(c.getInt("monitor.farming.rounds", 8), 2, 1000),
+                        Math.clamp(c.getInt("monitor.farming.minutes", 60), 1, 24 * 60) * 60_000L,
+                        Math.clamp(c.getInt("monitor.farming.winner-percent", 90), 50, 100) / 100.0,
+                        Math.clamp(c.getInt("monitor.farming.max-loser-damage-percent", 20), 0, 100) / 100.0),
                 Math.clamp(c.getDouble("monitor.max-hit-hearts", 20), 1, 1000),
                 Math.clamp(c.getInt("monitor.border-tries", 10), 1, 1000),
                 Math.clamp(c.getInt("monitor.idle-seconds", 90), 10, 3600));

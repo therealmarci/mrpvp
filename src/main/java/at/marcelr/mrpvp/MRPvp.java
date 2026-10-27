@@ -48,14 +48,16 @@ public final class MRPvp extends JavaPlugin implements Listener {
     private Settings settings;
     // lang-version 2: invitations show the arena; 3: and the duel options; 4: chat buttons, review note, match totals;
     // 5: boss bar separator.
-    private final Messages messages = new Messages(6, Map.of(
+    private final Messages messages = new Messages(7, Map.of(
             2, Set.of("invite-sent", "invite-received", "gui-invites-lore"),
             3, Set.of("invite-sent", "invite-received", "gui-invites-lore", "game-starting", "gui-kits-click"),
             4, Set.of("invite-received", "invite-view-button", "end-summary-won", "end-summary-lost", "end-summary-draw",
                     "match-won", "match-lost", "match-draw", "mradmin-summary"),
             5, Set.of("bar-part-round"),
             // 6: "Website | GitHub" in /mrpvp version.
-            6, Set.of("version-links")));
+            6, Set.of("version-links"),
+            // 7: farming means one-sided series now.
+            7, Set.of("monitor-farming")));
     private final StateKeeper stateKeeper = new StateKeeper(this);
     private final ArenaWorld arenaWorld = new ArenaWorld(this);
     private final KitManager kits = new KitManager(this);

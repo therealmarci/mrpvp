@@ -22,7 +22,7 @@ import java.util.logging.Level;
  */
 public final class ConfigUpdater {
 
-    public static final int CURRENT_VERSION = 8;
+    public static final int CURRENT_VERSION = 9;
     public static final String BOM = "\uFEFF";
     /** Texts whose content changed with new features; the new default replaces the old value. */
     private static final Set<String> REPLACED_KEYS = Set.of(
@@ -80,6 +80,10 @@ public final class ConfigUpdater {
                     template.set("server-language", old);
                 }
                 template.set("language", "auto");
+            }
+            // v9: the old default of 5 rounds per opponent and day held back normal play between friends.
+            if (version < 9 && existing.getInt("stats.max-counted-per-opponent-per-day", 5) == 5) {
+                template.set("stats.max-counted-per-opponent-per-day", 50);
             }
             template.set("config-version", CURRENT_VERSION);
             // Keep long messages on one line instead of folding them.

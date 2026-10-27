@@ -10,7 +10,7 @@
 # ==============================================================================
 
 # Nicht ändern - damit erkennt das Plugin bei Updates, welche Texte erneuert werden müssen.
-lang-version: 6
+lang-version: 7
 
 prefix: "<dark_gray>[<red>MRpvp</red>]</dark_gray> "
 no-permission: "<prefix><red>Dazu hast du keine Berechtigung."
@@ -692,7 +692,7 @@ alert-quit: "Server mitten im Kampf verlassen"
 alert-border: "Viele Versuche, die Arena zu verlassen"
 alert-hit: "Auffällig starker Treffer"
 alert-idle: "Lange Runde ohne Treffer"
-monitor-farming: "Spiel #<id>: <one> und <two> haben <detail> Runden in einer Stunde gespielt - Statistik-Farmen?"
+monitor-farming: "Spiel #<id>: <one> und <two> haben <detail> Runden in kurzer Zeit gespielt, fast immer mit demselben Sieger und kaum Gegenwehr - Statistik-Farmen?"
 monitor-quit: "Spiel #<id> (<one> gegen <two>): <detail> hat mitten im Kampf den Server verlassen."
 monitor-border: "Spiel #<id> (<one> gegen <two>): viele Versuche, die Arena zu verlassen - <detail>."
 monitor-hit: "Spiel #<id> (<one> gegen <two>): auffällig starker Treffer - <detail>."
