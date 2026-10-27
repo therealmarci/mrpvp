@@ -1,146 +1,165 @@
 # MRpvp
 
-Duelle in eigenen Arenen für Paper 26.3. Ein Spieler fordert einen anderen heraus, beide kämpfen in einer eigenen
-Arena mit einem vorgegebenen Kit und bekommen danach **alles genau so zurück**, wie es vorher war: Inventar, Rüstung,
-Zweithand, Enderchest, XP, Leben, Hunger, Effekte, Spielmodus und Position. Im Duell stirbt niemand wirklich: keine
-Tode und Kills in der Minecraft-Statistik, keine Todesnachricht, keine Drops, keine Advancements. MRpvp führt eine
-**eigene Statistik** mit K/D, Siegen, Serien und Bestenliste.
+**Duelle ohne Risiko:** Zwei Spieler kämpfen in einer eigenen Arena mit einem vorgegebenen Kit - und bekommen danach **alles genau so zurück**, wie es vorher war. Mit eigener Statistik, Bestenliste und Schutz gegen Statistik-Farmen.
 
-Im Spiel läuft alles über Menüs, für Spieler und für Admins. Befehle öffnen nur die Menüs.
+**[⬇ Download](https://mrtechnology.marcelr.at/download/mrpvp/)** · **[📖 Anleitung online](https://mrtechnology.marcelr.at/docs/mrpvp/)** · **[🐞 Fehler melden](https://mrtechnology.marcelr.at/report/mrpvp/)**
 
-> **Pre-Release:** Alle 0.x-Versionen sind Testversionen. Bis 1.0.0 können sich Config, Menüs und Permissions noch
-> ändern.
+| Auf einen Blick | |
+|---|---|
+| Server | Paper 26.3 (oder ein Fork wie Purpur), Java 25 |
+| Benötigt | nichts - MRadmin optional |
+| Sprachen | Deutsch, Englisch - automatisch wie im Minecraft-Client |
+| Status | Vorabversion (0.x) - Config, Menüs und Permissions können sich bis 1.0.0 noch ändern |
 
-## Installation
-1. Paper **26.3** mit **Java 25**.
-2. `MRpvp-mc26.3-v….jar` aus den [Releases](https://github.com/therealmarci/mrpvp/releases) in `plugins/` legen und
-   den Server starten. Paper lädt den SQLite-Treiber beim ersten Start selbst herunter (Ordner `libraries/`).
-3. Beim ersten Start legt MRpvp die Arena-Welt `mrpvp_arenas` an (leere Void-Welt) und baut die Standard-Arenen und
-   Standard-Kits auf. Fertig - `/duel` öffnet das Menü.
+## Was kann MRpvp?
+- **Herausfordern per Menü:** Spieler, Kit, Arena und Regeln wählen, Einladung senden - der Gegner nimmt per Klick im Chat an.
+- **Nichts geht verloren:** Inventar, Rüstung, Enderchest, XP, Leben, Hunger, Effekte, Spielmodus und Position werden **vor** dem Duell sicher gespeichert und danach zurückgegeben - auch nach einem Server-Absturz.
+- **Duelle zählen nicht für Minecraft:** keine Tode und Kills in der Vanilla-Statistik, keine Todesnachricht, keine Drops, keine Advancements.
+- **14 fertige Kits** (Klassisch, Netherite, UHC, Sumo, Boxing, Crystal, Elytra & Streitkolben …) und **4 Arenen** - eigene baust du im Spiel.
+- **Eigene Statistik:** K/D, Siege, Serien, Bestenliste und die letzten Runden mit Kampf-Log.
+- **Faire Wertung:** Auffällige Runden (z.B. abgesprochene Statistik-Farmen) warten auf eine Prüfung durch das Team.
+- **Alles über Menüs** - für Spieler und für Admins.
+
+## Schnellstart
+1. **[MRpvp herunterladen](https://mrtechnology.marcelr.at/download/mrpvp/)** und die JAR in den Ordner `plugins/` legen.
+2. Den Server starten. MRpvp legt die Arena-Welt `mrpvp_arenas` an und baut die Standard-Arenen und -Kits auf. Den Datenbank-Treiber lädt Paper beim ersten Start selbst herunter.
+3. Fertig - jeder Spieler kann mit **`/duel`** loslegen.
+
+**Update:** Die alte JAR durch die neue ersetzen und den Server neu starten. Neue Einstellungen und neue Standard-Kits kommen automatisch dazu.
+
+---
 
 ## So läuft ein Duell
-- `/duel` → **Herausfordern** → Spieler anklicken → eine Seite mit **Kit**, **Map** (Klick öffnet jeweils die
-  Auswahl) und den Optionen → **Einladung senden**. Die letzten Einstellungen sind vorausgewählt.
-- Der Eingeladene bekommt im Chat **[Annehmen] [Ablehnen] [Details]**.
-- Optionen: **Siege bis Gewinn** (1, 2, 3, 5 - mehrere Runden als Match), **Zeitlimit pro Runde**, **Hunger** und
-  **natürliche Regeneration**. Kits können Hunger oder Regeneration fest vorgeben (z.B. UHC ohne Regeneration).
-- Im Duell zeigt die **Bossbar** Runde, Spielstand, Gegner mit Herzen und Restzeit (bei Boxing die Treffer). Im Chat
-  kommt nur eine Zusammenfassung am Ende.
-- **Aufgeben** (`/duel leave`) ist eine Niederlage im ganzen Match - nur vor Runde 1 wird einfach abgebrochen.
-- **Verbindung weg** (Absturz, Server verlassen): Die Runde pausiert 20 Sekunden, der Gegner ist eingefroren. Wer
-  rechtzeitig zurückkommt, spielt nach einem kurzen Countdown weiter - einmal pro Match. Sonst ist es eine Niederlage.
-- Die eigenen Sachen sind sicher in der Datenbank gespeichert, bevor irgendetwas am Inventar geändert wird - auch ein
-  Server-Absturz verliert nichts. Wer gerade offline ist, bekommt alles beim nächsten Login.
+1. **`/duel`** → **Herausfordern** → Spieler anklicken. Oder direkt: `/duel <spieler>`.
+2. **Kit** und **Map** wählen, dazu die Optionen:
+   - **Siege bis Gewinn** (1, 2, 3 oder 5 Runden als Match)
+   - **Zeitlimit pro Runde**
+   - **Hunger** und **natürliche Regeneration** an oder aus (manche Kits geben das fest vor, z.B. UHC ohne Regeneration)
+3. **Einladung senden.** Der Gegner bekommt im Chat **[Annehmen] [Ablehnen] [Details]**. Deine letzten Einstellungen sind beim nächsten Mal vorausgewählt.
+4. Im Duell zeigt die **Bossbar** Runde, Spielstand, die Herzen des Gegners und die Restzeit. Am Ende gibt es eine Zusammenfassung im Chat - und alles zurück.
 
-## Kits und Arenen
-Mitgeliefert werden die Kits **Klassisch, Diamant, Netherite, Bogen, Streitkolben, Elytra & Streitkolben, UHC,
-Build-UHC, Sumo, Boxing, NoDebuff, Crystal, Axt & Schild** und **Dreizack** sowie die Arenen **Standard**, **Sumo**
-(Plattform über dem Void), **Bau-Arena** (Bauen erlaubt) und **XXL-Himmel** (128 × 128 schwebende Inseln, nur für
-Kits mit Elytra).
+- **Aufgeben** mit `/duel leave` zählt als Niederlage im ganzen Match (nur vor Runde 1 wird einfach abgebrochen).
+- **Verbindung weg?** Die Runde pausiert 20 Sekunden, der Gegner ist eingefroren. Wer rechtzeitig zurückkommt, spielt weiter (einmal pro Match).
+- Wer bei der Rückgabe offline ist, bekommt alles beim nächsten Login.
 
-- **Kits** stehen lesbar in `kits.yml` und lassen sich im Spiel mit dem Kit-Editor bearbeiten (Admin-Menü → Kits).
-  Kit-Regeln (`rules`): kein Schaden / nur Rückstoß (Sumo, Boxing), Sieg nach Treffern, feste Regeneration oder
-  Hunger, nur bestimmte Arenen, braucht eine Bau-Arena.
-- **Arenen** baut man im Spiel im Arena-Editor (Kreativmodus, Werkzeuge in der Hotbar). Gespeichert als
-  Minecraft-Struktur (`.nbt`) und in einem Raster aus Kopien bereitgehalten - eine Runde startet ohne Wartezeit, nach
-  der Runde wird die Kopie neu eingefügt. Pro Arena: erlaubte Kits, „nur Kits mit Elytra“, Bauen erlaubt und Bauhöhe,
-  Anzahl bereiter Kopien.
-- Neue Standard-Kits kommen bei Updates einmal automatisch dazu. Gelöschte Standard-Kits und -Arenen holt
-  Admin-Menü → **Standard wiederherstellen** zurück.
+## Statistik & Bestenliste
+Im Duell-Menü sieht jeder Spieler seine Statistik (gesamt und pro Kit), die **Bestenliste** (Siege, K/D, Siegquote, beste Serie - gesamt, 30 oder 7 Tage) und seine letzten Runden mit Kampf-Log. Jede Runde hat eine **Spiel-ID** (z.B. `#1042`), über die das Team sie wiederfindet.
 
-## Statistik und Prüfung
-- Spieler sehen ihre Statistik (gesamt und pro Kit), die Bestenliste (Siege, K/D, Siegquote, beste Serie; gesamt,
-  30 oder 7 Tage) und ihre letzten Runden mit Kampf-Log.
-- Jede Runde hat eine **Spiel-ID** (z.B. #1042). Admins sehen jede Runde mit den gesicherten Inventaren (beim
-  Betreten und am Ende) und können offene Rückgaben sofort ausführen.
-- **Auffällige Runden** zählen nicht einfach nicht, sie **warten auf einen Admin**. Auffällig sind z.B.
-  Statistik-Farmen, zu viele Runden gegen denselben Gegner, sehr kurze Runden ohne Treffer und extreme Treffer.
-  Admin-Menü → **Prüfen**: werten (die Statistik beider wird neu berechnet) oder verwerfen. Ohne Entscheidung zählt
-  die Runde nach 7 Tagen (einstellbar unter `review.*`).
+---
 
-## Zusammenarbeit mit anderen Plugins
-MRpvp läuft **allein** – kein anderes Plugin ist Pflicht, und keins braucht MRpvp. Die MR-Plugins sprechen
-**über MRadmin** miteinander (Modul-Schnittstelle): Ohne MRadmin bekommen sie voneinander nichts mit. Was welche
-Plugins braucht:
+## Für Admins
 
-| Funktion | Braucht |
-|---|---|
-| Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, Hinweis „Runden warten auf eine Prüfung“ auf der Startseite im Web | MRadmin |
-| Seite **Duelle** im Web: live mit Herzen und Mini-Karte, alle Runden mit Inventaren, Kampf-Log und Wiedergabe, Prüfen | MRadmin |
-| Auffällige Runden im Discord-Admin-Log | MRadmin |
-| Im Adminmodus kann man kein Duell starten | MRadmin |
-| Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert und im gesicherten Inventar angezeigt | MRadmin + MRtoolbar |
-| Spieler im Duell zählen nicht zur Schlafquote, die Arena-Welt wird nie verwaltet | MRadmin + MRsleep |
-| In der Arena-Welt lassen sich keine Chunkloader setzen | MRadmin + MRchunks |
+### Admin-Menü
+`/duel admin` öffnet das Admin-Menü. Von dort aus:
+- **Live** laufenden Duellen zusehen oder sie abbrechen
+- **Runden** ansehen - mit Kampf-Log und den gesicherten Inventaren (vor und nach der Runde) - und offene Rückgaben sofort ausführen
+- **Prüfen:** auffällige Runden werten oder verwerfen
+- **Spieler** verwalten, von Duellen sperren, Statistik zurücksetzen
+- **Kits** und **Arenen** bearbeiten, **Standard wiederherstellen**
+
+### Kits
+Mitgeliefert: **Klassisch, Diamant, Netherite, Bogen, Streitkolben, Elytra & Streitkolben, UHC, Build-UHC, Sumo, Boxing, NoDebuff, Crystal, Axt & Schild** und **Dreizack**.
+- Bearbeiten im Spiel mit dem **Kit-Editor** (Admin-Menü → Kits) oder lesbar in `kits.yml`.
+- Kit-Regeln: kein Schaden bzw. nur Rückstoß (Sumo, Boxing), Sieg nach Treffern, feste Regeneration oder Hunger, nur bestimmte Arenen, braucht eine Bau-Arena.
+- Ein Kit kann eine eigene Permission haben (`permission` in `kits.yml`), z.B. für VIP-Kits.
+
+### Arenen
+Mitgeliefert: **Standard**, **Sumo** (Plattform über dem Void), **Bau-Arena** (Bauen erlaubt) und **XXL-Himmel** (schwebende Inseln, nur für Kits mit Elytra).
+- Neue Arenen baust du im Spiel im **Arena-Editor** (Kreativmodus, Werkzeuge in der Hotbar).
+- Pro Arena einstellbar: erlaubte Kits, „nur Kits mit Elytra“, Bauen erlaubt und Bauhöhe, wie viele Kopien bereitstehen.
+- Jede Arena liegt als fertige Kopie bereit, damit eine Runde sofort startet. Nach der Runde wird sie automatisch zurückgesetzt.
+- Gelöschte Standard-Kits und -Arenen holt **Standard wiederherstellen** zurück.
+
+### Auffällige Runden prüfen
+Auffällige Runden zählen nicht einfach nicht - sie **warten auf eine Entscheidung**. Auffällig sind z.B. zu viele Runden gegen denselben Gegner, sehr kurze Runden ohne Treffer oder extreme Treffer. Unter **Admin-Menü → Prüfen** wertest du sie (die Statistik beider wird neu berechnet) oder verwirfst sie. Ohne Entscheidung zählt eine Runde nach 7 Tagen (einstellbar unter `review`).
+
+---
 
 ## Befehle
-| Befehl | Permission | Funktion |
+| Befehl | Was er tut | Permission |
 |---|---|---|
-| `/duel` (`/pvp`, `/duell`) | `mrpvp.use` | Duell-Menü: herausfordern, Einladungen, Statistik, Bestenliste, letzte Runden |
-| `/duel <spieler>` | `mrpvp.use` | direkt die Einladung an diesen Spieler |
-| `/duel leave` | `mrpvp.use` | aufgeben (Niederlage im Match) |
-| `/duel admin` | `mrpvp.admin.gui` | Admin-Menü |
-| `/mrpvp version \| reload` | `mrpvp.admin.reload` | Version anzeigen, Config und Texte neu laden |
-| `/mrpvp debug …` | `mrpvp.admin.debug` | Zustand sichern/zurückgeben testen, gesicherte Zustände ansehen |
+| `/duel` (`/pvp`, `/duell`) | Duell-Menü: herausfordern, Einladungen, Statistik, Bestenliste, letzte Runden | `mrpvp.use` |
+| `/duel <spieler>` | Direkt eine Einladung an diesen Spieler | `mrpvp.use` |
+| `/duel leave` | Aufgeben (Niederlage im Match) | `mrpvp.use` |
+| `/duel admin` | Admin-Menü | `mrpvp.admin.gui` |
+| `/mrpvp version` · `reload` | Version anzeigen · Config und Texte neu laden | `mrpvp.admin.reload` |
+| `/mrpvp debug …` | Sichern und Zurückgeben testen, gesicherte Zustände ansehen | `mrpvp.admin.debug` |
 
 ## Permissions
-| Permission | Standard | Funktion |
+| Permission | Standard | Wofür |
 |---|---|---|
-| `mrpvp.player` | alle | alle Spieler-Rechte (`mrpvp.use`) |
-| `mrpvp.use` | alle | herausfordern, Einladungen annehmen, eigene Statistik |
-| `mrpvp.bypass.cooldown` | OP | keine Wartezeit zwischen Einladungen |
-| `mrpvp.bypass.commands` | niemand | alle Befehle auch im Duell |
-| `mrpvp.admin` | OP | alle Admin-Rechte |
-| `mrpvp.admin.gui` | OP | Admin-Menü öffnen |
+| `mrpvp.player` · `mrpvp.use` | alle | Duelle: herausfordern, annehmen, eigene Statistik |
+| `mrpvp.bypass.cooldown` | OP | Keine Wartezeit zwischen Einladungen |
+| `mrpvp.bypass.commands` | niemand | Alle Befehle auch im Duell (sonst nur `duel.allowed-commands`) |
+| `mrpvp.admin` | OP | Alle folgenden Admin-Rechte |
+| `mrpvp.admin.gui` | OP | Admin-Menü öffnen (Aktionen darin brauchen ihr eigenes Recht) |
 | `mrpvp.admin.arena` | OP | Arenen bauen, bearbeiten, aktivieren, löschen |
 | `mrpvp.admin.kits` | OP | Kit-Editor |
-| `mrpvp.admin.games` | OP | alle Runden mit Kampf-Log und gesicherten Inventaren |
-| `mrpvp.admin.restore` | OP | offenen Zustand sofort zurückgeben |
-| `mrpvp.admin.spectate` | OP | laufenden Duellen zusehen |
-| `mrpvp.admin.stop` | OP | laufende Duelle abbrechen |
-| `mrpvp.admin.players` | OP | Spieler-Verwaltung |
-| `mrpvp.admin.ban` | OP | von Duellen sperren |
-| `mrpvp.admin.reset` | OP | Statistik eines Spielers zurücksetzen |
-| `mrpvp.admin.review` | OP | auffällige Runden werten oder verwerfen, Hinweise dazu |
+| `mrpvp.admin.games` | OP | Alle Runden mit Kampf-Log und gesicherten Inventaren |
+| `mrpvp.admin.restore` | OP | Offene Rückgabe sofort ausführen |
+| `mrpvp.admin.spectate` · `stop` | OP | Duellen zusehen · Duelle abbrechen |
+| `mrpvp.admin.players` · `ban` · `reset` | OP | Spieler-Verwaltung · sperren · Statistik zurücksetzen |
+| `mrpvp.admin.review` | OP | Auffällige Runden prüfen (bekommt auch die Hinweise) |
 | `mrpvp.admin.defaults` | OP | Standard-Kits und -Arenen wiederherstellen |
-| `mrpvp.admin.reload` / `.debug` / `.update` | OP | `/mrpvp reload`, `/mrpvp debug`, Update-Hinweis |
+| `mrpvp.admin.reload` · `debug` · `update` | OP | `/mrpvp reload` · `/mrpvp debug` · Update-Hinweis beim Betreten |
 
-Kits können eine eigene Permission haben (`permission` in `kits.yml`).
-
-## Config (Auszug)
-Alles steht kommentiert in `plugins/MRpvp/config.yml`, neue Einstellungen kommen bei Updates von selbst dazu.
+## Konfiguration
+Alles steht kommentiert in `plugins/MRpvp/config.yml`. Änderungen übernimmst du mit `/mrpvp reload`.
 
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
-| `language` | `auto` | Sprache der Texte: `auto` (wie im Minecraft-Client), `de`, `en` - Texte in `lang/` |
-| `arenas.pool-per-template` | `1` | bereite Kopien pro Arena |
-| `arenas.headroom` | `150` | Luft über einer Arena (Elytra, Streitkolben) |
-| `duel.options.wins` / `.minutes` | `[1,2,3,5]` / `[3,5,10,15]` | Auswahl im Einladungsmenü |
-| `duel.reconnect-seconds` | `20` | Wartezeit bei Verbindungsabbruch (einmal pro Match), `0` = sofort verloren |
+| `language` | `auto` | `auto` = wie im Minecraft-Client des Spielers, sonst `de` oder `en` |
+| `duel.options.wins` · `.minutes` | `[1,2,3,5]` · `[3,5,10,15]` | Auswahl im Einladungsmenü |
+| `duel.reconnect-seconds` | `20` | Wartezeit bei Verbindungsabbruch, `0` = sofort verloren |
 | `duel.allowed-commands` | `msg`, `r` … | Befehle, die im Duell erlaubt sind |
-| `stats.max-counted-per-opponent-per-day` | `5` | mehr Runden gegen denselben Gegner pro Tag sind auffällig |
-| `review.hold` | `farming, limit, short, hit, border, idle` | was eine Runde zur Prüfung zurückhält |
-| `review.auto-days` / `.auto-decision` | `7` / `count` | automatische Entscheidung |
+| `arenas.pool-per-template` | `1` | Bereite Kopien pro Arena |
+| `stats.max-counted-per-opponent-per-day` | `5` | Mehr Runden gegen denselben Gegner pro Tag sind auffällig |
+| `review.auto-days` | `7` | Nach so vielen Tagen zählt eine ungeprüfte Runde automatisch |
 | `protection.restore-statistics` | `true` | Minecraft-Statistik nach der Runde auf den Stand davor |
-| `history.days` / `.snapshot-days` | `30` / `90` | wie lange Kampf-Logs und gesicherte Inventare bleiben |
-| `monitor.*` | | Grenzen für Auffälligkeiten, Discord-Log über MRadmin |
+| `history.days` · `.snapshot-days` | `30` · `90` | Wie lange Kampf-Logs und gesicherte Inventare bleiben |
 
-## Dateien
-| Datei | Inhalt |
+Alle Texte stehen in `plugins/MRpvp/lang/<sprache>.yml` ([MiniMessage](https://docs.advntr.dev/minimessage/format.html)), die Kits in `kits.yml`, die Arenen unter `templates/`, Runden und Statistik in der Datenbank `mrpvp.db`.
+
+---
+
+## Zusammenarbeit mit anderen Plugins
+MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr - die Plugins sprechen dafür über **MRadmin** miteinander:
+
+| Funktion | Braucht |
 |---|---|
-| `config.yml` | Einstellungen |
-| `kits.yml` | Kits (auch vom Kit-Editor geschrieben) |
-| `lang/de.yml`, `lang/en.yml` | alle Texte (MiniMessage) |
-| `templates/*.nbt` + `*.yml` | Arenen |
-| `mrpvp.db` | SQLite: Runden, gesicherte Zustände, Kampf-Log, Statistik, Sperren |
-| `slots.yml`, `data.yml` | intern (Arena-Kopien, installierte Standards) |
+| Seite **Duelle** in der Weboberfläche: live mit Herzen und Mini-Karte, alle Runden mit Inventaren, Kampf-Log und Wiedergabe, Prüfen | MRadmin |
+| Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, auffällige Runden im Discord-Log | MRadmin |
+| Im Admin-Modus kann man kein Duell starten | MRadmin |
+| Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert | MRadmin + MRtoolbar |
+| Spieler im Duell zählen nicht zur Schlafquote | MRadmin + MRsleep |
+| In der Arena-Welt lassen sich keine Chunkloader setzen | MRadmin + MRchunks |
 
-## Bauen
-```
-./gradlew build
-```
-Die JAR liegt danach in `build/libs/`. Branches und Release-Ablauf: [docs/RELEASES.md](docs/RELEASES.md),
-Konzept und Stand: [docs/PLAN.md](docs/PLAN.md).
+## Häufige Fragen
+**Kann beim Duell etwas aus dem Inventar verloren gehen?**
+Nein. Alles wird in der Datenbank gesichert, **bevor** etwas am Inventar geändert wird - auch ein Absturz verliert nichts. Admins sehen jede Sicherung im Admin-Menü unter **Runden** und können eine offene Rückgabe sofort ausführen.
+
+**Warum zählt eine Runde nicht in meiner Statistik?**
+Sie wurde als auffällig markiert - z.B. zu viele Runden gegen denselben Gegner oder eine sehr kurze Runde ohne Treffer - und wartet auf eine Prüfung durch das Team. Spätestens nach 7 Tagen wird sie automatisch entschieden.
+
+**Kann ich eigene Kits nur für VIPs anbieten?**
+Ja: Gib dem Kit in `kits.yml` eine `permission` und vergib sie an die VIP-Gruppe.
+
+**Ich habe einen Fehler gefunden oder einen Wunsch.**
+Gern über das **[Formular auf der Website](https://mrtechnology.marcelr.at/report/mrpvp/)** - am besten mit der Spiel-ID der betroffenen Runde und der Ausgabe von `/mrpvp version`.
+
+---
 
 ## Lizenz
-Siehe [LICENSE](LICENSE): Nutzung und Veränderung für den eigenen Server erlaubt, Weiterveröffentlichung nicht.
+MRpvp steht unter der **[MRtechnology Lizenz](LICENSE)** (source-available, nicht Open Source). Kurz gesagt:
+
+| ✅ Erlaubt | ❌ Nicht erlaubt |
+|---|---|
+| Nutzen - privat und gewerblich, auch auf Servern mit Spenden, Rängen oder Shops | Weiterveröffentlichen (auch verändert), z.B. auf Modrinth, Spigot, in Modpacks |
+| Verändern und neu kompilieren | Verkaufen oder gegen Geld anbieten |
+| An dein Team oder deinen Hoster weitergeben | Als eigenes Werk ausgeben, Lizenzhinweis entfernen |
+| Verbesserungen per Pull Request einreichen | |
+
+Die Nutzung erfolgt auf eigenes Risiko - leg vor Updates eine Sicherung an. Maßgeblich ist der vollständige Text in [LICENSE](LICENSE).
+
+## Für Entwickler
+Selbst bauen mit Java 25: `gradlew build` → `build/libs/`. Branches und Releases: [docs/RELEASES.md](docs/RELEASES.md), Konzept und Stand: [docs/PLAN.md](docs/PLAN.md).
