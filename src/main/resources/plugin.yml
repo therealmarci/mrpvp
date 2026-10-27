@@ -20,41 +20,58 @@ commands:
     usage: /mrpvp <version|reload|debug>
 
 permissions:
+  # ------------------------------------------------------------------ Groups
+  # The same in every MRtechnology plugin: <plugin>.player for players, <plugin>.groups.support / staff / admin for
+  # the team - each group contains the one below. The single permissions further down stay usable on their own;
+  # mrpvp.bypass.commands and the kit permissions from kits.yml are in no group on purpose.
   mrpvp.player:
-    description: All player permissions at once - e.g. for the default group in LuckPerms.
-    default: true
+    description: "Player: duels - open /duel, challenge and accept invites."
+    default: op
     children:
       mrpvp.use: true
+  mrpvp.groups.support:
+    description: "Group support: player + admin menu, view all rounds (results, combat log, saved inventories), review suspicious rounds, watch duels, player management."
+    default: op
+    children:
+      mrpvp.player: true
+      mrpvp.admin.gui: true
+      mrpvp.admin.games: true
+      mrpvp.admin.review: true
+      mrpvp.admin.spectate: true
+      mrpvp.admin.players: true
+  mrpvp.groups.staff:
+    description: "Group staff: support + edit kits and arenas, stop duels or declare the winner, pause duels, ban players from duels."
+    default: op
+    children:
+      mrpvp.groups.support: true
+      mrpvp.admin.kits: true
+      mrpvp.admin.arena: true
+      mrpvp.admin.stop: true
+      mrpvp.admin.pause: true
+      mrpvp.admin.ban: true
+  mrpvp.groups.admin:
+    description: "Group admin: everything of MRpvp - reset statistics, return saved states, restore defaults, reload, debug, update notice, no invite cooldown."
+    default: op
+    children:
+      mrpvp.groups.staff: true
+      mrpvp.admin.reset: true
+      mrpvp.admin.restore: true
+      mrpvp.admin.defaults: true
+      mrpvp.admin.reload: true
+      mrpvp.admin.debug: true
+      mrpvp.admin.update: true
+      mrpvp.bypass.cooldown: true
+
+  # ------------------------------------------------------------------ Single permissions
   mrpvp.use:
     description: Duels - open /duel, challenge and accept invites. Kits with their own permission (kits.yml "permission") need it additionally.
-    default: true
+    default: op
   mrpvp.bypass.cooldown:
     description: No waiting time between two invites.
     default: op
   mrpvp.bypass.commands:
     description: All commands also during a duel (otherwise only duel.allowed-commands).
     default: false
-  mrpvp.admin:
-    description: All admin permissions of MRpvp.
-    default: op
-    children:
-      mrpvp.admin.gui: true
-      mrpvp.admin.arena: true
-      mrpvp.admin.games: true
-      mrpvp.admin.restore: true
-      mrpvp.admin.spectate: true
-      mrpvp.admin.stop: true
-      mrpvp.admin.pause: true
-      mrpvp.admin.kits: true
-      mrpvp.admin.players: true
-      mrpvp.admin.ban: true
-      mrpvp.admin.reset: true
-      mrpvp.admin.review: true
-      mrpvp.admin.defaults: true
-      mrpvp.admin.reload: true
-      mrpvp.admin.debug: true
-      mrpvp.admin.update: true
-      mrpvp.bypass.cooldown: true
   mrpvp.admin.gui:
     description: Open the admin menu (/duel admin or the button in the duel menu). Actions in it need their own permission.
     default: op

@@ -23,7 +23,14 @@
 ## Schnellstart
 1. **[MRpvp herunterladen](https://mrtechnology.marcelr.at/download/mrpvp/)** und die JAR in den Ordner `plugins/` legen.
 2. Den Server starten. MRpvp legt die Arena-Welt `mrpvp_arenas` an und baut die Standard-Arenen und -Kits auf. Den Datenbank-Treiber lädt Paper beim ersten Start selbst herunter.
-3. Fertig - jeder Spieler kann mit **`/duel`** loslegen.
+3. **Rechte geben** - ohne sie dürfen nur OPs Duelle spielen:
+   ```text
+   /lp group default permission set mrpvp.player true
+   /lp group supporter permission set mrpvp.groups.support true
+   /lp group staff permission set mrpvp.groups.staff true
+   /lp group admin permission set mrpvp.groups.admin true
+   ```
+4. Fertig - Spieler legen mit **`/duel`** los.
 
 **Update:** Die alte JAR durch die neue ersetzen und den Server neu starten. Neue Einstellungen und neue Standard-Kits kommen automatisch dazu.
 
@@ -94,10 +101,15 @@ Auffällige Runden zählen nicht einfach nicht - sie **warten auf eine Entscheid
 ## Permissions
 | Permission | Standard | Wofür |
 |---|---|---|
-| `mrpvp.player` · `mrpvp.use` | alle | Duelle: herausfordern, annehmen, eigene Statistik |
+| **Gruppen** | | in allen MRtechnology-Plugins gleich aufgebaut, jede enthält die darunter |
+| `mrpvp.player` | OP | Duelle: herausfordern, annehmen, eigene Statistik |
+| `mrpvp.groups.support` | OP | Spieler + Admin-Menü, alle Runden ansehen, auffällige Runden prüfen und werten, zusehen, Spieler-Verwaltung |
+| `mrpvp.groups.staff` | OP | Support + Kits und Arenen bearbeiten, Duelle abbrechen oder Sieger bestimmen, pausieren, Spieler sperren |
+| `mrpvp.groups.admin` | OP | Alles: Staff + Statistik zurücksetzen, gesicherte Stände zurückgeben, Standard wiederherstellen, Reload, Debug, Update-Hinweis, keine Einladungs-Wartezeit |
+| **Einzeln** | | |
+| `mrpvp.use` | OP | Duelle spielen |
 | `mrpvp.bypass.cooldown` | OP | Keine Wartezeit zwischen Einladungen |
-| `mrpvp.bypass.commands` | niemand | Alle Befehle auch im Duell (sonst nur `duel.allowed-commands`) |
-| `mrpvp.admin` | OP | Alle folgenden Admin-Rechte |
+| `mrpvp.bypass.commands` | niemand | Alle Befehle auch im Duell (sonst nur `duel.allowed-commands`) - in keiner Gruppe |
 | `mrpvp.admin.gui` | OP | Admin-Menü öffnen (Aktionen darin brauchen ihr eigenes Recht) |
 | `mrpvp.admin.arena` | OP | Arenen bauen, bearbeiten, aktivieren, löschen |
 | `mrpvp.admin.kits` | OP | Kit-Editor |

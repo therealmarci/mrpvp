@@ -9,9 +9,20 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+> [!WARNING]
+> **Neue Permission-Gruppen:** Das Paket `mrpvp.admin` gibt es nicht mehr. Stattdessen gibt es in allen MRtechnology-Plugins dieselben Gruppen `<plugin>.player` und `<plugin>.groups.support|staff|admin`. Außerdem sind Duelle nicht mehr automatisch für alle Spieler da: `/lp group default permission set mrpvp.player true`. Admin-Gruppen umstellen, z.B. `/lp group admin permission unset mrpvp.admin` und `/lp group admin permission set mrpvp.groups.admin true`.
+
 ### Neu
+- **Permission-Gruppen:** `mrpvp.groups.support` (Admin-Menü, Runden ansehen, prüfen und werten, zusehen, Spieler-Verwaltung), `mrpvp.groups.staff` (+ Kits und Arenen bearbeiten, Duelle abbrechen, Sieger bestimmen, pausieren, sperren) und `mrpvp.groups.admin` (alles). Jede Gruppe enthält die darunter und `mrpvp.player`.
+- **Knopf im MRadmin-Dashboard:** öffnet das Admin-Menü jetzt direkt über die Modul-API.
 - **Kit-Editor in der MRadmin-Weboberfläche:** Unter Duelle → Kits stehen alle Kits mit den Item-Bildern aus dem Spiel. Dort lassen sie sich sortieren (die Reihenfolge im Spiel), kopieren, neu anlegen, umbenennen und löschen. Im Editor: Inventar wie im Spiel - Klick auf einen Platz öffnet den Item-Editor von MRadmin (Anzahl, Name, Beschreibung, Verzauberungen, Tränke, Farbe, Rüstungsbesatz …), Plätze tauschen, Name und Beschreibung auf Deutsch und Englisch, Symbol, Permission und **alle Kit-Regeln** inklusive der Arenen, auf die ein Kit festgelegt ist, Regeneration und Hunger. Permission `mrpvp.admin.kits` (wie der Kit-Editor im Spiel). Braucht MRadmin mit Item-Editor (Modul-API 2).
 - **Inventare im Web mit Bildern:** Die Inventare bei laufenden und beendeten Runden zeigt MRadmin jetzt mit den Item-Bildern und dem Tooltip wie im Spiel.
+
+### Entfernt
+- **Paket `mrpvp.admin`:** ersetzt durch `mrpvp.groups.admin`.
+
+### Behoben & geändert
+- **Duelle nur noch mit Permission:** `mrpvp.player` und `mrpvp.use` sind nicht mehr automatisch für alle - vergib `mrpvp.player` an deine Spieler-Gruppe.
 
 ## [0.3.0] - 2026-10-27
 
