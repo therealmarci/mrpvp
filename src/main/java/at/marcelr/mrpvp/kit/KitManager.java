@@ -260,6 +260,37 @@ public final class KitManager {
         load();
     }
 
+    /**
+     * Puts the kits into this order (the menus show them so); ids not listed keep their place after the listed ones.
+     */
+    public void reorder(List<String> ids) throws IOException {
+        File file = new File(plugin.getDataFolder(), "kits.yml");
+        YamlConfiguration yaml = readFile(file);
+        ConfigurationSection section = yaml.getConfigurationSection("kits");
+        if (section == null) {
+            return;
+        }
+        List<String> order = new ArrayList<>();
+        for (String id : ids) {
+            if (section.isConfigurationSection(id) && !order.contains(id)) {
+                order.add(id);
+            }
+        }
+        for (String id : section.getKeys(false)) {
+            if (!order.contains(id)) {
+                order.add(id);
+            }
+        }
+        Map<String, ConfigurationSection> kept = new LinkedHashMap<>();
+        for (String id : order) {
+            kept.put(id, section.getConfigurationSection(id));
+        }
+        yaml.set("kits", null);
+        kept.forEach((id, kit) -> yaml.set("kits." + id, kit));
+        write(file, yaml);
+        load();
+    }
+
     public void delete(String id) throws IOException {
         File file = new File(plugin.getDataFolder(), "kits.yml");
         YamlConfiguration yaml = readFile(file);

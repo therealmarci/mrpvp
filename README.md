@@ -63,7 +63,8 @@ Im Duell-Menü sieht jeder Spieler seine Statistik (gesamt und pro Kit), die **B
 
 ### Kits
 Mitgeliefert: **Klassisch, Diamant, Netherite, Bogen, Streitkolben, Elytra & Streitkolben, UHC, Build-UHC, Sumo, Boxing, NoDebuff, Crystal, Axt & Schild** und **Dreizack**.
-- Bearbeiten im Spiel mit dem **Kit-Editor** (Admin-Menü → Kits) oder lesbar in `kits.yml`.
+- Bearbeiten im Spiel mit dem **Kit-Editor** (Admin-Menü → Kits), in der **MRadmin-Weboberfläche** (Duelle → Kits) oder lesbar in `kits.yml`.
+- **Kit-Editor im Web** (mit MRadmin, Permission `mrpvp.admin.kits` wie im Spiel): alle Kits mit Bildern und Tooltip wie im Spiel, Reihenfolge per ↑/↓, kopieren, neu anlegen, umbenennen, löschen. Ein Klick auf einen Platz öffnet den Item-Editor (Anzahl, Name, Beschreibung, Verzauberungen, Tränke, Farbe, Rüstungsbesatz …), dazu Name und Beschreibung auf Deutsch und Englisch, Symbol, Permission und alle Regeln. Gespeichert wird in `kits.yml`; neue Runden bekommen das Kit sofort, laufende behalten ihres.
 - Kit-Regeln: kein Schaden bzw. nur Rückstoß (Sumo, Boxing), Sieg nach Treffern, feste Regeneration oder Hunger, nur bestimmte Arenen, braucht eine Bau-Arena.
 - Ein Kit kann eine eigene Permission haben (`permission` in `kits.yml`), z.B. für VIP-Kits.
 - **Name und Beschreibung pro Sprache:** In `kits.yml` entweder ein Text für alle Sprachen oder `name: { de: "<white>Klassisch", en: "<white>Classic" }` - jeder Spieler sieht seine Sprache, fehlt sie, gilt Englisch. Die Standard-Kits sind deutsch und englisch. Im Kit-Editor änderst du Name und Beschreibung in deiner eigenen Sprache, die anderen bleiben.
@@ -139,6 +140,7 @@ MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr 
 |---|---|
 | Seite **Duelle** in der Weboberfläche: live mit Herzen und Mini-Karte, alle Runden mit Inventaren, Kampf-Log und Wiedergabe, Prüfen | MRadmin |
 | Kachel **Duelle** auf der Spielerseite der Weboberfläche: Statistik, laufende und letzte Runden, Sperre | MRadmin |
+| **Kit-Editor im Web** mit Item-Bildern und Item-Editor | MRadmin (ab der Version mit Item-Editor) |
 | Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, auffällige Runden im Discord-Log | MRadmin |
 | Im Admin-Modus kann man kein Duell starten | MRadmin |
 | Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert | MRadmin + MRtoolbar |

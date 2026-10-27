@@ -9,6 +9,10 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+### Neu
+- **Kit-Editor in der MRadmin-Weboberfläche:** Unter Duelle → Kits stehen alle Kits mit den Item-Bildern aus dem Spiel. Dort lassen sie sich sortieren (die Reihenfolge im Spiel), kopieren, neu anlegen, umbenennen und löschen. Im Editor: Inventar wie im Spiel - Klick auf einen Platz öffnet den Item-Editor von MRadmin (Anzahl, Name, Beschreibung, Verzauberungen, Tränke, Farbe, Rüstungsbesatz …), Plätze tauschen, Name und Beschreibung auf Deutsch und Englisch, Symbol, Permission und **alle Kit-Regeln** inklusive der Arenen, auf die ein Kit festgelegt ist, Regeneration und Hunger. Permission `mrpvp.admin.kits` (wie der Kit-Editor im Spiel). Braucht MRadmin mit Item-Editor (Modul-API 2).
+- **Inventare im Web mit Bildern:** Die Inventare bei laufenden und beendeten Runden zeigt MRadmin jetzt mit den Item-Bildern und dem Tooltip wie im Spiel.
+
 ## [0.3.0] - 2026-10-27
 
 ### Neu
