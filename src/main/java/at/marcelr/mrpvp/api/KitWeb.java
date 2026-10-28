@@ -24,7 +24,9 @@ import java.util.regex.Pattern;
  * <pre>
  *  kits                {kits: [id, name, icon, permission, rules, hotbar (items), item count], arenas}
  *  kit      {id}       one kit: names / descriptions per language, icon, permission, rules, all items, arenas to choose
- *  kitSave  {kit}      new or changed kit ("original" = id before, null for a new one; another id renames it)
+ *  kitExport {ids}     the kits (comma-separated ids, empty = all) as a file to download (see KitTransfer)
+ *  kitSave  {kit}      new or changed kit ("original" = id before, null for a new one; another id renames it) -
+ *                      also used to import a file, kit by kit, after the web showed the preview
  *  kitDelete {id}      kitOrder {ids}
  * </pre>
  * Items go through MRadmin's item support (WebItems, API 2) - so they can be shown and edited with everything.
@@ -98,6 +100,17 @@ final class KitWeb {
         k.put("offhand", offhand);
         k.put("arenas", arenas(plugin));
         return k;
+    }
+
+    /** {name, content} of a kit file with the given kits (comma-separated ids, empty = all). */
+    static Map<String, Object> export(MRPvp plugin, String ids) {
+        List<String> wanted = ids.isBlank() ? List.of() : List.of(ids.toLowerCase(Locale.ROOT).split(","));
+        List<Kit> kits = plugin.kits().all().stream().filter(k -> wanted.isEmpty() || wanted.contains(k.id())).toList();
+        if (kits.isEmpty()) {
+            return null;
+        }
+        String name = "mrpvp-kits-" + java.time.LocalDate.now() + (kits.size() == 1 ? "-" + kits.getFirst().id() : "") + ".json";
+        return Map.of("name", name, "content", at.marcelr.mrpvp.kit.KitTransfer.write(kits), "count", kits.size());
     }
 
     /** Arenas a kit can be limited to. */

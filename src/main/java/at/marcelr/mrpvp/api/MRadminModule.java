@@ -54,7 +54,7 @@ final class MRadminModule implements AdminModule, WebModule {
             "pause", AdminMenu.PERM_PAUSE, "kits", AdminMenu.PERM_KITS);
     /** Rounds with inventories need "games", the review list "review", the kit editor "kits"; everything else only viewing. */
     private static final Map<String, String> REQUESTS = Map.of("games", "games", "game", "games", "reviews", "review",
-            "kits", "kits", "kit", "kits");
+            "kits", "kits", "kit", "kits", "kitExport", "kits");
     private static final Set<String> DATA = Set.of("overview", "live", "games", "game", "alerts", "reviews", "kits", "kit");
     private static final Map<String, String> ACTIONS = Map.ofEntries(
             Map.entry("stop", "stop"), Map.entry("win", "stop"), Map.entry("pause", "pause"), Map.entry("resume", "pause"),
@@ -282,6 +282,7 @@ final class MRadminModule implements AdminModule, WebModule {
         return switch (request) {
             case "kits" -> KitWeb.list(plugin);
             case "kit" -> KitWeb.kit(plugin, args.getOrDefault("id", ""));
+            case "kitExport" -> KitWeb.export(plugin, args.getOrDefault("ids", ""));
             default -> DATA.contains(request) ? WebData.handle(plugin, request, args) : null;
         };
     }

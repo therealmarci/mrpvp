@@ -37,6 +37,21 @@ public final class KitListMenu extends Menu {
         });
         set(49, Items.of(Material.WRITABLE_BOOK).name(m.item("gui-kitlist-new")).lore(m.lore("gui-kitlist-new-lore")).build(),
                 click -> askId(""));
+        set(47, Items.of(Material.CHEST_MINECART).name(m.item("gui-kitlist-export"))
+                .lore(m.lore("gui-kitlist-export-lore", tag("folder", "plugins/MRpvp/exports/"))).build(), click -> {
+            String file = KitImportMenu.exportAll(plugin);
+            if (file == null) {
+                m.send(viewer, "kit-export-failed");
+            } else {
+                m.send(viewer, "kit-exported", tag("count", kits.size()), tag("file", "plugins/MRpvp/exports/" + file));
+                successSound();
+            }
+        });
+        set(51, Items.of(Material.HOPPER_MINECART).name(m.item("gui-kitlist-import"))
+                .lore(m.lore("gui-kitlist-import-lore", tag("folder", "plugins/MRpvp/imports/"))).build(), click -> {
+            clickSound();
+            new KitImportMenu(plugin, viewer).open();
+        });
         fillRow(5);
     }
 
