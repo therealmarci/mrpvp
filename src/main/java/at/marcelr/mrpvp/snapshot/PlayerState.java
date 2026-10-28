@@ -56,8 +56,20 @@ public final class PlayerState {
                 null);
     }
 
+    /** Max hearts of a kit (rules.max-hearts): a modifier that is never written to the player file. */
+    public static final org.bukkit.NamespacedKey KIT_HEALTH = new org.bukkit.NamespacedKey("mrpvp", "kit_health");
+
+    /** Takes the kit's max hearts away again. */
+    public static void removeKitHealth(Player player) {
+        AttributeInstance max = player.getAttribute(Attribute.MAX_HEALTH);
+        if (max != null) {
+            max.removeModifier(KIT_HEALTH);
+        }
+    }
+
     /** Empty inventory, no effects, full health and hunger - the start of a round (or the editor). */
     public static void reset(Player player, GameMode mode) {
+        removeKitHealth(player);
         player.closeInventory();
         PlayerInventory inv = player.getInventory();
         inv.clear();
@@ -109,6 +121,7 @@ public final class PlayerState {
         inv.setArmorContents(armor);
         inv.setItemInOffHand(offhand[0]);
 
+        removeKitHealth(player);
         player.getActivePotionEffects().forEach(effect -> player.removePotionEffect(effect.getType()));
         player.addPotionEffects(effects(s.effects(), log));
 

@@ -12,10 +12,10 @@ import at.marcelr.mrpvp.kit.Kit;
  */
 public record DuelOptions(int wins, int minutes, boolean hunger, boolean regen) {
 
-    /** The options as they apply with this kit - a kit can fix hunger or regeneration (UHC: no regeneration). */
+    /** The options as they apply with this kit - a kit can fix the time limit, hunger or regeneration (UHC: no regeneration). */
     public DuelOptions with(Kit kit) {
         var rules = kit.rules();
-        return new DuelOptions(wins, minutes, rules.hunger() != null ? rules.hunger() : hunger,
+        return new DuelOptions(wins, rules.minutes() > 0 ? rules.minutes() : minutes, rules.hunger() != null ? rules.hunger() : hunger,
                 rules.regen() != null ? rules.regen() : regen);
     }
 

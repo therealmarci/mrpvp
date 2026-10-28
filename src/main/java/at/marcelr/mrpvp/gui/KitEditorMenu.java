@@ -201,6 +201,11 @@ public final class KitEditorMenu extends Menu {
         }
         set(53, Items.of(Material.LIME_CONCRETE).name(m.item("gui-kiteditor-save"))
                 .lore(m.lore("gui-kiteditor-save-lore", tag("count", draft.items.size()))).build(), click -> save());
+        set(50, Items.of(Material.COMPARATOR).name(m.item("gui-kiteditor-rules"))
+                .lore(m.lore("gui-kiteditor-rules-lore")).build(), click -> {
+            clickSound();
+            new KitRulesMenu(plugin, viewer, draft, this::open).open();
+        });
         set(48, Items.of(Material.KNOWLEDGE_BOOK).name(m.item("gui-kiteditor-help")).lore(m.lore("gui-kiteditor-help-lore")).build());
         fillRow(5);
         set(41, Items.filler());
@@ -305,7 +310,8 @@ public final class KitEditorMenu extends Menu {
 
     private void save() {
         var m = plugin.messages();
-        if (draft.items.isEmpty()) {
+        // Without items only with own rules (sumo: bare hands, only knockback).
+        if (draft.items.isEmpty() && draft.rules.isDefault()) {
             m.send(viewer, "kit-empty");
             return;
         }

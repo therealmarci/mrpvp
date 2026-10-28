@@ -101,7 +101,7 @@ public final class KitManager {
                 }
             }
         }
-        KitRules rules = rules(k.getConfigurationSection("rules"));
+        KitRules rules = rules(id, k.getConfigurationSection("rules"));
         // Without items only makes sense with own rules (sumo: bare hands, only knockback).
         if (items.isEmpty() && rules.isDefault()) {
             plugin.getLogger().warning("kits.yml " + id + ": no items - kit skipped.");
@@ -150,15 +150,44 @@ public final class KitManager {
         }
     }
 
-    private static KitRules rules(ConfigurationSection r) {
+    private KitRules rules(String kit, ConfigurationSection r) {
         if (r == null) {
             return KitRules.NONE;
+        }
+        // effects: { speed: 2 } - unknown effects are skipped with a warning
+        Map<String, Integer> effects = new LinkedHashMap<>();
+        ConfigurationSection e = r.getConfigurationSection("effects");
+        if (e != null) {
+            var registry = RegistryAccess.registryAccess().getRegistry(RegistryKey.MOB_EFFECT);
+            for (String name : e.getKeys(false)) {
+                String key = name.toLowerCase(Locale.ROOT);
+                if (!Key.parseable(key) || registry.get(Key.key(key)) == null) {
+                    plugin.getLogger().warning("kits.yml " + kit + ": unknown effect '" + name + "' - skipped.");
+                    continue;
+                }
+                effects.put(key, Math.clamp(e.getInt(name, 1), 1, KitRules.MAX_EFFECT_LEVEL));
+            }
+        }
+        // cooldowns: { ender_pearl: 15 } - seconds after using such an item
+        Map<String, Integer> cooldowns = new LinkedHashMap<>();
+        ConfigurationSection c = r.getConfigurationSection("cooldowns");
+        if (c != null) {
+            for (String name : c.getKeys(false)) {
+                Material type = Material.matchMaterial(name);
+                if (type == null || !type.isItem() || type.isAir()) {
+                    plugin.getLogger().warning("kits.yml " + kit + ": unknown item '" + name + "' in cooldowns - skipped.");
+                    continue;
+                }
+                cooldowns.put(type.getKey().getKey(), Math.clamp(c.getInt(name, 0), 1, KitRules.MAX_COOLDOWN));
+            }
         }
         return new KitRules(r.getBoolean("damage", true), Math.max(0, r.getInt("hits-to-win", 0)),
                 r.isBoolean("regen") ? r.getBoolean("regen") : null,
                 r.isBoolean("hunger") ? r.getBoolean("hunger") : null,
                 r.getStringList("arenas").stream().map(a -> a.toLowerCase(Locale.ROOT)).toList(),
-                r.getBoolean("build", false));
+                r.getBoolean("build", false), effects,
+                Math.clamp(r.getInt("max-hearts", 0), 0, KitRules.MAX_HEARTS), cooldowns,
+                Math.clamp(r.getInt("minutes", 0), 0, KitRules.MAX_MINUTES));
     }
 
     private static void writeRules(YamlConfiguration yaml, String path, KitRules rules) {
@@ -182,6 +211,14 @@ public final class KitManager {
         }
         if (rules.build()) {
             yaml.set(path + ".rules.build", true);
+        }
+        rules.effects().forEach((effect, level) -> yaml.set(path + ".rules.effects." + effect, level));
+        if (rules.maxHearts() > 0) {
+            yaml.set(path + ".rules.max-hearts", rules.maxHearts());
+        }
+        rules.cooldowns().forEach((item, seconds) -> yaml.set(path + ".rules.cooldowns." + item, seconds));
+        if (rules.minutes() > 0) {
+            yaml.set(path + ".rules.minutes", rules.minutes());
         }
     }
 
@@ -451,6 +488,13 @@ public final class KitManager {
         for (Map.Entry<KitSlot, ItemStack> entry : kit.items().entrySet()) {
             ItemStack item = entry.getValue().clone();
             item.editPersistentDataContainer(pdc -> pdc.set(marker, PersistentDataType.LONG, gameId));
+            // Kit cooldown: the game itself waits after a use and shows it on the item (rules.cooldowns).
+            Integer cooldown = kit.rules().cooldowns().get(item.getType().getKey().getKey());
+            if (cooldown != null) {
+                item.setData(io.papermc.paper.datacomponent.DataComponentTypes.USE_COOLDOWN,
+                        io.papermc.paper.datacomponent.item.UseCooldown.useCooldown(cooldown)
+                                .cooldownGroup(Key.key("mrpvp", "kit_" + item.getType().getKey().getKey())).build());
+            }
             KitSlot slot = entry.getKey();
             if (slot.special() == null) {
                 inv.setItem(slot.index(), item);
@@ -464,6 +508,32 @@ public final class KitManager {
                 }
             }
         }
+    }
+
+    /**
+     * The kit's round rules on the player: max hearts (an attribute modifier that is never saved - a crash cannot
+     * leave it behind, see {@link at.marcelr.mrpvp.snapshot.PlayerState#KIT_HEALTH}) and the effects for the whole
+     * round. Call after {@link #give}; the state reset at the end of the round takes both away again.
+     */
+    public void applyRules(Player player, Kit kit) {
+        KitRules rules = kit.rules();
+        var health = player.getAttribute(org.bukkit.attribute.Attribute.MAX_HEALTH);
+        if (health != null) {
+            health.removeModifier(at.marcelr.mrpvp.snapshot.PlayerState.KIT_HEALTH);
+            if (rules.maxHearts() > 0) {
+                health.addTransientModifier(new org.bukkit.attribute.AttributeModifier(
+                        at.marcelr.mrpvp.snapshot.PlayerState.KIT_HEALTH, rules.maxHearts() * 2.0 - health.getValue(),
+                        org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER));
+            }
+        }
+        var registry = RegistryAccess.registryAccess().getRegistry(RegistryKey.MOB_EFFECT);
+        rules.effects().forEach((key, level) -> {
+            var type = registry.get(Key.key(key));
+            if (type != null) {
+                player.addPotionEffect(new org.bukkit.potion.PotionEffect(type,
+                        org.bukkit.potion.PotionEffect.INFINITE_DURATION, level - 1, false, false, true));
+            }
+        });
     }
 
     public boolean isKitItem(ItemStack item) {

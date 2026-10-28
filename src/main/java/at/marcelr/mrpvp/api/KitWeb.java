@@ -117,6 +117,14 @@ final class KitWeb {
         r.put("hunger", rules.hunger());
         r.put("arenas", rules.arenas());
         r.put("build", rules.build());
+        List<Map<String, Object>> effects = new ArrayList<>();
+        rules.effects().forEach((type, level) -> effects.add(Map.of("type", type, "level", level)));
+        r.put("effects", effects);
+        r.put("maxHearts", rules.maxHearts());
+        List<Map<String, Object>> cooldowns = new ArrayList<>();
+        rules.cooldowns().forEach((item, seconds) -> cooldowns.add(Map.of("item", item, "seconds", seconds)));
+        r.put("cooldowns", cooldowns);
+        r.put("minutes", rules.minutes());
         return r;
     }
 
@@ -271,9 +279,45 @@ final class KitWeb {
                 }
             }
         }
+        Map<String, Integer> effects = new LinkedHashMap<>();
+        if (r.get("effects") instanceof List<?> list) {
+            var registry = io.papermc.paper.registry.RegistryAccess.registryAccess()
+                    .getRegistry(io.papermc.paper.registry.RegistryKey.MOB_EFFECT);
+            for (Object o : list) {
+                if (!(o instanceof Map<?, ?> e)) {
+                    throw new IllegalArgumentException("kit-rules");
+                }
+                String type = text(e.get("type")).toLowerCase(Locale.ROOT);
+                int level = e.get("level") instanceof Number n ? n.intValue() : 0;
+                if (!net.kyori.adventure.key.Key.parseable(type) || registry.get(net.kyori.adventure.key.Key.key(type)) == null
+                        || level < 1 || level > KitRules.MAX_EFFECT_LEVEL) {
+                    throw new IllegalArgumentException("kit-effect");
+                }
+                effects.put(type, level);
+            }
+        }
+        Map<String, Integer> cooldowns = new LinkedHashMap<>();
+        if (r.get("cooldowns") instanceof List<?> list) {
+            for (Object o : list) {
+                if (!(o instanceof Map<?, ?> c)) {
+                    throw new IllegalArgumentException("kit-rules");
+                }
+                Material type = Material.matchMaterial(text(c.get("item")));
+                int seconds = c.get("seconds") instanceof Number n ? n.intValue() : 0;
+                if (type == null || !type.isItem() || type.isAir() || seconds < 1 || seconds > KitRules.MAX_COOLDOWN) {
+                    throw new IllegalArgumentException("kit-cooldown");
+                }
+                cooldowns.put(type.getKey().getKey(), seconds);
+            }
+        }
+        int hearts = r.get("maxHearts") instanceof Number n ? n.intValue() : 0;
+        int minutes = r.get("minutes") instanceof Number n ? n.intValue() : 0;
+        if (hearts < 0 || hearts > KitRules.MAX_HEARTS || minutes < 0 || minutes > KitRules.MAX_MINUTES) {
+            throw new IllegalArgumentException("kit-rules");
+        }
         return new KitRules(!Boolean.FALSE.equals(r.get("damage")), hits,
                 r.get("regen") instanceof Boolean b ? b : null, r.get("hunger") instanceof Boolean b ? b : null,
-                List.copyOf(arenas), Boolean.TRUE.equals(r.get("build")));
+                List.copyOf(arenas), Boolean.TRUE.equals(r.get("build")), effects, hearts, cooldowns, minutes);
     }
 
     static String delete(MRPvp plugin, Map<?, ?> args, String admin) {
