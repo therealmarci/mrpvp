@@ -155,8 +155,8 @@ final class SelfPage {
                 new SelfBlock.Stat(m.plain("self-card-game"), "#" + row.id(), ""))))));
         if (me != null && other != null) {
             details.add(new SelfBlock.Group(m.plain("self-card-numbers"), "", List.of(
-                    sideMeters(m.plain("self-card-me"), me, other, locale, m),
-                    sideMeters(m.plain("self-card-opponent", "name", other.name()), other, me, locale, m))));
+                    sideMeters(m.plain("self-card-me"), me, other, "own", locale, m),
+                    sideMeters(m.plain("self-card-opponent", "name", other.name()), other, me, "other", locale, m))));
         }
         if (row.removed()) {
             details.add(new SelfBlock.Text(m.plain("self-card-removed"), "warn"));
@@ -165,19 +165,23 @@ final class SelfPage {
                 subtitle, badge, tone, stats, List.of(), null, List.of(), details);
     }
 
-    /** One side of a round as bars against the other side (damage, hits) plus the rest as text. */
-    private static SelfBlock sideMeters(String title, GameQueries.PlayerLine p, GameQueries.PlayerLine o, Locale locale,
+    /**
+     * One side of a round as bars against the other side (damage, hits, health) plus the rest as text - all bars in the
+     * colour of the side ({@code tone} "own" violet for the viewer, "other" amber for the opponent).
+     */
+    private static SelfBlock sideMeters(String title, GameQueries.PlayerLine p, GameQueries.PlayerLine o, String tone,
+                                        Locale locale,
                                         Messages m) {
         double damage = Math.max(1, Math.max(p.damageDealt(), o.damageDealt()));
         int hits = Math.max(1, Math.max(p.hits(), o.hits()));
         List<SelfBlock.Meter> meters = new ArrayList<>();
         meters.add(new SelfBlock.Meter(m.plain("self-card-dealt"), hearts(locale, p.damageDealt()),
-                p.damageDealt() / damage, -1, "", ""));
+                p.damageDealt() / damage, -1, "", tone));
         meters.add(new SelfBlock.Meter(m.plain("self-card-hits"), p.hits() + " (" + m.plain("self-card-crits", "crits", p.crits()) + ")",
-                (double) p.hits() / hits, -1, "", ""));
+                (double) p.hits() / hits, -1, "", tone));
         if (p.healthEnd() != null) {
             meters.add(new SelfBlock.Meter(m.plain("self-card-health"), hearts(locale, p.healthEnd()), p.healthEnd() / 20.0, -1,
-                    "", p.healthEnd() <= 0 ? "bad" : p.healthEnd() < 6 ? "warn" : "good"));
+                    "", tone));
         }
         List<String> extra = new ArrayList<>();
         if (p.arrowsShot() > 0) {
