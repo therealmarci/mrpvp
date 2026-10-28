@@ -30,6 +30,7 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 - **Paket `mrpvp.admin`:** ersetzt durch `mrpvp.groups.admin`.
 
 ### Behoben & geändert
+- **Kachel auf der Spielerseite:** Die Duell-Kachel auf der Startseite der Spielerseite (MRadmin, `/web`) zeigt jetzt Siege groß, dazu Runden, Siegquote und K/D.
 - **`/mrpvp version` nur noch mit Permission:** `mrpvp.version` (in `mrpvp.player`) - bisher durfte das jeder.
 - **Duelle nur noch mit Permission:** `mrpvp.player` und `mrpvp.use` sind nicht mehr automatisch für alle - vergib `mrpvp.player` an deine Spieler-Gruppe.
 

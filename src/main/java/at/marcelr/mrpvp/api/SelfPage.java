@@ -96,7 +96,8 @@ final class SelfPage {
                         m.plain("self-col-kit"), m.plain("self-col-result"), m.plain("self-col-duration")), rows,
                         m.plain("self-history-empty")),
                 new SelfBlock.Text(m.plain("self-hint"), "info"));
-        List<SelfBlock> summary = List.of(new SelfBlock.Stats(List.of(stats.get(1), stats.get(3))));
+        // Start page tile: wins big, then games, win rate and K/D.
+        List<SelfBlock> summary = List.of(new SelfBlock.Stats(List.of(stats.get(1), stats.get(0), stats.get(3), stats.get(4))));
         return new SelfArea(AREA, m.plain("self-title"), "⚔️", summary, blocks);
     }
 
