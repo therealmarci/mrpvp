@@ -143,18 +143,20 @@ final class SelfPage {
             stats.add(new SelfBlock.Stat(m.plain("self-card-damage"), hearts(locale, me.damageDealt()) + " / "
                     + hearts(locale, me.damageTaken()), ""));
         }
-        // Opened: both sides next to each other, the reason and the arena.
+        // Opened: the reason and the arena, then both sides.
         List<SelfBlock> details = new ArrayList<>();
         ArenaTemplate arena = plugin.templates().get(row.arena());
         String reason = row.reason() == null ? "" : m.plain("end-reason-" + row.reason().toLowerCase(Locale.ROOT));
-        details.add(new SelfBlock.Stats(List.of(
+        // Two framed boxes: the overview (how it ended, where, with what) and below the numbers of both sides.
+        details.add(new SelfBlock.Group(m.plain("self-card-overview"), "", List.of(new SelfBlock.Stats(List.of(
                 new SelfBlock.Stat(m.plain("self-card-reason"), reason, ""),
                 new SelfBlock.Stat(m.plain("self-card-arena"), arena == null ? row.arena() : plain(arena.name()), ""),
                 new SelfBlock.Stat(m.plain("self-col-kit"), kitName, ""),
-                new SelfBlock.Stat(m.plain("self-card-game"), "#" + row.id(), ""))));
+                new SelfBlock.Stat(m.plain("self-card-game"), "#" + row.id(), ""))))));
         if (me != null && other != null) {
-            details.add(sideMeters(m.plain("self-card-me"), me, other, locale, m));
-            details.add(sideMeters(m.plain("self-card-opponent", "name", other.name()), other, me, locale, m));
+            details.add(new SelfBlock.Group(m.plain("self-card-numbers"), "", List.of(
+                    sideMeters(m.plain("self-card-me"), me, other, locale, m),
+                    sideMeters(m.plain("self-card-opponent", "name", other.name()), other, me, locale, m))));
         }
         if (row.removed()) {
             details.add(new SelfBlock.Text(m.plain("self-card-removed"), "warn"));
