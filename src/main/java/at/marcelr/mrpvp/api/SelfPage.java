@@ -33,7 +33,8 @@ final class SelfPage {
 
     static final String AREA = "duels";
     private static final String USE = "mrpvp.use";
-    private static final int HISTORY = 15;
+    /** Rounds in the list (the web interface shows them in pages). */
+    private static final int HISTORY = 100;
     private static final int RANKING_SIZE = 500;
 
     private SelfPage() {
@@ -104,7 +105,7 @@ final class SelfPage {
                 : new SelfBlock.Table(m.plain("self-history"), List.of(m.plain("self-col-date"), m.plain("self-col-opponent"),
                         m.plain("self-col-kit"), m.plain("self-col-result"), m.plain("self-col-duration")), rows,
                         m.plain("self-history-empty"));
-        List<SelfBlock> blocks = List.of(new SelfBlock.Stats(stats), history, new SelfBlock.Text(m.plain("self-hint"), "info"));
+        List<SelfBlock> blocks = List.of(new SelfBlock.Stats(stats), history);
         // Start page tile: wins big, then games, win rate and K/D.
         List<SelfBlock> summary = List.of(new SelfBlock.Stats(List.of(stats.get(1), stats.get(0), stats.get(3), stats.get(4))));
         return new SelfArea(AREA, m.plain("self-title"), "⚔️", summary, blocks);
