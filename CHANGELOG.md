@@ -9,6 +9,8 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+## [0.4.0] - 2026-10-28
+
 > [!WARNING]
 > **Neue Permission-Gruppen:** Das Paket `mrpvp.admin` gibt es nicht mehr. Stattdessen gibt es in allen MRtechnology-Plugins dieselben Gruppen `<plugin>.player` und `<plugin>.groups.support|staff|admin`. Außerdem sind Duelle nicht mehr automatisch für alle Spieler da: `/lp group default permission set mrpvp.player true`. Admin-Gruppen umstellen, z.B. `/lp group admin permission unset mrpvp.admin` und `/lp group admin permission set mrpvp.groups.admin true`.
 
