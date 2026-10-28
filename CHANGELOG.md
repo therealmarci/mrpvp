@@ -9,6 +9,9 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+### Neu
+- **Duelle auf der eigenen Spielerseite (MRadmin, `/web`):** Mit MRadmin sieht jeder Spieler im Browser seine Duell-Statistik (Runden, Siege, Niederlagen, Siegquote, K/D, Serie, Trefferquote) und seine letzten Runden mit Gegner, Kit, Ergebnis und Dauer. Auf der Statistik-Seite stehen dazu die Ranglisten **meiste Siege**, **beste Siegquote** (ab `stats.min-games-for-ratio` Runden) und **längste Siegesserie**. Braucht `mrpvp.use` und MRadmin mit Modul-API 1.3.0. Texte unter `self-*` in den Sprachdateien.
+
 ## [0.4.0] - 2026-10-28
 
 > [!WARNING]

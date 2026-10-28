@@ -320,6 +320,26 @@ final class MRadminModule implements AdminModule, WebModule {
         return WebData.handle(plugin, "player", Map.of("uuid", player.toString()));
     }
 
+    // ------------------------------------------- since MRadmin API 4 (1.3.0)
+
+    /** The player's own page (/web): MRadmin checks these permissions beforehand, also while the player is offline. */
+    @Override
+    public Set<String> selfPermissions() {
+        return Set.of("mrpvp.use");
+    }
+
+    /** Own duel statistics and the last rounds (read only). */
+    @Override
+    public List<at.marcelr.mradmin.api.SelfArea> selfAreas(at.marcelr.mradmin.api.SelfViewer viewer) {
+        return SelfPage.areas(plugin, viewer);
+    }
+
+    /** Duel rankings for the statistics page: most wins, best win rate, best streak. */
+    @Override
+    public List<at.marcelr.mradmin.api.SelfRanking> rankings(String lang) {
+        return SelfPage.rankings(plugin, lang);
+    }
+
     /** Rounds waiting for a review. */
     @Override
     public List<WebAlert> alerts() {
