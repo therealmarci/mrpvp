@@ -22,6 +22,7 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 - **Paket `mrpvp.admin`:** ersetzt durch `mrpvp.groups.admin`.
 
 ### Behoben & geändert
+- **`/mrpvp version` nur noch mit Permission:** `mrpvp.version` (in `mrpvp.player`) - bisher durfte das jeder.
 - **Duelle nur noch mit Permission:** `mrpvp.player` und `mrpvp.use` sind nicht mehr automatisch für alle - vergib `mrpvp.player` an deine Spieler-Gruppe.
 
 ## [0.3.0] - 2026-10-27

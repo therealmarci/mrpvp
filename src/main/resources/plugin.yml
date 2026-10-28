@@ -25,9 +25,10 @@ permissions:
   # the team - each group contains the one below. The single permissions further down stay usable on their own;
   # mrpvp.bypass.commands and the kit permissions from kits.yml are in no group on purpose.
   mrpvp.player:
-    description: "Player: duels - open /duel, challenge and accept invites."
+    description: "Player: duels - open /duel, challenge and accept invites; /mrpvp version."
     default: op
     children:
+      mrpvp.version: true
       mrpvp.use: true
   mrpvp.groups.support:
     description: "Group support: player + admin menu, view all rounds (results, combat log, saved inventories), review suspicious rounds, watch duels, player management."
@@ -63,6 +64,9 @@ permissions:
       mrpvp.bypass.cooldown: true
 
   # ------------------------------------------------------------------ Single permissions
+  mrpvp.version:
+    description: /mrpvp version - version, update status and links.
+    default: op
   mrpvp.use:
     description: Duels - open /duel, challenge and accept invites. Kits with their own permission (kits.yml "permission") need it additionally.
     default: op

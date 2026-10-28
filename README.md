@@ -95,7 +95,8 @@ Auffällige Runden zählen nicht einfach nicht - sie **warten auf eine Entscheid
 | `/duel <spieler>` | Direkt eine Einladung an diesen Spieler | `mrpvp.use` |
 | `/duel leave` | Aufgeben (Niederlage im Match) | `mrpvp.use` |
 | `/duel admin` | Admin-Menü | `mrpvp.admin.gui` |
-| `/mrpvp version` · `reload` | Version anzeigen · Config und Texte neu laden | `mrpvp.admin.reload` |
+| `/mrpvp version` | Version anzeigen | `mrpvp.version` (in `mrpvp.player`) |
+| `/mrpvp reload` | Config und Texte neu laden | `mrpvp.admin.reload` |
 | `/mrpvp debug …` | Sichern und Zurückgeben testen, gesicherte Zustände ansehen | `mrpvp.admin.debug` |
 
 ## Permissions
