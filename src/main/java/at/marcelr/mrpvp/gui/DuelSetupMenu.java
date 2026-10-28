@@ -162,12 +162,15 @@ public final class DuelSetupMenu extends Menu {
             clickSound();
             render();
         });
-        set(14, Items.of(Material.CLOCK).amount(Math.clamp(options.minutes(), 1, 64))
-                .name(m.item("gui-options-minutes", tag("value", options.minutes())))
-                .lore(m.lore("gui-options-minutes-lore")).build(), click -> {
-            options = options.withMinutes(step(duel.minuteChoices(), options.minutes(), click));
-            clickSound();
-            render();
+        boolean minutesFixed = kit.rules().minutes() > 0;
+        set(14, Items.of(Material.CLOCK).amount(Math.clamp(shown.minutes(), 1, 64))
+                .name(m.item("gui-options-minutes", tag("value", shown.minutes())))
+                .lore(m.lore(minutesFixed ? "gui-options-fixed-lore" : "gui-options-minutes-lore")).build(), click -> {
+            if (!minutesFixed) {
+                options = options.withMinutes(step(duel.minuteChoices(), options.minutes(), click));
+                clickSound();
+                render();
+            }
         });
 
         boolean hungerFixed = kit.rules().hunger() != null;

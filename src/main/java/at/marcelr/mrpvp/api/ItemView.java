@@ -1,5 +1,7 @@
 package at.marcelr.mrpvp.api;
 
+import at.marcelr.mradmin.api.MRadminService;
+import at.marcelr.mradmin.api.WebItems;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -10,19 +12,40 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Items as plain data for the web interface - what the page needs to show a slot, never the item itself. */
+/**
+ * Items as plain data for the web interface. With MRadmin's item support (API 2) MRadmin describes them - the web
+ * then shows them with the game's pictures and can edit them; with an older MRadmin a simple view of our own.
+ */
 final class ItemView {
 
     private ItemView() {
     }
 
+    /** MRadmin's item support, or null with an MRadmin before API 2. */
+    static WebItems items() {
+        MRadminService service = MRadminService.get();
+        return service != null && service.apiVersion() >= 2 ? service.items() : null;
+    }
+
     /**
-     * "slot", "type" (e.g. "diamond_sword"), "amount", "name" (custom name or null), "enchants" ([key, level]),
-     * "damage" and "max" (durability, max 0 = none). Null for an empty slot.
+     * The item's data (see MRadmin's WebItems) plus "slot". Without MRadmin's item support: "slot", "type"
+     * (e.g. "diamond_sword"), "amount", "name" (custom name or null), "enchants" ([key, level]), "damage" and "max"
+     * (durability, max 0 = none). Null for an empty slot.
      */
     static Map<String, Object> of(int slot, ItemStack item) {
         if (item == null || item.isEmpty()) {
             return null;
+        }
+        WebItems items = items();
+        if (items != null) {
+            Map<String, Object> described = items.describe(item);
+            if (described == null) {
+                return null;
+            }
+            Map<String, Object> view = new LinkedHashMap<>();
+            view.put("slot", slot);
+            view.putAll(described);
+            return view;
         }
         Map<String, Object> view = new LinkedHashMap<>();
         view.put("slot", slot);

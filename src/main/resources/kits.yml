@@ -19,6 +19,11 @@
 #                    hunger: false     hunger fixed on/off (otherwise the players choose)
 #                    arenas: [sumo]    only in these arenas
 #                    build: true       needs an arena where building is allowed
+#                    minutes: 5        fixed time limit of a round (otherwise the players choose)
+#                    max-hearts: 20    both players have this many hearts (10 = normal)
+#                    effects: { speed: 2, fire_resistance: 1 }       effects for the whole round (level 1-10)
+#                    cooldowns: { ender_pearl: 15, golden_apple: 5 } seconds to wait after using such an item
+#                  All of it can also be set in the kit editor (button "Rules") and in MRadmin's web interface.
 #
 #   Slots: 0-8 = hotbar, 9-35 = inventory, helmet, chestplate, leggings, boots, offhand
 #

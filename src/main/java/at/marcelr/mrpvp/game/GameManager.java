@@ -363,6 +363,7 @@ public final class GameManager {
         player.teleport(spawn);
         player.setVelocity(new org.bukkit.util.Vector());
         plugin.kits().give(player, kit, id);
+        plugin.kits().applyRules(player, kit);
         player.setHealth(PlayerState.maxHealth(player));
     }
 

@@ -51,15 +51,17 @@ final class MRadminModule implements AdminModule, WebModule {
     private static final Map<String, String> PERMISSIONS = Map.of(
             "games", AdminMenu.PERM_GAMES, "stop", AdminMenu.PERM_STOP, "ban", AdminMenu.PERM_BAN,
             "reset", AdminMenu.PERM_RESET, "restore", AdminMenu.PERM_RESTORE, "review", Reviews.PERM_REVIEW,
-            "pause", AdminMenu.PERM_PAUSE);
-    /** Rounds with inventories need "games", the review list "review"; everything else only viewing. */
-    private static final Map<String, String> REQUESTS = Map.of("games", "games", "game", "games", "reviews", "review");
-    private static final Set<String> DATA = Set.of("overview", "live", "games", "game", "alerts", "reviews");
+            "pause", AdminMenu.PERM_PAUSE, "kits", AdminMenu.PERM_KITS);
+    /** Rounds with inventories need "games", the review list "review", the kit editor "kits"; everything else only viewing. */
+    private static final Map<String, String> REQUESTS = Map.of("games", "games", "game", "games", "reviews", "review",
+            "kits", "kits", "kit", "kits", "kitExport", "kits");
+    private static final Set<String> DATA = Set.of("overview", "live", "games", "game", "alerts", "reviews", "kits", "kit");
     private static final Map<String, String> ACTIONS = Map.ofEntries(
             Map.entry("stop", "stop"), Map.entry("win", "stop"), Map.entry("pause", "pause"), Map.entry("resume", "pause"),
             Map.entry("ban", "ban"), Map.entry("unban", "ban"), Map.entry("reset", "reset"), Map.entry("giveBack", "restore"),
             Map.entry("count", "review"), Map.entry("discard", "review"), Map.entry("uncount", "review"),
-            Map.entry("recount", "review"));
+            Map.entry("recount", "review"), Map.entry("kitSave", "kits"), Map.entry("kitDelete", "kits"),
+            Map.entry("kitOrder", "kits"));
 
     private final MRPvp plugin;
 
@@ -166,6 +168,16 @@ final class MRadminModule implements AdminModule, WebModule {
 
     /** MRpvp's admin view of the player. */
     @Override
+    public boolean openMenu(Player viewer, Runnable back) {
+        if (!viewer.hasPermission(AdminMenu.PERM_GUI)) {
+            plugin.messages().send(viewer, "no-permission");
+            return false;
+        }
+        plugin.messages().run(viewer, () -> new AdminMenu(plugin, viewer).open());
+        return true;
+    }
+
+    @Override
     public boolean openPlayerMenu(Player viewer, UUID player, Runnable back) {
         if (!viewer.hasPermission(AdminMenu.PERM_PLAYERS)) {
             plugin.messages().send(viewer, "no-permission");
@@ -267,7 +279,12 @@ final class MRadminModule implements AdminModule, WebModule {
 
     @Override
     public @Nullable Object data(String request, Map<String, String> args) {
-        return DATA.contains(request) ? WebData.handle(plugin, request, args) : null;
+        return switch (request) {
+            case "kits" -> KitWeb.list(plugin);
+            case "kit" -> KitWeb.kit(plugin, args.getOrDefault("id", ""));
+            case "kitExport" -> KitWeb.export(plugin, args.getOrDefault("ids", ""));
+            default -> DATA.contains(request) ? WebData.handle(plugin, request, args) : null;
+        };
     }
 
     @Override
@@ -277,6 +294,20 @@ final class MRadminModule implements AdminModule, WebModule {
 
     @Override
     public @Nullable String action(String action, Map<String, Object> args, WebUser user) {
+        switch (action) {
+            case "kitSave" -> {
+                return KitWeb.save(plugin, args, user.name());
+            }
+            case "kitDelete" -> {
+                return KitWeb.delete(plugin, args, user.name());
+            }
+            case "kitOrder" -> {
+                return KitWeb.order(plugin, args);
+            }
+            default -> {
+                // the round and player actions below
+            }
+        }
         Map<String, Object> all = new HashMap<>(args);
         all.put("action", action);
         all.put("admin", user.name());

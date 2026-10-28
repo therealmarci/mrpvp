@@ -23,7 +23,14 @@
 ## Schnellstart
 1. **[MRpvp herunterladen](https://mrtechnology.marcelr.at/download/mrpvp/)** und die JAR in den Ordner `plugins/` legen.
 2. Den Server starten. MRpvp legt die Arena-Welt `mrpvp_arenas` an und baut die Standard-Arenen und -Kits auf. Den Datenbank-Treiber lädt Paper beim ersten Start selbst herunter.
-3. Fertig - jeder Spieler kann mit **`/duel`** loslegen.
+3. **Rechte geben** - ohne sie dürfen nur OPs Duelle spielen:
+   ```text
+   /lp group default permission set mrpvp.player true
+   /lp group supporter permission set mrpvp.groups.support true
+   /lp group staff permission set mrpvp.groups.staff true
+   /lp group admin permission set mrpvp.groups.admin true
+   ```
+4. Fertig - Spieler legen mit **`/duel`** los.
 
 **Update:** Die alte JAR durch die neue ersetzen und den Server neu starten. Neue Einstellungen und neue Standard-Kits kommen automatisch dazu.
 
@@ -63,9 +70,11 @@ Im Duell-Menü sieht jeder Spieler seine Statistik (gesamt und pro Kit), die **B
 
 ### Kits
 Mitgeliefert: **Klassisch, Diamant, Netherite, Bogen, Streitkolben, Elytra & Streitkolben, UHC, Build-UHC, Sumo, Boxing, NoDebuff, Crystal, Axt & Schild** und **Dreizack**.
-- Bearbeiten im Spiel mit dem **Kit-Editor** (Admin-Menü → Kits) oder lesbar in `kits.yml`.
-- Kit-Regeln: kein Schaden bzw. nur Rückstoß (Sumo, Boxing), Sieg nach Treffern, feste Regeneration oder Hunger, nur bestimmte Arenen, braucht eine Bau-Arena.
+- Bearbeiten im Spiel mit dem **Kit-Editor** (Admin-Menü → Kits), in der **MRadmin-Weboberfläche** (Duelle → Kits) oder lesbar in `kits.yml`.
+- **Kit-Editor im Web** (mit MRadmin, Permission `mrpvp.admin.kits` wie im Spiel): alle Kits mit Bildern und Tooltip wie im Spiel, Reihenfolge per ↑/↓, kopieren, neu anlegen, umbenennen, löschen. Ein Klick auf einen Platz öffnet den Item-Editor (Anzahl, Name, Beschreibung, Verzauberungen, Tränke, Farbe, Rüstungsbesatz …), dazu Name und Beschreibung auf Deutsch und Englisch, Symbol, Permission und alle Regeln. Gespeichert wird in `kits.yml`; neue Runden bekommen das Kit sofort, laufende behalten ihres.
+- Kit-Regeln: kein Schaden bzw. nur Rückstoß (Sumo, Boxing), Sieg nach Treffern, feste Regeneration oder Hunger, festes Zeitlimit, mehr oder weniger Herzen, Effekte für die ganze Runde (z.B. Schnelligkeit II), eigene Cooldowns für Items (z.B. 15 Sekunden für Enderperlen - das Spiel zeigt die Wartezeit am Item), nur bestimmte Arenen, braucht eine Bau-Arena. Einstellbar im Kit-Editor über den Knopf **Regeln**, im Web oder in `kits.yml`. Was ein Kit fest vorgibt, ist beim Herausfordern ausgegraut.
 - Ein Kit kann eine eigene Permission haben (`permission` in `kits.yml`), z.B. für VIP-Kits.
+- **Kits weitergeben (Export/Import):** In der Kit-Liste schreibt **Alle Kits exportieren** eine Datei nach `plugins/MRpvp/exports/`. Auf dem anderen Server die Datei nach `plugins/MRpvp/imports/` legen und **Kits importieren** wählen: Vorher siehst du pro Kit, ob es neu ist oder schon existiert (dann als `<id>_2` anlegen oder ersetzen), welche Arenen es dort nicht gibt (werden weggelassen) und ob Items nicht lesbar sind. Im Web (Duelle → Kits) geht beides genauso, dort lassen sich fehlende Arenen auch einer eigenen zuordnen. Die Datei enthält jedes Item komplett - Items aus einer neueren Minecraft-Version kann ein älterer Server eventuell nicht lesen.
 - **Name und Beschreibung pro Sprache:** In `kits.yml` entweder ein Text für alle Sprachen oder `name: { de: "<white>Klassisch", en: "<white>Classic" }` - jeder Spieler sieht seine Sprache, fehlt sie, gilt Englisch. Die Standard-Kits sind deutsch und englisch. Im Kit-Editor änderst du Name und Beschreibung in deiner eigenen Sprache, die anderen bleiben.
 
 ### Arenen
@@ -87,16 +96,22 @@ Auffällige Runden zählen nicht einfach nicht - sie **warten auf eine Entscheid
 | `/duel <spieler>` | Direkt eine Einladung an diesen Spieler | `mrpvp.use` |
 | `/duel leave` | Aufgeben (Niederlage im Match) | `mrpvp.use` |
 | `/duel admin` | Admin-Menü | `mrpvp.admin.gui` |
-| `/mrpvp version` · `reload` | Version anzeigen · Config und Texte neu laden | `mrpvp.admin.reload` |
+| `/mrpvp version` | Version anzeigen | `mrpvp.version` (in `mrpvp.player`) |
+| `/mrpvp reload` | Config und Texte neu laden | `mrpvp.admin.reload` |
 | `/mrpvp debug …` | Sichern und Zurückgeben testen, gesicherte Zustände ansehen | `mrpvp.admin.debug` |
 
 ## Permissions
 | Permission | Standard | Wofür |
 |---|---|---|
-| `mrpvp.player` · `mrpvp.use` | alle | Duelle: herausfordern, annehmen, eigene Statistik |
+| **Gruppen** | | in allen MRtechnology-Plugins gleich aufgebaut, jede enthält die darunter |
+| `mrpvp.player` | OP | Duelle: herausfordern, annehmen, eigene Statistik |
+| `mrpvp.groups.support` | OP | Spieler + Admin-Menü, alle Runden ansehen, auffällige Runden prüfen und werten, zusehen, Spieler-Verwaltung |
+| `mrpvp.groups.staff` | OP | Support + Kits und Arenen bearbeiten, Duelle abbrechen oder Sieger bestimmen, pausieren, Spieler sperren |
+| `mrpvp.groups.admin` | OP | Alles: Staff + Statistik zurücksetzen, gesicherte Stände zurückgeben, Standard wiederherstellen, Reload, Debug, Update-Hinweis, keine Einladungs-Wartezeit |
+| **Einzeln** | | |
+| `mrpvp.use` | OP | Duelle spielen |
 | `mrpvp.bypass.cooldown` | OP | Keine Wartezeit zwischen Einladungen |
-| `mrpvp.bypass.commands` | niemand | Alle Befehle auch im Duell (sonst nur `duel.allowed-commands`) |
-| `mrpvp.admin` | OP | Alle folgenden Admin-Rechte |
+| `mrpvp.bypass.commands` | niemand | Alle Befehle auch im Duell (sonst nur `duel.allowed-commands`) - in keiner Gruppe |
 | `mrpvp.admin.gui` | OP | Admin-Menü öffnen (Aktionen darin brauchen ihr eigenes Recht) |
 | `mrpvp.admin.arena` | OP | Arenen bauen, bearbeiten, aktivieren, löschen |
 | `mrpvp.admin.kits` | OP | Kit-Editor |
@@ -139,6 +154,7 @@ MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr 
 |---|---|
 | Seite **Duelle** in der Weboberfläche: live mit Herzen und Mini-Karte, alle Runden mit Inventaren, Kampf-Log und Wiedergabe, Prüfen | MRadmin |
 | Kachel **Duelle** auf der Spielerseite der Weboberfläche: Statistik, laufende und letzte Runden, Sperre | MRadmin |
+| **Kit-Editor im Web** mit Item-Bildern und Item-Editor | MRadmin (ab der Version mit Item-Editor) |
 | Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, auffällige Runden im Discord-Log | MRadmin |
 | Im Admin-Modus kann man kein Duell starten | MRadmin |
 | Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert | MRadmin + MRtoolbar |

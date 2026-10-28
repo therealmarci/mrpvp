@@ -9,6 +9,27 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+## [0.4.0] - 2026-10-28
+
+> [!WARNING]
+> **Neue Permission-Gruppen:** Das Paket `mrpvp.admin` gibt es nicht mehr. Stattdessen gibt es in allen MRtechnology-Plugins dieselben Gruppen `<plugin>.player` und `<plugin>.groups.support|staff|admin`. Außerdem sind Duelle nicht mehr automatisch für alle Spieler da: `/lp group default permission set mrpvp.player true`. Admin-Gruppen umstellen, z.B. `/lp group admin permission unset mrpvp.admin` und `/lp group admin permission set mrpvp.groups.admin true`.
+
+### Neu
+- **Permission-Gruppen:** `mrpvp.groups.support` (Admin-Menü, Runden ansehen, prüfen und werten, zusehen, Spieler-Verwaltung), `mrpvp.groups.staff` (+ Kits und Arenen bearbeiten, Duelle abbrechen, Sieger bestimmen, pausieren, sperren) und `mrpvp.groups.admin` (alles). Jede Gruppe enthält die darunter und `mrpvp.player`.
+- **Knopf im MRadmin-Dashboard:** öffnet das Admin-Menü jetzt direkt über die Modul-API.
+- **Neue Kit-Regeln:** festes Zeitlimit (`minutes`), Herzen (`max-hearts`, z.B. 20 statt 10), Effekte für die ganze Runde (`effects: { speed: 2 }`) und eigene Cooldowns für Items (`cooldowns: { ender_pearl: 15 }` - die Wartezeit nach dem Benutzen zeigt das Spiel am Item). Was ein Kit fest vorgibt, ist beim Herausfordern ausgegraut. Die Herzen hängen an einem Wert, der nie gespeichert wird - nach der Runde (auch nach einem Absturz) hat jeder wieder seine normalen Herzen.
+- **Kits exportieren und importieren:** In der Kit-Liste (Admin-Menü → Kits) schreibt **Alle Kits exportieren** eine Datei nach `plugins/MRpvp/exports/`; **Kits importieren** liest Dateien aus `plugins/MRpvp/imports/` mit Vorschau pro Kit (neu, vorhanden → als `<id>_2` anlegen oder ersetzen, fehlende Arenen, nicht lesbare Items). Im Web (MRadmin → Duelle → Kits) gibt es Export mit Auswahl und Import mit Arena-Zuordnung. Gleiches Dateiformat (JSON) im Spiel und im Web. Permission `mrpvp.admin.kits`.
+- **Alle Kit-Regeln im Kit-Editor im Spiel:** Neuer Knopf **Regeln** (Admin-Menü → Kits → Kit): Schaden, Treffer bis zum Sieg, Regeneration und Hunger (Spieler wählen / immer an / immer aus), braucht Bau-Arena, Zeitlimit, Herzen und auf eigenen Seiten die Arenen, Effekte (Stufe per Klick) und Cooldowns (für die Items des Kits). Bisher ließen sich die Regeln nur in `kits.yml` ändern. Kits ohne Items lassen sich jetzt auch im Spiel speichern, wenn sie eigene Regeln haben (z.B. Sumo).
+- **Kit-Editor in der MRadmin-Weboberfläche:** Unter Duelle → Kits stehen alle Kits mit den Item-Bildern aus dem Spiel. Dort lassen sie sich sortieren (die Reihenfolge im Spiel), kopieren, neu anlegen, umbenennen und löschen. Im Editor: Inventar wie im Spiel - Klick auf einen Platz öffnet den Item-Editor von MRadmin (Anzahl, Name, Beschreibung, Verzauberungen, Tränke, Farbe, Rüstungsbesatz …), Plätze tauschen, Name und Beschreibung auf Deutsch und Englisch, Symbol, Permission und **alle Kit-Regeln** inklusive der Arenen, auf die ein Kit festgelegt ist, Regeneration und Hunger. Permission `mrpvp.admin.kits` (wie der Kit-Editor im Spiel). Braucht MRadmin mit Item-Editor (Modul-API 2).
+- **Inventare im Web mit Bildern:** Die Inventare bei laufenden und beendeten Runden zeigt MRadmin jetzt mit den Item-Bildern und dem Tooltip wie im Spiel.
+
+### Entfernt
+- **Paket `mrpvp.admin`:** ersetzt durch `mrpvp.groups.admin`.
+
+### Behoben & geändert
+- **`/mrpvp version` nur noch mit Permission:** `mrpvp.version` (in `mrpvp.player`) - bisher durfte das jeder.
+- **Duelle nur noch mit Permission:** `mrpvp.player` und `mrpvp.use` sind nicht mehr automatisch für alle - vergib `mrpvp.player` an deine Spieler-Gruppe.
+
 ## [0.3.0] - 2026-10-27
 
 ### Neu
