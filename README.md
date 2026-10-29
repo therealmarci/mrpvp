@@ -176,6 +176,9 @@ Sie wurde als auffällig markiert - z.B. zu viele Runden gegen denselben Gegner 
 **Kann ich eigene Kits nur für VIPs anbieten?**
 Ja: Gib dem Kit in `kits.yml` eine `permission` und vergib sie an die VIP-Gruppe.
 
+**Mein neues Kit steht im Admin-Menü, aber nicht in `/duel`.**
+Ein Kit ist nur wählbar, wenn mindestens eine eingeschaltete Arena dazu passt. Häufige Gründe: Die Arena ist auf „nur Elytra“ gestellt, das Kit hat aber keine Elytra; die Arena lässt nur bestimmte Kits zu; das Kit braucht „Bauen“, die Arena erlaubt es nicht. Die Kit-Liste im Admin-Menü zeigt solche Kits rot an, der Kit-Editor im Web nennt bei jeder Arena den Grund.
+
 **Ich habe einen Fehler gefunden oder einen Wunsch.**
 Gern über das **[Formular auf der Website](https://mrtechnology.marcelr.at/report/mrpvp/)** - am besten mit der Spiel-ID der betroffenen Runde und der Ausgabe von `/mrpvp version`.
 

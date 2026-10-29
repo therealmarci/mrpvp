@@ -197,6 +197,13 @@ public final class TemplateManager {
         return result;
     }
 
+    /** Whether at least one enabled arena fits the kit - otherwise it cannot be chosen in /duel. */
+    public boolean playable(at.marcelr.mrpvp.kit.Kit kit) {
+        List<ArenaTemplate> enabled = enabled();
+        return enabled.isEmpty() ? kit.rules().arenas().isEmpty() && !kit.rules().build()
+                : enabled.stream().anyMatch(a -> a.fits(kit));
+    }
+
     /** The lowest editor plot no template uses. */
     public int freePlot() {
         int plot = 0;

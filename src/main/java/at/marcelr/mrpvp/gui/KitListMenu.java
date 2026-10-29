@@ -26,7 +26,11 @@ public final class KitListMenu extends Menu {
         List<Kit> kits = List.copyOf(plugin.kits().all());
         for (int i = 0; i < kits.size() && i < 45; i++) {
             Kit kit = kits.get(i);
-            set(i, KitIcon.of(plugin, kit).lore(m.lore("gui-kitlist-click", tag("permission", kit.permission().isEmpty() ? "-" : kit.permission()))).build(), click -> {
+            Items icon = KitIcon.of(plugin, kit);
+            if (!plugin.templates().playable(kit)) {
+                icon.lore(m.lore("gui-kitlist-unplayable"));
+            }
+            set(i, icon.lore(m.lore("gui-kitlist-click", tag("permission", kit.permission().isEmpty() ? "-" : kit.permission()))).build(), click -> {
                 clickSound();
                 new KitEditorMenu(plugin, viewer, KitEditorMenu.Draft.of(kit), false).open();
             });

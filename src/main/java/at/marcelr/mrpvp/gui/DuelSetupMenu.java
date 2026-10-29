@@ -76,10 +76,7 @@ public final class DuelSetupMenu extends Menu {
 
     /** Kits the viewer may use that at least one arena allows. */
     List<Kit> kits() {
-        List<ArenaTemplate> enabled = plugin.templates().enabled();
-        return plugin.kits().allowed(viewer).stream().filter(k -> enabled.isEmpty()
-                ? k.rules().arenas().isEmpty() && !k.rules().build()
-                : enabled.stream().anyMatch(a -> a.fits(k))).toList();
+        return plugin.kits().allowed(viewer).stream().filter(plugin.templates()::playable).toList();
     }
 
     /** null (random, if the kit fits more than one) followed by every arena the kit fits. */
