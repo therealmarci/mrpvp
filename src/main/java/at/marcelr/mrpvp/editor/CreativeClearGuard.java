@@ -36,7 +36,7 @@ public final class CreativeClearGuard implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCreative(InventoryCreativeEvent event) {
-        if (!(event.getWhoClicked() instanceof Player player) || plugin.editor().session(player) == null) {
+        if (!(event.getWhoClicked() instanceof Player player) || (plugin.editor().session(player) == null && !plugin.kitEditor().editing(player))) {
             return;
         }
         ItemStack placed = event.getCursor();
@@ -60,7 +60,7 @@ public final class CreativeClearGuard implements Listener {
 
     private void check(Player player, Tick tick) {
         ticks.remove(player.getUniqueId());
-        if (tick.emptied()[0] < THRESHOLD || !player.isOnline() || plugin.editor().session(player) == null) {
+        if (tick.emptied()[0] < THRESHOLD || !player.isOnline() || (plugin.editor().session(player) == null && !plugin.kitEditor().editing(player))) {
             return;
         }
         player.getInventory().setContents(tick.before());

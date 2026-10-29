@@ -2,7 +2,7 @@ name: MRpvp
 version: '${version}'
 main: at.marcelr.mrpvp.MRPvp
 api-version: '${mcVersion}'
-softdepend: [MRadmin, MRtoolbar, MRsleep]
+softdepend: [MRadmin]
 # SQLite driver for plugins/MRpvp/mrpvp.db - Paper downloads it on the first start (folder libraries/).
 libraries:
   - org.xerial:sqlite-jdbc:${sqliteVersion}
@@ -31,7 +31,7 @@ permissions:
       mrpvp.version: true
       mrpvp.use: true
   mrpvp.groups.support:
-    description: "Group support: player + admin menu, view all rounds (results, combat log, saved inventories), review suspicious rounds, watch duels, player management."
+    description: "Group support: player + admin menu, view all rounds (results, combat log, saved inventories), review suspicious rounds, watch duels, stop duels or declare the winner, pause duels, player management."
     default: op
     children:
       mrpvp.player: true
@@ -40,15 +40,15 @@ permissions:
       mrpvp.admin.review: true
       mrpvp.admin.spectate: true
       mrpvp.admin.players: true
+      mrpvp.admin.stop: true
+      mrpvp.admin.pause: true
   mrpvp.groups.staff:
-    description: "Group staff: support + edit kits and arenas, stop duels or declare the winner, pause duels, ban players from duels."
+    description: "Group staff: support + edit kits and arenas, ban players from duels."
     default: op
     children:
       mrpvp.groups.support: true
       mrpvp.admin.kits: true
       mrpvp.admin.arena: true
-      mrpvp.admin.stop: true
-      mrpvp.admin.pause: true
       mrpvp.admin.ban: true
   mrpvp.groups.admin:
     description: "Group admin: everything of MRpvp - reset statistics, return saved states, restore defaults, reload, debug, update notice, no invite cooldown."

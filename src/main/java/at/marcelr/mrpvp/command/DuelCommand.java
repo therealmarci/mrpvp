@@ -50,11 +50,17 @@ public final class DuelCommand implements TabExecutor {
             plugin.messages().send(player, "no-permission");
             return;
         }
+        // Editing a kit in the own inventory: /duel opens its menu, /duel kit <done|cancel|icon> are its chat buttons.
+        if (plugin.kitEditor().editing(player) && (args.length == 0 || args[0].equalsIgnoreCase("kit"))) {
+            plugin.kitEditor().command(player, args.length > 1 ? args[1].toLowerCase(Locale.ROOT) : "");
+            return;
+        }
         if (args.length == 0) {
             new MainMenu(plugin, player).open();
             return;
         }
         switch (args[0].toLowerCase(Locale.ROOT)) {
+            case "kit" -> plugin.messages().send(player, "kit-inventory-none");
             case "invite" -> {
                 Invite invite = invite(player, args);
                 if (invite != null) {

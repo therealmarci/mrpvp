@@ -2,7 +2,9 @@ package at.marcelr.mrpvp.game;
 
 import at.marcelr.mrpvp.arena.ArenaInstance;
 import at.marcelr.mrpvp.kit.Kit;
+import at.marcelr.mrpvp.stats.GameQueries;
 
+import java.util.List;
 import java.util.UUID;
 
 /** A running round. Main thread only. */
@@ -113,6 +115,17 @@ public final class Game {
 
     CombatLog log() {
         return log;
+    }
+
+    /**
+     * Combat log entries not written to the database yet (that happens every few seconds) - the live view adds
+     * them so hits show at once. Main thread only.
+     */
+    public List<GameQueries.EventRow> pendingEvents() {
+        return log.pending().stream()
+                .map(e -> new GameQueries.EventRow(e.t(), e.type().name(), e.actor(), e.target(), e.damage(), e.cause(),
+                        e.weapon(), e.x(), e.y(), e.z()))
+                .toList();
     }
 
     /**

@@ -60,6 +60,8 @@ public record Snapshot(
         EDITOR,
         /** /mrpvp debug arena */
         DEBUG,
+        /** an admin editing the items of a kit in their inventory */
+        KIT,
         /** an admin watching a round */
         SPECTATE
     }

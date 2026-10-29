@@ -406,6 +406,11 @@ Befehle sind nur Einstiegspunkte in die GUIs:
   (Zweck EDITOR) + Kreativ + Werkzeug-Hotbar (Auswahl-Stab, Spawn 1/2, Einstellungen, Speichern/Beenden),
   Partikel-Rahmen und Spawn-Marker, Actionbar-Status. Sperren: Enderchest, Welt verlassen, Werkzeuge droppen.
   Speichern prüft Auswahl, Größe (`arenas.max-width/height`), Spawns in der Auswahl; Version +1.
+  Seit 2026-10-29 **Entwürfe „im Bau“**: eine `EditorSession` pro Arena-ID (nicht pro Spieler), mehrere Bauende
+  (`builders`), gespeichert in `arena-drafts.yml` (autom. alle 30 s, beim Verlassen/Beenden). Veröffentlichen =
+  bisheriges Speichern + alle Bauenden raus + Entwurf weg (aktiv/Kopien von der spielbaren Version); Verlassen lässt
+  den Entwurf stehen; Verwerfen setzt den Bauplatz auf die Structure zurück bzw. leert ihn. Neue Arenen gibt es als
+  Vorlage erst nach dem Veröffentlichen - darum nicht wählbar und nicht im Web.
   Verwerfen: bestehende Vorlage → Bau auf gespeicherten Stand zurück; neue → Bauplatz geräumt.
 - GUIs: Admin-Menü (`/duel admin` oder Knopf im Hauptmenü, `mrpvp.admin.gui`) → Arenen (`mrpvp.admin.arena`):
   Liste, Neue Arena (Name per Dialog), pro Arena Bearbeiten / Aktiv / Pool ± / Neu aufbauen / Löschen (Bestätigung).

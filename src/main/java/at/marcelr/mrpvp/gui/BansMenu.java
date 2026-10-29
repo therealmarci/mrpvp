@@ -10,11 +10,14 @@ import java.util.List;
 
 import static at.marcelr.mrpvp.Messages.tag;
 
-/** Players excluded from duels; click opens the player. */
+/** Players excluded from duels; click opens the player. {@code back} leads to where it was opened from. */
 public final class BansMenu extends Menu {
 
-    public BansMenu(MRPvp plugin, Player viewer) {
+    private final Runnable back;
+
+    public BansMenu(MRPvp plugin, Player viewer, Runnable back) {
         super(plugin, viewer, 6, plugin.messages().get("gui-bans-title"));
+        this.back = back;
     }
 
     @Override
@@ -36,7 +39,7 @@ public final class BansMenu extends Menu {
         }
         set(45, Items.of(Material.ARROW).name(m.item("gui-back")).build(), click -> {
             clickSound();
-            new PlayersMenu(plugin, viewer, 0).open();
+            back.run();
         });
         fillRow(5);
     }

@@ -201,8 +201,8 @@ public final class Messages {
         return in(recipient instanceof Player player ? languageOf(player) : "en", action);
     }
 
-    /** Runs {@code action} with the texts of the language {@code code}. */
-    private static <T> T in(String code, Supplier<T> action) {
+    /** Runs {@code action} with the texts of the language {@code code} (e.g. the language of a player's web page). */
+    public static <T> T in(String code, Supplier<T> action) {
         String previous = CURRENT.get();
         CURRENT.set(code);
         try {

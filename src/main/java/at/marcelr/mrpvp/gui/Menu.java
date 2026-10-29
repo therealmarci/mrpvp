@@ -130,6 +130,17 @@ public abstract class Menu implements InventoryHolder {
         return false;
     }
 
+    /**
+     * A team area the viewer has no permission for: it stays in its place as a grey lock, so the menu keeps its shape
+     * (every team member sees the same symmetric menu). {@code name} is the area's normal name.
+     */
+    protected void locked(int slot, net.kyori.adventure.text.Component name) {
+        String plain = net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText().serialize(name);
+        set(slot, Items.of(org.bukkit.Material.IRON_BARS)
+                .name(plugin.messages().item("gui-locked-name", at.marcelr.mrpvp.Messages.tag("name", plain)))
+                .lore(plugin.messages().lore("gui-locked-lore")).build(), click -> sound(Sound.ENTITY_VILLAGER_NO));
+    }
+
     protected void sound(Sound sound) {
         if (plugin.settings().gui().sounds()) {
             viewer.playSound(viewer.getLocation(), sound, 0.6f, 1.2f);

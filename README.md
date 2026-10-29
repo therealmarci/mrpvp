@@ -79,7 +79,8 @@ Mitgeliefert: **Klassisch, Diamant, Netherite, Bogen, Streitkolben, Elytra & Str
 
 ### Arenen
 Mitgeliefert: **Standard**, **Sumo** (Plattform über dem Void), **Bau-Arena** (Bauen erlaubt) und **XXL-Himmel** (schwebende Inseln, nur für Kits mit Elytra).
-- Neue Arenen baust du im Spiel im **Arena-Editor** (Kreativmodus, Werkzeuge in der Hotbar).
+- Neue Arenen baust du im Spiel im **Arena-Editor** (Admin-Menü → Arenen → Neue Arena; Kreativmodus, Werkzeuge in der Hotbar, dein Inventar wird solange sicher gespeichert).
+- **Entwürfe „im Bau“:** Neue Arenen und Änderungen an bestehenden sind erst ein Entwurf. Mehrere aus dem Team können gleichzeitig daran bauen (in der Arenen-Liste Klick auf den Entwurf bzw. im Arena-Menü **Mitbauen**). Ein Entwurf ist nicht spielbar und erscheint nicht im Web - bei bestehenden Arenen bleibt bis dahin die alte Version spielbar. Im Editor (grüner Farbstoff, Slot 9): **Veröffentlichen** (wird die neue Version), **Verlassen** (der Entwurf bleibt im Bau, auch nach einem Neustart) oder **Entwurf verwerfen** (auch in der Liste mit Shift+Rechtsklick).
 - Pro Arena einstellbar: erlaubte Kits, „nur Kits mit Elytra“, Bauen erlaubt und Bauhöhe, wie viele Kopien bereitstehen.
 - Jede Arena liegt als fertige Kopie bereit, damit eine Runde sofort startet. Nach der Runde wird sie automatisch zurückgesetzt.
 - Gelöschte Standard-Kits und -Arenen holt **Standard wiederherstellen** zurück.
@@ -105,8 +106,8 @@ Auffällige Runden zählen nicht einfach nicht - sie **warten auf eine Entscheid
 |---|---|---|
 | **Gruppen** | | in allen MRtechnology-Plugins gleich aufgebaut, jede enthält die darunter |
 | `mrpvp.player` | OP | Duelle: herausfordern, annehmen, eigene Statistik |
-| `mrpvp.groups.support` | OP | Spieler + Admin-Menü, alle Runden ansehen, auffällige Runden prüfen und werten, zusehen, Spieler-Verwaltung |
-| `mrpvp.groups.staff` | OP | Support + Kits und Arenen bearbeiten, Duelle abbrechen oder Sieger bestimmen, pausieren, Spieler sperren |
+| `mrpvp.groups.support` | OP | Spieler + Admin-Menü, alle Runden ansehen, auffällige Runden prüfen und werten, zusehen, Duelle abbrechen oder Sieger bestimmen, pausieren, Spieler-Verwaltung |
+| `mrpvp.groups.staff` | OP | Support + Kits und Arenen bearbeiten, Spieler sperren |
 | `mrpvp.groups.admin` | OP | Alles: Staff + Statistik zurücksetzen, gesicherte Stände zurückgeben, Standard wiederherstellen, Reload, Debug, Update-Hinweis, keine Einladungs-Wartezeit |
 | **Einzeln** | | |
 | `mrpvp.use` | OP | Duelle spielen |
@@ -136,12 +137,14 @@ Alles steht kommentiert in `plugins/MRpvp/config.yml`. Änderungen übernimmst d
 | `duel.reconnect-seconds` | `20` | Wartezeit bei Verbindungsabbruch, `0` = sofort verloren |
 | `duel.allowed-commands` | `msg`, `r` … | Befehle, die im Duell erlaubt sind |
 | `arenas.pool-per-template` | `1` | Bereite Kopien pro Arena |
+| `arena-world.hide-on-squaremap` | `true` | Arena-Welt auf der Webkarte squaremap ausblenden (trägt sie dort einmalig als `map.enabled: false` ein) |
 | `stats.max-counted-per-opponent-per-day` | `50` | Mehr Runden gegen denselben Gegner pro Tag warten auf eine Prüfung |
 | `monitor.farming.*` | 8 Runden / 60 min, 90 %, 20 % | Statistik-Farmen: so viele Runden desselben Paars in dieser Zeit, **und** derselbe gewinnt mindestens 90 %, **und** der andere macht höchstens 20 % des Schadens. Ausgeglichene Runden unter Freunden sind nie verdächtig. |
 | `review.auto-days` | `7` | Nach so vielen Tagen zählt eine ungeprüfte Runde automatisch |
 | `protection.restore-statistics` | `true` | Minecraft-Statistik nach der Runde auf den Stand davor |
 | `history.days` · `.snapshot-days` | `30` · `90` | Wie lange Kampf-Logs und gesicherte Inventare bleiben |
 | `gui.ban-durations` | `1d`, `7d`, `permanent` | Schnellauswahl für Duell-Sperren auf der Spielerseite der MRadmin-Weboberfläche |
+| `update-checker.*` | an, `github`, alle 6 h | Hinweis auf neue Versionen (Quelle, Vorabversionen, Prüfintervall) |
 
 Alle Texte stehen in `plugins/MRpvp/lang/<sprache>.yml` ([MiniMessage](https://docs.advntr.dev/minimessage/format.html)), die Kits in `kits.yml`, die Arenen unter `templates/`, Runden und Statistik in der Datenbank `mrpvp.db`.
 
@@ -154,10 +157,12 @@ MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr 
 |---|---|
 | Seite **Duelle** in der Weboberfläche: live mit Herzen und Mini-Karte, alle Runden mit Inventaren, Kampf-Log und Wiedergabe, Prüfen | MRadmin |
 | Kachel **Duelle** auf der Spielerseite der Weboberfläche: Statistik, laufende und letzte Runden, Sperre | MRadmin |
+| Eigene Duell-Statistik, letzte Runden und Duell-Ranglisten für Spieler im Browser (`/web`) | MRadmin |
 | **Kit-Editor im Web** mit Item-Bildern und Item-Editor | MRadmin (ab der Version mit Item-Editor) |
 | Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, auffällige Runden im Discord-Log | MRadmin |
 | Im Admin-Modus kann man kein Duell starten | MRadmin |
 | Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert | MRadmin + MRtoolbar |
+| Die Arena-Welt erscheint nicht auf der Webkarte | squaremap (wird automatisch eingetragen) |
 | Spieler im Duell zählen nicht zur Schlafquote | MRadmin + MRsleep |
 | In der Arena-Welt lassen sich keine Chunkloader setzen | MRadmin + MRchunks |
 

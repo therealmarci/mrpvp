@@ -42,13 +42,14 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 
+/** Main class of MRpvp: database, arena world, kits, arenas and duels; gives every saved state back on shutdown. */
 public final class MRPvp extends JavaPlugin implements Listener {
 
     private FileConfiguration config;
     private Settings settings;
     // lang-version 2: invitations show the arena; 3: and the duel options; 4: chat buttons, review note, match totals;
     // 5: boss bar separator.
-    private final Messages messages = new Messages(8, Map.of(
+    private final Messages messages = new Messages(10, Map.of(
             2, Set.of("invite-sent", "invite-received", "gui-invites-lore"),
             3, Set.of("invite-sent", "invite-received", "gui-invites-lore", "game-starting", "gui-kits-click"),
             4, Set.of("invite-received", "invite-view-button", "end-summary-won", "end-summary-lost", "end-summary-draw",
@@ -59,7 +60,12 @@ public final class MRPvp extends JavaPlugin implements Listener {
             // 7: farming means one-sided series now.
             7, Set.of("monitor-farming"),
             // 8: a click on a live round opens its control menu.
-            8, Set.of("gui-live-entry-lore")));
+            8, Set.of("gui-live-entry-lore"),
+            // 9: "My rounds" instead of "My games" in the new main menu.
+            9, Set.of("gui-main-games"),
+            // 10: arenas are built as drafts (publish / leave / discard).
+            10, Set.of("gui-arenas-new-lore", "gui-arena-edit-lore", "editor-started-new", "editor-started",
+                    "editor-tool-exit-name", "gui-editor-discard", "gui-editor-discard-lore")));
     private final StateKeeper stateKeeper = new StateKeeper(this);
     private final ArenaWorld arenaWorld = new ArenaWorld(this);
     private final KitManager kits = new KitManager(this);
@@ -68,6 +74,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
     private final SlotManager slots = new SlotManager(this, templates, new BuiltinArenas(arenaWorld::world, () -> settings().arenas().headroom()));
     private final GameManager games = new GameManager(this, slots);
     private final EditorManager editor = new EditorManager(this);
+    private final at.marcelr.mrpvp.gui.KitInventoryEditor kitEditor = new at.marcelr.mrpvp.gui.KitInventoryEditor(this);
     private final Spectators spectators = new Spectators(this);
     private final Bans bans = new Bans(this);
     private final MRadminLink admin = new MRadminLink(this);
@@ -121,6 +128,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
         reviews.start();
         // Old combat logs and given-back states: once at start, then daily.
         cleanupTask = Bukkit.getScheduler().runTaskTimer(this, this::cleanUp, 20L * 60, 20L * 60 * 60 * 24);
+        editor.load();
         editor.start();
 
         updateChecker = new UpdateChecker(this);
@@ -132,6 +140,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new GameListener(this, games), this);
         getServer().getPluginManager().registerEvents(new ArenaProtection(this), this);
         getServer().getPluginManager().registerEvents(editor, this);
+        getServer().getPluginManager().registerEvents(kitEditor, this);
         getServer().getPluginManager().registerEvents(new CreativeClearGuard(this), this);
         getServer().getPluginManager().registerEvents(spectators, this);
         getServer().getPluginManager().registerEvents(new ProtectionListener(this), this);
@@ -163,6 +172,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
             games.endAll();
             editor.stop();
             editor.closeAll();
+            kitEditor.closeAll();
             spectators.closeAll();
             stateKeeper.giveBackAll();
             slots.stop();
@@ -276,6 +286,10 @@ public final class MRPvp extends JavaPlugin implements Listener {
 
     public Bans bans() {
         return bans;
+    }
+
+    public at.marcelr.mrpvp.gui.KitInventoryEditor kitEditor() {
+        return kitEditor;
     }
 
     public EditorManager editor() {

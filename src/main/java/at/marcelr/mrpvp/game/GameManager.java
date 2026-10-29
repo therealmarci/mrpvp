@@ -142,8 +142,17 @@ public final class GameManager {
     /** Sends an invitation (texts go to both). Returns whether it was sent. */
     public boolean invite(Player from, Player to, Kit kit, String arena, DuelOptions options) {
         Messages m = messages();
+        // MRadmin's admin mode: no duels from there, and nobody can invite someone in it.
+        if (plugin.admin().adminMode(from)) {
+            m.send(from, "invite-error-adminmode-self");
+            return false;
+        }
         if (!available(from)) {
             m.send(from, "invite-error-busy-self");
+            return false;
+        }
+        if (plugin.admin().adminMode(to)) {
+            m.send(from, "invite-error-adminmode", tag("player", to.getName()));
             return false;
         }
         if (bannedMessage(from)) {

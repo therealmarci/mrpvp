@@ -9,6 +9,21 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+## [0.9.9] - 2026-10-29
+
+### Neu
+- **Duelle auf der eigenen Spielerseite (MRadmin, `/web`):** Mit MRadmin sieht jeder Spieler im Browser seine Duell-Statistik (Runden, Siege, Niederlagen, Siegquote, K/D, Serie, Trefferquote) und seine letzten Runden mit Gegner, Kit, Ergebnis und Dauer. Auf der Statistik-Seite stehen dazu die Ranglisten **meiste Siege**, **beste Siegquote** (ab `stats.min-games-for-ratio` Runden) und **längste Siegesserie**. Braucht `mrpvp.use` und MRadmin mit Modul-API 1.3.0. Texte unter `self-*` in den Sprachdateien.
+
+### Behoben & geändert
+- **Support steuert laufende Duelle:** `mrpvp.admin.stop` und `mrpvp.admin.pause` stecken jetzt in `mrpvp.groups.support` (vorher Staff) - Support kann Duelle abbrechen, einen Sieger bestimmen und pausieren. Spieler sperren bleibt bei Staff.
+- **Arena-Welt nicht mehr auf der Webkarte:** Ist squaremap installiert, schaltet MRpvp seine Arena-Welt dort ab (`world-settings."minecraft:mrpvp_arenas".map.enabled: false` in `plugins/squaremap/config.yml`) und lädt squaremap dafür einmal neu - nur wenn dort noch nichts eingetragen ist. Abschaltbar mit `arena-world.hide-on-squaremap: false` (config-version 11).
+- **Kit-Editor im Spiel komplett neu:** Ein Kit öffnet jetzt ein symmetrisches Kit-Menü (Inventar bearbeiten, Regeln, Name, Beschreibung, Symbol, Inhalt leeren, Permission, Zurück / Speichern / Löschen) mit Hinweis auf ungespeicherte Änderungen. **„Inventar bearbeiten“** legt dein eigenes Inventar sicher weg (auch das vom Admin-Modus), du bekommst Kreativ und das Kit **direkt in dein Inventar** - bearbeiten wie gewohnt. Fertig, „Symbol = Item in der Hand“ und Abbrechen gehen über Chat-Knöpfe oder `/duel`; danach bekommst du dein eigenes Inventar zurück und speicherst im Kit-Menü. Droppen, Aufheben und Kisten sind dabei gesperrt, nichts kann herausgeschmuggelt werden. Vorher musste man Items aus dem eigenen Inventar ins Kit kopieren - im Admin-Modus ging das praktisch nicht.
+- **Duell-Menü (/duel) neu geordnet und symmetrisch:** links „Spielen“ (Herausfordern, Einladungen), in der Mitte „Meine Runden“, rechts „Rang“ (Statistik, Bestenliste), Schließen unten mittig. Der Admin-Knopf sitzt oben mittig und ist für Spieler einfach Glas - das Menü bleibt für alle symmetrisch. In einer Runde stehen dort „Aufgeben“ und die laufende Runde, im Admin-Modus von MRadmin ein Hinweis, dass dort keine Duelle gehen.
+- **Admin-Menü neu geordnet und symmetrisch:** oben der Status, links „Überwachen“ (Live, Prüfen, Auffälligkeiten), rechts „Spieler“ (alle Runden, Spieler, neu: **Sperren** direkt), darunter Kits und Arenen, unten Zurück / Standard wiederherstellen / Schließen. Bereiche ohne Berechtigung bleiben als graues Gitter „Dafür fehlt dir die Berechtigung“ an ihrem Platz.
+- **Admin-Modus (MRadmin):** `/duel` lässt sich öffnen und alles einstellen, aber wer im Admin-Modus ist, steht nicht mehr in der Spielerauswahl und kann nicht eingeladen werden („kann gerade nicht eingeladen werden“); selbst einladen geht dort auch nicht (mit Hinweis `/mradmin mode off`).
+- **Live-Ansicht im Web ohne Verzögerung:** Die Rundenansicht der MRadmin-Weboberfläche bekommt Treffer, Schüsse, Perlen usw. sofort (bisher erst, wenn MRpvp das Kampf-Log alle 5 Sekunden gespeichert hatte). Jeder Eintrag des Kampf-Logs kommt mit seinem Ort in der Arena, damit die Mini-Karte ihn dort zeigen kann.
+- **Arenen gemeinsam bauen (Entwürfe „im Bau“):** Neue Arenen und Änderungen an bestehenden entstehen jetzt als **Entwurf**. Mehrere aus dem Team können gleichzeitig daran bauen: In der Arenen-Liste (Admin-Menü → Arenen) stehen neue Arenen als „im Bau“ mit Anzeige, wer gerade baut und wer zuletzt daran war - Klick = mitbauen, Shift+Rechtsklick = verwerfen. Bei bestehenden Arenen zeigt die Liste „Änderungen im Bau“, im Arena-Menü wird „Bearbeiten“ dann zu **Mitbauen**. Ein Entwurf ist nicht spielbar, nicht wählbar und erscheint nicht im Web; bei bestehenden Arenen bleibt bis dahin die alte Version spielbar. Im Editor (grüner Farbstoff, Slot 9) gibt es jetzt **Veröffentlichen** (neue Version, alle Bauenden verlassen den Editor), **Verlassen** (der Entwurf bleibt im Bau, auch über Neustarts - gespeichert in `plugins/MRpvp/arena-drafts.yml`) und **Entwurf verwerfen**. Beim Veröffentlichen gelten „aktiv“ und die Zahl der Kopien so, wie sie inzwischen im Arena-Menü eingestellt sind. Wer eine Arena löscht, löscht ihren Entwurf mit. Permission wie bisher `mrpvp.admin.arena`. Vorher konnte immer nur einer eine Arena bearbeiten, und wer den Editor verließ, verlor einen nicht gespeicherten Stand.
+
 ## [0.4.0] - 2026-10-28
 
 > [!WARNING]
@@ -27,6 +42,9 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 - **Paket `mrpvp.admin`:** ersetzt durch `mrpvp.groups.admin`.
 
 ### Behoben & geändert
+- **Spielerseite schont den Server:** Statistik und letzte Runden eines Spielers werden für die Spielerseite 30 Sekunden zwischengespeichert, statt bei jedem Nachladen die Datenbank abzufragen (der Server-Thread wartet dabei).
+- **Spielerseite: letzte Runden als Karten:** Auf der Spielerseite (MRadmin, `/web`) ist jede der letzten Runden jetzt eine Karte in der Kachel „Deine letzten Runden“ - mit Gegner, Zeitpunkt, Kit, Dauer und Schaden, farbig nach Ergebnis (Sieg grün, Niederlage rot, Unentschieden gelb, abgebrochen grau), bis zu 100 Runden in Seiten zum Blättern. Ein Klick öffnet die Runde, gegliedert in zwei Kacheln: „Überblick“ (wie sie endete, Arena, Kit, Runde) und „Werte im Detail“ mit - du violett, der Gegner gelb - für beide Seiten Schaden, Treffer, Leben am Ende, Pfeile, Totems und Enderperlen. Braucht MRadmin mit Modul-API 5, sonst bleibt es bei der Tabelle. Der Hinweis „Duelle startest du im Spiel mit /duel“ ist weg.
+- **Kachel auf der Spielerseite:** Die Duell-Kachel auf der Startseite der Spielerseite (MRadmin, `/web`) zeigt jetzt Siege groß, dazu Runden, Siegquote und K/D.
 - **`/mrpvp version` nur noch mit Permission:** `mrpvp.version` (in `mrpvp.player`) - bisher durfte das jeder.
 - **Duelle nur noch mit Permission:** `mrpvp.player` und `mrpvp.use` sind nicht mehr automatisch für alle - vergib `mrpvp.player` an deine Spieler-Gruppe.
 

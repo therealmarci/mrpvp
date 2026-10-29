@@ -10,6 +10,11 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * The world all arenas live in. MRpvp creates it itself (empty void world, no Multiverse needed) and sets its rules
@@ -49,6 +54,43 @@ public final class ArenaWorld {
             plugin.getLogger().info("Arena world '" + s.name() + "' loaded.");
         }
         applyRules();
+        hideOnSquaremap();
+    }
+
+    /**
+     * Switches the arena world off in squaremap's config (world-settings."minecraft:mrpvp_arenas".map.enabled), so it
+     * does not show up on the web map. squaremap is reloaded once afterwards if it already runs.
+     * Only if the setting is not there yet - a value set by hand stays.
+     */
+    private void hideOnSquaremap() {
+        if (world == null || !plugin.settings().arenaWorld().hideOnSquaremap()) {
+            return;
+        }
+        File file = new File(plugin.getDataFolder().getParentFile(), "squaremap/config.yml");
+        if (!file.isFile()) {
+            return;
+        }
+        // squaremap names worlds by their key and replaces dots, which it splits paths on.
+        String path = "world-settings." + world.getKey().asString().replace(".", "____dot____") + ".map.enabled";
+        YamlConfiguration config = new YamlConfiguration();
+        config.options().parseComments(true);
+        config.options().width(10_000);
+        try {
+            config.load(file);
+            if (config.contains(path)) {
+                return;
+            }
+            config.set(path, false);
+            config.save(file);
+        } catch (IOException | InvalidConfigurationException e) {
+            plugin.getLogger().warning("Could not hide the arena world on squaremap: " + e.getMessage());
+            return;
+        }
+        plugin.getLogger().info("Hid the arena world on the squaremap web map (squaremap/config.yml, " + path + ": false).");
+        // squaremap (a Paper plugin) usually starts first and only reads its config on (re)load - once is enough.
+        if (Bukkit.getPluginManager().isPluginEnabled("squaremap")) {
+            Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "squaremap reload"));
+        }
     }
 
     /** Rules of the arena world - set on every start and reload, so a changed config always applies. */

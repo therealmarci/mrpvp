@@ -53,7 +53,7 @@ public record Settings(
      * @param difficulty never peaceful (players would heal all the time)
      * @param time       fixed time of day in ticks (6000 = noon)
      */
-    public record ArenaWorldSettings(String name, Difficulty difficulty, long time) {
+    public record ArenaWorldSettings(String name, Difficulty difficulty, long time, boolean hideOnSquaremap) {
     }
 
     /**
@@ -139,7 +139,8 @@ public record Settings(
             difficulty = Difficulty.EASY;
         }
         ArenaWorldSettings arenaWorld = new ArenaWorldSettings(worldName, difficulty,
-                Math.floorMod(c.getLong("arena-world.time", 6000), 24_000L));
+                Math.floorMod(c.getLong("arena-world.time", 6000), 24_000L),
+                c.getBoolean("arena-world.hide-on-squaremap", true));
 
         ArenaSettings arenas = new ArenaSettings(
                 Math.clamp(c.getInt("arenas.pool-per-template", 1), 0, 16),

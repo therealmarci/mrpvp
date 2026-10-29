@@ -61,7 +61,7 @@ public final class PlayersMenu extends Menu {
         set(52, Items.of(Material.BARRIER).name(m.item("gui-players-admin-bans", tag("count", plugin.bans().all().size())))
                 .lore(m.lore("gui-players-admin-bans-lore")).build(), click -> {
             clickSound();
-            new BansMenu(plugin, viewer).open();
+            new BansMenu(plugin, viewer, () -> new PlayersMenu(plugin, viewer, 0).open()).open();
         });
         set(53, Items.of(Material.NAME_TAG).name(m.item("gui-players-admin-search")).build(), click ->
                 TextPrompt.ask(plugin, viewer, "prompt-player", "", 16, value -> {

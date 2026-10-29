@@ -58,6 +58,7 @@ final class KitRulesMenu extends Menu {
 
     private void change(KitRules rules) {
         draft.rules = rules;
+        draft.changed = true;
         clickSound();
         render();
     }
