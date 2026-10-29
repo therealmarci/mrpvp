@@ -3,8 +3,6 @@ version: '${version}'
 main: at.marcelr.mrpvp.MRPvp
 api-version: '${mcVersion}'
 softdepend: [MRadmin, MRtoolbar, MRsleep]
-# Before squaremap, so the arena world can be switched off in its config before it reads it.
-loadbefore: [squaremap]
 # SQLite driver for plugins/MRpvp/mrpvp.db - Paper downloads it on the first start (folder libraries/).
 libraries:
   - org.xerial:sqlite-jdbc:${sqliteVersion}

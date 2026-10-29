@@ -59,7 +59,7 @@ public final class ArenaWorld {
 
     /**
      * Switches the arena world off in squaremap's config (world-settings."minecraft:mrpvp_arenas".map.enabled), so it
-     * does not show up on the web map. MRpvp loads before squaremap (loadbefore), so squaremap reads it on this start.
+     * does not show up on the web map. squaremap is reloaded once afterwards if it already runs.
      * Only if the setting is not there yet - a value set by hand stays.
      */
     private void hideOnSquaremap() {
@@ -86,9 +86,11 @@ public final class ArenaWorld {
             plugin.getLogger().warning("Could not hide the arena world on squaremap: " + e.getMessage());
             return;
         }
-        boolean running = Bukkit.getPluginManager().isPluginEnabled("squaremap");
-        plugin.getLogger().info("Hid the arena world on the squaremap web map (squaremap/config.yml, " + path + ": false)"
-                + (running ? " - applies after the next restart." : "."));
+        plugin.getLogger().info("Hid the arena world on the squaremap web map (squaremap/config.yml, " + path + ": false).");
+        // squaremap (a Paper plugin) usually starts first and only reads its config on (re)load - once is enough.
+        if (Bukkit.getPluginManager().isPluginEnabled("squaremap")) {
+            Bukkit.getScheduler().runTask(plugin, () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "squaremap reload"));
+        }
     }
 
     /** Rules of the arena world - set on every start and reload, so a changed config always applies. */
