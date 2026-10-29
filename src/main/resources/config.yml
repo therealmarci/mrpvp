@@ -13,7 +13,7 @@
 # ==============================================================================
 
 # Do not change - used for automatic config updates.
-config-version: 9
+config-version: 10
 
 # Language of the texts (menus, messages). The texts are in plugins/MRpvp/lang/<language>.yml.
 #   auto = every player gets the language set in their Minecraft client.
@@ -42,6 +42,10 @@ arena-world:
   difficulty: normal
   # Fixed time of day in ticks: 0 = morning, 6000 = noon, 13000 = evening, 18000 = midnight.
   time: 6000
+  # Keep the arena world off the web map squaremap (if installed): MRpvp switches it off in squaremap's config
+  # (world-settings, map.enabled) before squaremap starts. Only if that setting is not there yet - a value set there
+  # by hand stays. false = MRpvp leaves squaremap alone.
+  hide-on-squaremap: true
 
 
 arenas:
