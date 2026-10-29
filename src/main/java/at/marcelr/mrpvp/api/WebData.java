@@ -213,7 +213,10 @@ final class WebData {
         // Server time, so the page can tell how long ago lastHitAt / lastHurtAt were (a dot lights up).
         r.put("now", System.currentTimeMillis());
         r.put("map", map(plugin, game.arena().name(), game.arena().slot()));
-        r.put("events", events(plugin.database().call(c -> GameQueries.events(c, id))));
+        // Written to the database every few seconds - the entries since then come from memory, so hits show at once.
+        List<GameQueries.EventRow> events = new ArrayList<>(plugin.database().call(c -> GameQueries.events(c, id)));
+        events.addAll(game.pendingEvents());
+        r.put("events", events(events, new double[] {region.getMinX(), region.getMinZ()}));
         return r;
     }
 
@@ -250,9 +253,9 @@ final class WebData {
             states.add(snapshot(s));
         }
         r.put("snapshots", states);
-        r.put("events", events(plugin.database().call(c -> GameQueries.events(c, id))));
-        List<Map<String, Object>> positions = new ArrayList<>();
         double[] origin = origin(plugin, row.slot());
+        r.put("events", events(plugin.database().call(c -> GameQueries.events(c, id)), origin));
+        List<Map<String, Object>> positions = new ArrayList<>();
         for (GameQueries.PositionRow p : plugin.database().call(c -> GameQueries.positions(c, id))) {
             positions.add(Map.of("t", p.t(), "side", p.side(), "x", p.x() - origin[0], "z", p.z() - origin[1],
                     "yaw", p.yaw(), "health", p.health()));
@@ -341,7 +344,8 @@ final class WebData {
         return m;
     }
 
-    private static List<Map<String, Object>> events(List<GameQueries.EventRow> events) {
+    /** The combat log; x / z where it happened, in blocks from the arena's lowest corner (like the positions). */
+    private static List<Map<String, Object>> events(List<GameQueries.EventRow> events, double[] origin) {
         List<Map<String, Object>> result = new ArrayList<>();
         for (GameQueries.EventRow e : events) {
             Map<String, Object> m = new LinkedHashMap<>();
@@ -352,6 +356,8 @@ final class WebData {
             m.put("damage", e.damage());
             m.put("cause", e.cause() == null ? null : e.cause().toLowerCase(Locale.ROOT));
             m.put("weapon", e.weapon() == null ? null : e.weapon().toLowerCase(Locale.ROOT));
+            m.put("x", e.x() - origin[0]);
+            m.put("z", e.z() - origin[1]);
             result.add(m);
         }
         return result;

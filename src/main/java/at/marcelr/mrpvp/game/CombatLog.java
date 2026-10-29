@@ -47,6 +47,11 @@ final class CombatLog {
         positions.add(position);
     }
 
+    /** The events collected since the last {@link #drain} (not in the database yet), as a copy. */
+    List<Event> pending() {
+        return List.copyOf(events);
+    }
+
     /** Hands over what was collected since the last call (for writing) and starts new lists. */
     Batch drain() {
         Batch batch = new Batch(events, positions);
