@@ -70,6 +70,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
     private final SlotManager slots = new SlotManager(this, templates, new BuiltinArenas(arenaWorld::world, () -> settings().arenas().headroom()));
     private final GameManager games = new GameManager(this, slots);
     private final EditorManager editor = new EditorManager(this);
+    private final at.marcelr.mrpvp.gui.KitInventoryEditor kitEditor = new at.marcelr.mrpvp.gui.KitInventoryEditor(this);
     private final Spectators spectators = new Spectators(this);
     private final Bans bans = new Bans(this);
     private final MRadminLink admin = new MRadminLink(this);
@@ -134,6 +135,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new GameListener(this, games), this);
         getServer().getPluginManager().registerEvents(new ArenaProtection(this), this);
         getServer().getPluginManager().registerEvents(editor, this);
+        getServer().getPluginManager().registerEvents(kitEditor, this);
         getServer().getPluginManager().registerEvents(new CreativeClearGuard(this), this);
         getServer().getPluginManager().registerEvents(spectators, this);
         getServer().getPluginManager().registerEvents(new ProtectionListener(this), this);
@@ -165,6 +167,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
             games.endAll();
             editor.stop();
             editor.closeAll();
+            kitEditor.closeAll();
             spectators.closeAll();
             stateKeeper.giveBackAll();
             slots.stop();
@@ -278,6 +281,10 @@ public final class MRPvp extends JavaPlugin implements Listener {
 
     public Bans bans() {
         return bans;
+    }
+
+    public at.marcelr.mrpvp.gui.KitInventoryEditor kitEditor() {
+        return kitEditor;
     }
 
     public EditorManager editor() {
