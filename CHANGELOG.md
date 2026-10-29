@@ -30,6 +30,7 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 - **Paket `mrpvp.admin`:** ersetzt durch `mrpvp.groups.admin`.
 
 ### Behoben & geändert
+- **Spielerseite schont den Server:** Statistik und letzte Runden eines Spielers werden für die Spielerseite 30 Sekunden zwischengespeichert, statt bei jedem Nachladen die Datenbank abzufragen (der Server-Thread wartet dabei).
 - **Spielerseite: letzte Runden als Karten:** Auf der Spielerseite (MRadmin, `/web`) ist jede der letzten Runden jetzt eine Karte in der Kachel „Deine letzten Runden“ - mit Gegner, Zeitpunkt, Kit, Dauer und Schaden, farbig nach Ergebnis (Sieg grün, Niederlage rot, Unentschieden gelb, abgebrochen grau), bis zu 100 Runden in Seiten zum Blättern. Ein Klick öffnet die Runde, gegliedert in zwei Kacheln: „Überblick“ (wie sie endete, Arena, Kit, Runde) und „Werte im Detail“ mit - du violett, der Gegner gelb - für beide Seiten Schaden, Treffer, Leben am Ende, Pfeile, Totems und Enderperlen. Braucht MRadmin mit Modul-API 5, sonst bleibt es bei der Tabelle. Der Hinweis „Duelle startest du im Spiel mit /duel“ ist weg.
 - **Kachel auf der Spielerseite:** Die Duell-Kachel auf der Startseite der Spielerseite (MRadmin, `/web`) zeigt jetzt Siege groß, dazu Runden, Siegquote und K/D.
 - **`/mrpvp version` nur noch mit Permission:** `mrpvp.version` (in `mrpvp.player`) - bisher durfte das jeder.

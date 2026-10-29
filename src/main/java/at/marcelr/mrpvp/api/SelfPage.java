@@ -54,10 +54,33 @@ final class SelfPage {
         });
     }
 
+
+    /** How long a player's statistics and rounds are kept for the page (it reloads every few seconds). */
+    private static final long CACHE_MILLIS = 30_000L;
+
+    private record Cached(long at, PlayerStats stats, List<GameQueries.GameRow> rows) {
+    }
+
+    /** player -> statistics and last rounds: the page is built on the server thread, which waits for the database. */
+    private static final java.util.Map<UUID, Cached> CACHE = new java.util.concurrent.ConcurrentHashMap<>();
+
+    private static Cached data(MRPvp plugin, UUID player, String name) throws SQLException {
+        long now = System.currentTimeMillis();
+        Cached cached = CACHE.get(player);
+        if (cached != null && now - cached.at() < CACHE_MILLIS) {
+            return cached;
+        }
+        CACHE.values().removeIf(c -> now - c.at() >= CACHE_MILLIS);
+        Cached fresh = new Cached(now, plugin.database().call(c -> StatsStore.stats(c, player, name, StatsStore.ALL)),
+                plugin.database().call(c -> GameQueries.list(c, player, GameQueries.ResultFilter.ALL, 0, HISTORY)));
+        CACHE.put(player, fresh);
+        return fresh;
+    }
     private static SelfArea area(MRPvp plugin, SelfViewer viewer) throws SQLException {
         Messages m = plugin.messages();
         UUID player = viewer.player();
-        PlayerStats s = plugin.database().call(c -> StatsStore.stats(c, player, viewer.name(), StatsStore.ALL));
+        Cached data = data(plugin, player, viewer.name());
+        PlayerStats s = data.stats();
         Locale locale = locale(viewer.lang());
         List<SelfBlock.Stat> stats = List.of(
                 new SelfBlock.Stat(m.plain("self-games"), String.valueOf(s.games()), ""),
@@ -75,7 +98,7 @@ final class SelfPage {
         boolean asCards = service != null && service.apiVersion() >= 5;
         DateTimeFormatter date = DateTimeFormatter.ofPattern("de".equals(viewer.lang()) ? "dd.MM.yyyy HH:mm" : "yyyy-MM-dd HH:mm")
                 .withZone(ZoneId.systemDefault());
-        for (GameQueries.GameRow row : plugin.database().call(c -> GameQueries.list(c, player, GameQueries.ResultFilter.ALL, 0, HISTORY))) {
+        for (GameQueries.GameRow row : data.rows()) {
             if (row.endedAt() == null) {
                 continue; // still running
             }
