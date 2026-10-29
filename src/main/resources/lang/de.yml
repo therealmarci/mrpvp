@@ -10,7 +10,7 @@
 # ==============================================================================
 
 # Nicht ändern - damit erkennt das Plugin bei Updates, welche Texte erneuert werden müssen.
-lang-version: 8
+lang-version: 9
 
 prefix: "<dark_gray>[<red>MRpvp</red>]</dark_gray> "
 no-permission: "<prefix><red>Dazu hast du keine Berechtigung."
@@ -187,6 +187,23 @@ gui-arena-admin-lore:
 
 # ------------------------------------------------------------------ Admin-Menü
 gui-main-admin: "<red>Admin"
+gui-main-admin-lore: "<gray>Live-Runden, Prüfen, Spieler, Kits und Arenen"
+gui-main-round-name: "<yellow>Runde <white>#<id></white> läuft"
+gui-main-round-lore: "<gray>Du bist gerade in einem Duell."
+gui-main-adminmode-name: "<gray>Keine Duelle im Admin-Modus"
+gui-main-adminmode-lore:
+  - "<dark_gray>Im Admin-Modus kannst du nicht spielen"
+  - "<dark_gray>und niemand kann dich einladen."
+  - ""
+  - "<gray>Beenden: <white>/mradmin mode off"
+gui-main-adminmode-invites: "<gray>Einladungen pausiert"
+gui-main-adminmode-invites-lore: "<dark_gray>Im Admin-Modus bekommst du keine Einladungen."
+gui-admin-bans: "<white>Sperren <dark_gray>(<count>)"
+gui-admin-bans-lore: "<gray>Wer gerade von Duellen ausgeschlossen ist"
+gui-locked-name: "<dark_gray><name>"
+gui-locked-lore: "<gray>Dafür fehlt dir die Berechtigung."
+invite-error-adminmode-self: "<prefix><red>Im Admin-Modus kannst du keine Duelle spielen. <gray>Beenden: <white>/mradmin mode off"
+invite-error-adminmode: "<prefix><red><white><player></white> kann gerade nicht eingeladen werden."
 gui-admin-title: "Duelle » Admin"
 gui-admin-status: "<yellow>Status"
 gui-admin-status-lore:
@@ -359,7 +376,7 @@ gui-main-stats: "<aqua>Meine Statistik"
 gui-main-stats-lore: "<gray>Siege, K/D, Serien, pro Kit"
 gui-main-leaderboard: "<gold>Bestenliste"
 gui-main-leaderboard-lore: "<gray>Die Besten nach Siegen, K/D, Quote, Serie"
-gui-main-games: "<white>Meine Spiele"
+gui-main-games: "<white>Meine Runden"
 gui-main-games-lore: "<gray>Deine letzten Runden mit Game-ID und Kampf-Log"
 gui-main-stop-watching: "<yellow>Zuschauen beenden"
 

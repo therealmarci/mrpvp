@@ -10,7 +10,7 @@
 # ==============================================================================
 
 # Do not change - tells the plugin which texts to renew on updates.
-lang-version: 8
+lang-version: 9
 
 prefix: "<dark_gray>[<red>MRpvp</red>]</dark_gray> "
 no-permission: "<prefix><red>You don't have permission to do that."
@@ -187,6 +187,23 @@ gui-arena-admin-lore:
 
 # ------------------------------------------------------------------ Admin menu
 gui-main-admin: "<red>Admin"
+gui-main-admin-lore: "<gray>Live rounds, review, players, kits and arenas"
+gui-main-round-name: "<yellow>Round <white>#<id></white> is running"
+gui-main-round-lore: "<gray>You are in a duel right now."
+gui-main-adminmode-name: "<gray>No duels in admin mode"
+gui-main-adminmode-lore:
+  - "<dark_gray>In admin mode you cannot play"
+  - "<dark_gray>and nobody can invite you."
+  - ""
+  - "<gray>Leave it: <white>/mradmin mode off"
+gui-main-adminmode-invites: "<gray>Invitations paused"
+gui-main-adminmode-invites-lore: "<dark_gray>You get no invitations in admin mode."
+gui-admin-bans: "<white>Bans <dark_gray>(<count>)"
+gui-admin-bans-lore: "<gray>Who is excluded from duels right now"
+gui-locked-name: "<dark_gray><name>"
+gui-locked-lore: "<gray>You have no permission for this."
+invite-error-adminmode-self: "<prefix><red>You cannot duel in admin mode. <gray>Leave it: <white>/mradmin mode off"
+invite-error-adminmode: "<prefix><red><white><player></white> cannot be invited right now."
 gui-admin-title: "Duels » Admin"
 gui-admin-status: "<yellow>Status"
 gui-admin-status-lore:
@@ -359,7 +376,7 @@ gui-main-stats: "<aqua>My statistics"
 gui-main-stats-lore: "<gray>Wins, K/D, streaks, per kit"
 gui-main-leaderboard: "<gold>Leaderboard"
 gui-main-leaderboard-lore: "<gray>The best by wins, K/D, win rate, streak"
-gui-main-games: "<white>My games"
+gui-main-games: "<white>My rounds"
 gui-main-games-lore: "<gray>Your last rounds with Game-ID and combat log"
 gui-main-stop-watching: "<yellow>Stop watching"
 

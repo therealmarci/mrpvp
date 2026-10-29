@@ -27,7 +27,9 @@ public final class PlayerSelectMenu extends Menu {
     protected void draw() {
         GameManager games = plugin.games();
         List<Player> players = Bukkit.getOnlinePlayers().stream()
-                .filter(p -> !p.equals(viewer) && !Npcs.is(p) && p.hasPermission(GameManager.PERM_USE) && viewer.canSee(p))
+                // Nobody in MRadmin's admin mode - they cannot be invited.
+                .filter(p -> !p.equals(viewer) && !Npcs.is(p) && p.hasPermission(GameManager.PERM_USE) && viewer.canSee(p)
+                        && !plugin.admin().adminMode(p))
                 .sorted(Comparator.comparing(Player::getName, String.CASE_INSENSITIVE_ORDER))
                 .map(p -> (Player) p).toList();
         int pages = Math.max(1, (players.size() + PER_PAGE - 1) / PER_PAGE);
