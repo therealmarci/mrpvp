@@ -42,6 +42,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 
+/** Main class of MRpvp: database, arena world, kits, arenas and duels; gives every saved state back on shutdown. */
 public final class MRPvp extends JavaPlugin implements Listener {
 
     private FileConfiguration config;

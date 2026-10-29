@@ -2,7 +2,7 @@ name: MRpvp
 version: '${version}'
 main: at.marcelr.mrpvp.MRPvp
 api-version: '${mcVersion}'
-softdepend: [MRadmin, MRtoolbar, MRsleep]
+softdepend: [MRadmin]
 # SQLite driver for plugins/MRpvp/mrpvp.db - Paper downloads it on the first start (folder libraries/).
 libraries:
   - org.xerial:sqlite-jdbc:${sqliteVersion}
