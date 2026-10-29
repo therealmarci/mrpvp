@@ -4,17 +4,27 @@ import org.bukkit.Location;
 import org.bukkit.util.BlockVector;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-/** An admin building or changing an arena template. Main thread only. */
+/**
+ * An arena draft "under construction": a new arena or changes to an existing one. Several admins can build in it at
+ * the same time; it stays (in arena-drafts.yml) when everyone leaves, until it is published or discarded. Main
+ * thread only.
+ */
 public final class EditorSession {
 
-    final UUID player;
     final String id;
-    /** never saved yet */
-    boolean isNew;
     final int plot;
+    /** players building in it right now, in the order they joined */
+    final Set<UUID> builders = new LinkedHashSet<>();
+    String creator = "";
+    String lastBuilder = "";
+    long created;
+    /** last time somebody built in it */
+    long changed;
     BlockVector pos1;
     BlockVector pos2;
     Location spawn1;
@@ -30,10 +40,8 @@ public final class EditorSession {
     boolean enabled = true;
     int version;
 
-    EditorSession(UUID player, String id, boolean isNew, int plot) {
-        this.player = player;
+    EditorSession(String id, int plot) {
         this.id = id;
-        this.isNew = isNew;
         this.plot = plot;
     }
 
@@ -59,6 +67,22 @@ public final class EditorSession {
 
     public List<String> kits() {
         return kits;
+    }
+
+    public Set<UUID> builders() {
+        return Set.copyOf(builders);
+    }
+
+    public String creator() {
+        return creator;
+    }
+
+    public String lastBuilder() {
+        return lastBuilder;
+    }
+
+    public long changed() {
+        return changed;
     }
 
     public void name(String value) {

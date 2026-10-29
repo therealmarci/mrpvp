@@ -79,7 +79,8 @@ Mitgeliefert: **Klassisch, Diamant, Netherite, Bogen, Streitkolben, Elytra & Str
 
 ### Arenen
 Mitgeliefert: **Standard**, **Sumo** (Plattform über dem Void), **Bau-Arena** (Bauen erlaubt) und **XXL-Himmel** (schwebende Inseln, nur für Kits mit Elytra).
-- Neue Arenen baust du im Spiel im **Arena-Editor** (Kreativmodus, Werkzeuge in der Hotbar).
+- Neue Arenen baust du im Spiel im **Arena-Editor** (Admin-Menü → Arenen → Neue Arena; Kreativmodus, Werkzeuge in der Hotbar, dein Inventar wird solange sicher gespeichert).
+- **Entwürfe „im Bau“:** Neue Arenen und Änderungen an bestehenden sind erst ein Entwurf. Mehrere aus dem Team können gleichzeitig daran bauen (in der Arenen-Liste Klick auf den Entwurf bzw. im Arena-Menü **Mitbauen**). Ein Entwurf ist nicht spielbar und erscheint nicht im Web - bei bestehenden Arenen bleibt bis dahin die alte Version spielbar. Im Editor (grüner Farbstoff, Slot 9): **Veröffentlichen** (wird die neue Version), **Verlassen** (der Entwurf bleibt im Bau, auch nach einem Neustart) oder **Entwurf verwerfen** (auch in der Liste mit Shift+Rechtsklick).
 - Pro Arena einstellbar: erlaubte Kits, „nur Kits mit Elytra“, Bauen erlaubt und Bauhöhe, wie viele Kopien bereitstehen.
 - Jede Arena liegt als fertige Kopie bereit, damit eine Runde sofort startet. Nach der Runde wird sie automatisch zurückgesetzt.
 - Gelöschte Standard-Kits und -Arenen holt **Standard wiederherstellen** zurück.

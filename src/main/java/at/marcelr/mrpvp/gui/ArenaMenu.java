@@ -2,6 +2,7 @@ package at.marcelr.mrpvp.gui;
 
 import at.marcelr.mrpvp.MRPvp;
 import at.marcelr.mrpvp.arena.ArenaTemplate;
+import at.marcelr.mrpvp.editor.EditorSession;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
@@ -30,11 +31,27 @@ public final class ArenaMenu extends Menu {
             return;
         }
         set(4, ArenaIcon.admin(plugin, t).build());
-        set(10, Items.of(Material.BRUSH).name(m.item("gui-arena-edit")).lore(m.lore("gui-arena-edit-lore")).build(),
-                click -> {
-                    viewer.closeInventory();
-                    plugin.editor().edit(viewer, t);
-                });
+        EditorSession draft = plugin.editor().draft(id);
+        if (draft == null) {
+            set(10, Items.of(Material.BRUSH).name(m.item("gui-arena-edit")).lore(m.lore("gui-arena-edit-lore")).build(),
+                    click -> {
+                        viewer.closeInventory();
+                        plugin.editor().edit(viewer, t);
+                    });
+        } else {
+            set(10, Items.of(Material.SCAFFOLDING).name(m.item("gui-arena-join"))
+                    .lore(m.lore("gui-arena-join-lore", tag("builders", ArenaIcon.builders(plugin, draft)))).build(), click -> {
+                if (click == ClickType.SHIFT_RIGHT) {
+                    new ConfirmMenu(plugin, viewer, m.item("gui-arenas-draft-discard", tag("id", id)), () -> {
+                        plugin.editor().discard(viewer, draft);
+                        open();
+                    }, this::open).open();
+                    return;
+                }
+                viewer.closeInventory();
+                plugin.editor().join(viewer, draft);
+            });
+        }
         set(12, Items.of(t.enabled() ? Material.LIME_DYE : Material.GRAY_DYE)
                 .name(m.item(t.enabled() ? "gui-arena-enabled-name" : "gui-arena-disabled-name"))
                 .lore(m.lore("gui-arena-toggle-lore")).build(), click -> {
@@ -57,6 +74,7 @@ public final class ArenaMenu extends Menu {
                 });
         set(16, Items.of(Material.LAVA_BUCKET).name(m.item("gui-arena-delete")).lore(m.lore("gui-arena-delete-lore")).build(),
                 click -> new ConfirmMenu(plugin, viewer, m.item("gui-arena-delete-confirm", tag("id", id)), () -> {
+                    plugin.editor().templateDeleted(viewer, id);
                     plugin.editor().clearSource(t);
                     plugin.templates().delete(id);
                     plugin.slots().templateChanged(id);
