@@ -49,7 +49,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
     private Settings settings;
     // lang-version 2: invitations show the arena; 3: and the duel options; 4: chat buttons, review note, match totals;
     // 5: boss bar separator.
-    private final Messages messages = new Messages(10, Map.of(
+    private final Messages messages = new Messages(11, Map.of(
             2, Set.of("invite-sent", "invite-received", "gui-invites-lore"),
             3, Set.of("invite-sent", "invite-received", "gui-invites-lore", "game-starting", "gui-kits-click"),
             4, Set.of("invite-received", "invite-view-button", "end-summary-won", "end-summary-lost", "end-summary-draw",
@@ -65,7 +65,19 @@ public final class MRPvp extends JavaPlugin implements Listener {
             9, Set.of("gui-main-games"),
             // 10: arenas are built as drafts (publish / leave / discard).
             10, Set.of("gui-arenas-new-lore", "gui-arena-edit-lore", "editor-started-new", "editor-started",
-                    "editor-tool-exit-name", "gui-editor-discard", "gui-editor-discard-lore")));
+                    "editor-tool-exit-name", "gui-editor-discard", "gui-editor-discard-lore")),
+            11, Set.of(
+                    "state-save-failed", "state-restored-join", "state-restore-later", "state-restore-failed",
+                    "invite-sent", "invite-received", "invite-error-busy", "invite-error-cooldown", "end-summary-won",
+                    "end-summary-lost", "end-summary-draw", "end-summary-aborted", "match-won", "match-lost", "match-draw",
+                    "arena-rebuild-queued", "gui-main-adminmode-lore", "invite-error-adminmode-self",
+                    "gui-arenas-new-lore", "gui-arena-edit-lore", "editor-started-new", "editor-started", "editor-saved",
+                    "editor-error-selection", "editor-error-too-big", "editor-no-clear", "gui-editor-discard-lore",
+                    "editor-joined", "editor-left", "editor-published-other", "editor-discarded-other",
+                    "gui-editor-publish-lore", "gui-editor-leave-lore", "gui-arena-join-lore", "game-uncounted",
+                    "game-recounted", "spectate-started", "gui-kiteditor-inventory-lore", "kit-inventory-started",
+                    "kit-inventory-done", "kit-inventory-no-containers", "banned-self", "debug-entered", "debug-state",
+                    "review-new", "review-counted")));
     private final StateKeeper stateKeeper = new StateKeeper(this);
     private final ArenaWorld arenaWorld = new ArenaWorld(this);
     private final KitManager kits = new KitManager(this);

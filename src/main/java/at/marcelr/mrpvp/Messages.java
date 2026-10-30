@@ -2,6 +2,7 @@ package at.marcelr.mrpvp;
 
 import at.marcelr.mrpvp.util.LanguageChoice;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
@@ -322,10 +323,26 @@ public final class Messages {
     public void send(CommandSender target, String key, TagResolver... resolvers) {
         as(target, () -> {
             if (raw(key) != null) {
-                target.sendMessage(get(key, resolvers));
+                Component message = get(key, resolvers);
+                target.sendMessage(target instanceof org.bukkit.entity.Player ? message : unfoldHovers(message));
             }
             return null;
         });
+    }
+
+    /** The console cannot hover: the text of each hover is appended in brackets instead (nothing gets lost). */
+    static Component unfoldHovers(Component component) {
+        List<Component> children = new ArrayList<>();
+        for (Component child : component.children()) {
+            children.add(unfoldHovers(child));
+        }
+        Component result = component.children(children);
+        HoverEvent<?> hover = result.hoverEvent();
+        if (hover != null && hover.action() == HoverEvent.Action.SHOW_TEXT) {
+            result = result.hoverEvent(null).append(Component.text(" (")).append((Component) hover.value())
+                    .append(Component.text(")"));
+        }
+        return result;
     }
 
     /** Sends the message to everyone in the world, each player in their own language. */
