@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 /**
  * The kit editor of the web interface (permission mrpvp.admin.kits, like the kit editor in the game).
  * <pre>
- *  kits                {kits: [id, name, icon, permission, rules, hotbar (items), item count], arenas}
+ *  kits                {kits: [id, name, icon, permission, rules, hotbar (items), item count, playable], arenas}
  *  kit      {id}       one kit: names / descriptions per language, icon, permission, rules, all items, arenas to choose
  *  kitExport {ids}     the kits (comma-separated ids, empty = all) as a file to download (see KitTransfer)
  *  kitSave  {kit}      new or changed kit ("original" = id before, null for a new one; another id renames it) -
@@ -66,6 +66,7 @@ final class KitWeb {
             });
             k.put("hotbar", hotbar);
             k.put("items", kit.items().size());
+            k.put("playable", plugin.templates().playable(kit));
             result.add(k);
         }
         return Map.of("kits", result, "arenas", arenas(plugin));
@@ -117,7 +118,9 @@ final class KitWeb {
     static List<Map<String, Object>> arenas(MRPvp plugin) {
         List<Map<String, Object>> arenas = new ArrayList<>();
         for (ArenaTemplate t : plugin.templates().all()) {
-            arenas.add(Map.of("id", t.id(), "name", plain(t.name()), "build", t.allowBuild(), "enabled", t.enabled()));
+            // elytraOnly and kits: the web shows which arenas take the kit (otherwise it is missing in /duel)
+            arenas.add(Map.of("id", t.id(), "name", plain(t.name()), "build", t.allowBuild(), "enabled", t.enabled(),
+                    "elytraOnly", t.elytraOnly(), "kits", t.kits()));
         }
         return arenas;
     }

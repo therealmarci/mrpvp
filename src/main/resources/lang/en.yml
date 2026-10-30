@@ -688,6 +688,7 @@ gui-kitlist-title: "Kits"
 gui-kitlist-click:
   - "<dark_gray>Permission: <permission>"
   - "<green>Click to edit"
+gui-kitlist-unplayable: "<red>No enabled arena fits - not in /duel"
 gui-kitlist-new: "<green>New kit"
 gui-kitlist-new-lore: "<gray>Enter a name, then put items in."
 gui-kitlist-export: "<white>Export all kits"
