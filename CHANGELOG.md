@@ -9,6 +9,8 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+## [0.9.11] - 2026-10-30
+
 ### Behoben & geändert
 - **Kurze Chat- und Menütexte:** Chatnachrichten sind jetzt eine knappe Zeile; Einzelheiten (Kit, Arena, Schaden, Spielnummer, Hinweise) erscheinen, wenn man mit der Maus darüberfährt, in der Konsole in Klammern dahinter. Auch Menü-Beschreibungen im Arena- und Kit-Editor sind kürzer (`lang-version` 11 - eigene Änderungen an diesen Texten in `lang/de.yml` und `lang/en.yml` werden dabei ersetzt).
 
