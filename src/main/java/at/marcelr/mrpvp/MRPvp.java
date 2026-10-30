@@ -65,7 +65,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
             9, Set.of("gui-main-games"),
             // 10: arenas are built as drafts (publish / leave / discard).
             10, Set.of("gui-arenas-new-lore", "gui-arena-edit-lore", "editor-started-new", "editor-started",
-                    "editor-tool-exit-name", "gui-editor-discard", "gui-editor-discard-lore")),
+                    "editor-tool-exit-name", "gui-editor-discard", "gui-editor-discard-lore"),
             11, Set.of(
                     "state-save-failed", "state-restored-join", "state-restore-later", "state-restore-failed",
                     "invite-sent", "invite-received", "invite-error-busy", "invite-error-cooldown", "end-summary-won",
