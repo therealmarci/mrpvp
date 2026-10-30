@@ -9,6 +9,8 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+## [0.9.10] - 2026-10-30
+
 ### Behoben & geändert
 - **Kit fehlt in `/duel`, ohne dass man den Grund sieht:** Ein Kit, das in keine eingeschaltete Arena passt (z.B. Arena „nur Elytra“, aber keine Elytra im Kit, oder die Arena lässt nur bestimmte Kits zu), war im Admin-Menü sichtbar, in `/duel` aber nicht wählbar. Die Kit-Liste im Admin-Menü zeigt solche Kits jetzt rot mit „In keiner aktiven Arena spielbar - fehlt in /duel“ (neuer Text `gui-kitlist-unplayable`). Der Web-Kit-Editor (MRadmin) zeigt bei jeder Arena, warum sie das Kit nicht nimmt.
 
