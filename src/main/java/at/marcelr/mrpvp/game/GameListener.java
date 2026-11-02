@@ -4,6 +4,7 @@ import at.marcelr.mrpvp.MRPvp;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Statistic;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.EnderPearl;
 import org.bukkit.entity.Entity;
@@ -208,6 +209,13 @@ public final class GameListener implements Listener {
             if (game != null) {
                 game.fighter(player.getUniqueId()).totems++;
                 games.log(game, CombatLog.Type.TOTEM, player, null, null, null, null, player.getLocation());
+                // A round leaves no trace in the player's Minecraft statistics. The game counts the totem after this
+                // event, and StateKeeper only restores the statistics that belong to no item.
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    if (player.getStatistic(Statistic.USE_ITEM, Material.TOTEM_OF_UNDYING) > 0) {
+                        player.decrementStatistic(Statistic.USE_ITEM, Material.TOTEM_OF_UNDYING);
+                    }
+                });
             }
         }
     }
