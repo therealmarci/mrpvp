@@ -10,6 +10,7 @@ group = "at.marcelr"
 val pluginVersion = project.version.toString()
 val mcVersion = providers.gradleProperty("mcVersion").get()
 val paperApi = providers.gradleProperty("paperApi").get()
+val multiverseInventoriesVersion = "5.3.6"
 val mradminApi = providers.gradleProperty("mradminApi").get()
 version = "mc$mcVersion-v$pluginVersion"
 
@@ -28,6 +29,10 @@ repositories {
     }
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    // Multiverse-Inventories (optional, nur zum Kompilieren).
+    maven("https://repo.onarandombox.com/multiverse-releases") {
+        content { includeGroup("org.mvplugins.multiverse.inventories") }
+    }
     maven("https://jitpack.io") {
         content { includeGroupByRegex("com\\.github\\.therealmarci.*") }
     }
@@ -35,6 +40,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:$paperApi")
+    compileOnly("org.mvplugins.multiverse.inventories:multiverse-inventories:$multiverseInventoriesVersion") { isTransitive = false }
     // Optional: MRadmin (Modul-API). Nur zum Kompilieren - zur Laufzeit kommen die Klassen aus MRadmin, und nur wenn es
     // installiert ist (siehe api/MRadminLink).
     compileOnly("com.github.therealmarci:mradmin:$mradminApi")

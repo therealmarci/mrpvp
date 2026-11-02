@@ -9,6 +9,12 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+## [0.9.12] - 2026-11-02
+
+### Behoben & geändert
+- **Totems im Duell zählen nicht mehr in der Minecraft-Statistik:** Ausgelöste Totems einer Runde landen nicht mehr in der Statistik des Spielers, auch nicht auf der Spielerseite. Schon gezählte bleiben stehen.
+- **Multiverse-Inventories:** Mit installiertem Multiverse-Inventories ging nach einem Duell das eigene Inventar verloren. Bei Wechseln in die Arena-Welt und zurück lässt es das Inventar jetzt in Ruhe, MRpvp sichert es wie gewohnt selbst. Nichts einzustellen.
+
 ## [0.9.11] - 2026-10-30
 
 ### Behoben & geändert
