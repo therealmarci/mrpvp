@@ -149,6 +149,13 @@ public final class MRPvp extends JavaPlugin implements Listener {
         menuListener.start();
 
         getServer().getPluginManager().registerEvents(stateKeeper, this);
+        if (getServer().getPluginManager().getPlugin("Multiverse-Inventories") != null) {
+            try {
+                getServer().getPluginManager().registerEvents(new at.marcelr.mrpvp.snapshot.InventoriesHook(this), this);
+            } catch (LinkageError e) {
+                getLogger().warning("This version of Multiverse-Inventories is not supported, MRpvp ignores it: " + e);
+            }
+        }
         getServer().getPluginManager().registerEvents(new GameListener(this, games), this);
         getServer().getPluginManager().registerEvents(new ArenaProtection(this), this);
         getServer().getPluginManager().registerEvents(editor, this);

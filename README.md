@@ -166,6 +166,12 @@ MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr 
 | Spieler im Duell zählen nicht zur Schlafquote | MRadmin + MRsleep |
 | In der Arena-Welt lassen sich keine Chunkloader setzen | MRadmin + MRchunks |
 
+### Mehrere Welten (Multiverse)
+Duelle lassen sich aus jeder Welt starten, danach geht es an denselben Ort zurück. Fehlt die Welt, landet der Spieler am Spawn der Hauptwelt.
+
+- **Multiverse-Core:** Die Arena-Welt verwaltet MRpvp selbst. Importiere sie nicht mit `/mv import`, sonst setzt Multiverse dort seinen Spielmodus durch.
+- **Multiverse-Inventories:** Bei Wechseln in die Arena-Welt und zurück bleibt das Inventar bei MRpvp, Multiverse-Inventories fasst es dann nicht an. Nichts einzustellen.
+
 ## Häufige Fragen
 **Kann beim Duell etwas aus dem Inventar verloren gehen?**
 Nein. Alles wird in der Datenbank gesichert, **bevor** etwas am Inventar geändert wird - auch ein Absturz verliert nichts. Admins sehen jede Sicherung im Admin-Menü unter **Runden** und können eine offene Rückgabe sofort ausführen.

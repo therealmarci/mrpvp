@@ -9,6 +9,9 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+### Behoben & geändert
+- **Multiverse-Inventories:** Mit installiertem Multiverse-Inventories ging nach einem Duell das eigene Inventar verloren. Bei Wechseln in die Arena-Welt und zurück lässt es das Inventar jetzt in Ruhe, MRpvp sichert es wie gewohnt selbst. Nichts einzustellen.
+
 ## [0.9.11] - 2026-10-30
 
 ### Behoben & geändert
