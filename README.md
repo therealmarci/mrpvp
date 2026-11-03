@@ -161,7 +161,7 @@ MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr 
 | Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, auffällige Runden im Discord-Log | MRadmin |
 | Im Admin-Modus kann man kein Duell starten | MRadmin |
 | Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert | MRadmin + MRtoolbar |
-| Die Arena-Welt erscheint nicht auf der Webkarte squaremap | MRadmin (blendet sie automatisch aus) |
+| Die Arena-Welt erscheint nicht auf der Karte der MRadmin-Spielerseite | MRadmin (blendet sie automatisch aus) |
 | Spieler im Duell zählen nicht zur Schlafquote | MRadmin + MRsleep |
 | In der Arena-Welt lassen sich keine Chunkloader setzen | MRadmin + MRchunks |
 

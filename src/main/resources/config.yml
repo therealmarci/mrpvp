@@ -42,7 +42,7 @@ arena-world:
   difficulty: normal
   # Fixed time of day in ticks: 0 = morning, 6000 = noon, 13000 = evening, 18000 = midnight.
   time: 6000
-  # The web map squaremap leaves this world out if MRadmin draws the map (its map.hide-module-worlds).
+  # The map of the MRadmin player page leaves this world out (MRadmin's map.hide-module-worlds).
 
 
 arenas:
