@@ -9,6 +9,9 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+### Entfernt
+- **Arena-Welt auf der Webkarte:** MRpvp schreibt nicht mehr selbst in die squaremap-Config, der Schlüssel `arena-world.hide-on-squaremap` entfällt (config-version 12). Die Webkarte gehört jetzt zu MRadmin, das die Arena-Welt von sich aus weglässt (`map.hide-module-worlds` in MRadmin). Ohne MRadmin erscheint die Arena-Welt auf squaremap, bis du sie dort selbst ausblendest.
+
 ## [0.9.12] - 2026-11-02
 
 ### Behoben & geändert

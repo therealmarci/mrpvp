@@ -137,7 +137,6 @@ Alles steht kommentiert in `plugins/MRpvp/config.yml`. Änderungen übernimmst d
 | `duel.reconnect-seconds` | `20` | Wartezeit bei Verbindungsabbruch, `0` = sofort verloren |
 | `duel.allowed-commands` | `msg`, `r` … | Befehle, die im Duell erlaubt sind |
 | `arenas.pool-per-template` | `1` | Bereite Kopien pro Arena |
-| `arena-world.hide-on-squaremap` | `true` | Arena-Welt auf der Webkarte squaremap ausblenden (trägt sie dort einmalig als `map.enabled: false` ein) |
 | `stats.max-counted-per-opponent-per-day` | `50` | Mehr Runden gegen denselben Gegner pro Tag warten auf eine Prüfung |
 | `monitor.farming.*` | 8 Runden / 60 min, 90 %, 20 % | Statistik-Farmen: so viele Runden desselben Paars in dieser Zeit, **und** derselbe gewinnt mindestens 90 %, **und** der andere macht höchstens 20 % des Schadens. Ausgeglichene Runden unter Freunden sind nie verdächtig. |
 | `review.auto-days` | `7` | Nach so vielen Tagen zählt eine ungeprüfte Runde automatisch |
@@ -162,7 +161,7 @@ MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr 
 | Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, auffällige Runden im Discord-Log | MRadmin |
 | Im Admin-Modus kann man kein Duell starten | MRadmin |
 | Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert | MRadmin + MRtoolbar |
-| Die Arena-Welt erscheint nicht auf der Webkarte | squaremap (wird automatisch eingetragen) |
+| Die Arena-Welt erscheint nicht auf der Webkarte squaremap | MRadmin (blendet sie automatisch aus) |
 | Spieler im Duell zählen nicht zur Schlafquote | MRadmin + MRsleep |
 | In der Arena-Welt lassen sich keine Chunkloader setzen | MRadmin + MRchunks |
 
