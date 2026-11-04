@@ -136,6 +136,7 @@ Alles steht kommentiert in `plugins/MRpvp/config.yml`. Änderungen übernimmst d
 | `duel.options.wins` · `.minutes` | `[1,2,3,5]` · `[3,5,10,15]` | Auswahl im Einladungsmenü |
 | `duel.reconnect-seconds` | `20` | Wartezeit bei Verbindungsabbruch, `0` = sofort verloren |
 | `duel.allowed-commands` | `msg`, `r` … | Befehle, die im Duell erlaubt sind |
+| `arena-world.name` · `.difficulty` · `.time` | `mrpvp_arenas` · `normal` · `6000` | Eigene Welt der Arenen: Name, Schwierigkeit, feste Uhrzeit |
 | `arenas.pool-per-template` | `1` | Bereite Kopien pro Arena |
 | `stats.max-counted-per-opponent-per-day` | `50` | Mehr Runden gegen denselben Gegner pro Tag warten auf eine Prüfung |
 | `monitor.farming.*` | 8 Runden / 60 min, 90 %, 20 % | Statistik-Farmen: so viele Runden desselben Paars in dieser Zeit, **und** derselbe gewinnt mindestens 90 %, **und** der andere macht höchstens 20 % des Schadens. Ausgeglichene Runden unter Freunden sind nie verdächtig. |

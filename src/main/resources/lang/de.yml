@@ -402,8 +402,6 @@ prompt-player-title: "Spieler suchen"
 prompt-player-hint: "Name eines Spielers, der schon einmal auf dem Server war."
 prompt-player-label: "Name"
 game-id-invalid: "<prefix><red>Das ist keine Game-ID."
-debug-yes: "ja"
-debug-no: "nein"
 
 # ------------------------------------------------------------------ Hauptmenü (Phase 4)
 gui-main-stats: "<aqua>Meine Statistik"
