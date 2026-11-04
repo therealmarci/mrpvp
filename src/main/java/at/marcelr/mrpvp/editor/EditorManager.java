@@ -435,6 +435,7 @@ public final class EditorManager implements Listener {
         }
         close(s, by, "editor-discarded-other", "");
         plugin.getLogger().info(by.getName() + " discarded the arena draft '" + s.id + "'.");
+        plugin.discord().log("draft-discarded", "admin", by.getName(), "arena", s.id);
         messages().send(by, "editor-discarded", tag("id", s.id));
     }
 
@@ -589,6 +590,7 @@ public final class EditorManager implements Listener {
         plugin.slots().templateChanged(t.id());
         plugin.getLogger().info(player.getName() + " published arena template '" + t.id() + "' (version " + t.version()
                 + ", " + format(size) + ").");
+        plugin.discord().log("arena-published", "admin", player.getName(), "arena", t.id(), "version", t.version());
         close(s, player, "editor-published-other", String.valueOf(t.version()));
         m.send(player, "editor-saved", tag("id", t.id()), tag("version", t.version()), tag("size", format(size)));
         return true;

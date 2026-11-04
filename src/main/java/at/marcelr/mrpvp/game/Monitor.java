@@ -92,9 +92,7 @@ public final class Monitor {
         Object[] values = {"id", game.id(), "one", one, "two", two, "detail", detail};
         // Console always English, Discord in the server's language.
         plugin.getLogger().info("Monitor: " + plugin.messages().console(key, values));
-        if (plugin.settings().monitor().discord()) {
-            plugin.admin().adminLog(plugin.messages().server(() -> plugin.messages().plain(key, values)));
-        }
+        plugin.discord().log("alert", "text", plugin.messages().server(() -> plugin.messages().plain(key, values)));
     }
 
     /** Alerts of the last 24 hours, newest first. */

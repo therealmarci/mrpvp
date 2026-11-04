@@ -99,6 +99,7 @@ Auffällige Runden zählen nicht einfach nicht - sie **warten auf eine Entscheid
 | `/duel admin` | Admin-Menü | `mrpvp.admin.gui` |
 | `/mrpvp version` | Version anzeigen | `mrpvp.version` (in `mrpvp.player`) |
 | `/mrpvp reload` | Config und Texte neu laden | `mrpvp.admin.reload` |
+| `/mrpvp discord [test]` | Status des Discord-Logs · Testnachricht senden | `mrpvp.admin.discord` |
 | `/mrpvp debug …` | Sichern und Zurückgeben testen, gesicherte Zustände ansehen | `mrpvp.admin.debug` |
 
 ## Permissions
@@ -124,6 +125,7 @@ Auffällige Runden zählen nicht einfach nicht - sie **warten auf eine Entscheid
 | `mrpvp.admin.review` | OP | Auffällige Runden prüfen (bekommt auch die Hinweise), Runden nachträglich aus der Wertung nehmen oder wieder werten |
 | `mrpvp.admin.defaults` | OP | Standard-Kits und -Arenen wiederherstellen |
 | `mrpvp.admin.reload` · `debug` · `update` | OP | `/mrpvp reload` · `/mrpvp debug` · Update-Hinweis beim Betreten |
+| `mrpvp.admin.discord` | OP | `/mrpvp discord [test]` |
 
 ## Konfiguration
 Am einfachsten im Browser: Mit **MRadmin** (ab der Version mit „Konfiguration im Browser“) unter **Plugins → MRpvp → Konfiguration** - jede Einstellung mit Erklärung, Speichern lädt MRpvp sofort neu (Permission `mradmin.config`). Alles steht außerdem kommentiert in `plugins/MRpvp/config.yml`; Änderungen von Hand übernimmst du mit `/mrpvp reload`.
@@ -132,7 +134,7 @@ Am einfachsten im Browser: Mit **MRadmin** (ab der Version mit „Konfiguration 
 |---|---|---|
 | `general.language` | `auto` | `auto` = wie im Minecraft-Client des Spielers, sonst `de` oder `en` für alle |
 | `general.fallback-language` | `en` | Für Spieler, deren Minecraft-Sprache keine eigene Datei hat |
-| `general.server-language` | `en` | Texte ohne einzelnen Empfänger: Discord-Meldungen zu auffälligen Runden (über MRadmin) |
+| `general.server-language` | `en` | Texte ohne einzelnen Empfänger: das Discord-Log und das Protokoll von MRadmin |
 | `duel.options.wins` · `.minutes` | `[1,2,3,5]` · `[3,5,10,15]` | Auswahl im Einladungsmenü |
 | `duel.reconnect-seconds` | `20` | Wartezeit bei Verbindungsabbruch, `0` = sofort verloren |
 | `duel.allowed-commands` | `msg`, `r` … | Befehle, die im Duell erlaubt sind |
@@ -144,9 +146,28 @@ Am einfachsten im Browser: Mit **MRadmin** (ab der Version mit „Konfiguration 
 | `protection.restore-statistics` | `true` | Minecraft-Statistik nach der Runde auf den Stand davor |
 | `history.days` · `.snapshot-days` | `30` · `90` | Wie lange Kampf-Logs und gesicherte Inventare bleiben |
 | `gui.ban-durations` | `1d`, `7d`, `permanent` | Schnellauswahl für Duell-Sperren auf der Spielerseite der MRadmin-Weboberfläche |
+| `discord.*` | aus | Discord-Log: Webhook, eigener oder MRadmins (`use-mradmin-webhook`), welche Ereignisse in welcher Farbe |
 | `updates.*` | an, `github`, alle 6 h | Hinweis auf neue Versionen (Quelle, Vorabversionen, Prüfintervall) |
 
 Alle Texte stehen in `plugins/MRpvp/lang/<sprache>.yml` ([MiniMessage](https://docs.advntr.dev/minimessage/format.html)), die Kits in `kits.yml`, die Arenen unter `templates/`, Runden und Statistik in der Datenbank `mrpvp.db`.
+
+### Discord-Log
+MRpvp meldet in einen Discord-Kanal:
+- **Runden:** Duell beendet (`duel-ended`, anfangs aus - kommt bei jedem Duell), auffällige Runde (`alert`), Runde wartet auf Prüfung (`review-waiting`), Prüfung entschieden (`review-counted` / `review-discarded`).
+- **Team-Eingriffe:** Runde abgebrochen oder mit Sieger beendet, pausiert und fortgesetzt, nachträglich aus der Wertung genommen oder wieder gewertet.
+- **Kits und Arenen:** Kit gespeichert, gelöscht, importiert; Arena veröffentlicht, gelöscht, Entwurf verworfen.
+- **Spieler und Verwaltung:** Duell-Sperre und Aufhebung, Statistik zurückgesetzt, Inventar zurückgegeben, Standard wiederhergestellt, Reload.
+
+1. In Discord: **Kanal bearbeiten → Integrationen → Webhooks → Neuer Webhook** und die **Webhook-URL kopieren**.
+2. In der Config `discord.enabled: true` setzen und die URL bei `webhook-url` eintragen.
+3. `/mrpvp reload`, dann mit **`/mrpvp discord test`** prüfen.
+
+Unter `discord.events` legst du pro Ereignis fest, ob es gesendet wird und in welcher Farbe. Die Texte stehen in der Sprachdatei unter `discord`.
+
+> [!TIP]
+> **Kein eigener Webhook?** Mit MRadmin geht es auch über dessen Discord-Log: `discord.enabled: true`, `webhook-url` leer lassen und `discord.use-mradmin-webhook: true` setzen. Wer bisher `monitor.discord` an hatte, bekommt das beim Update automatisch.
+>
+> Mit MRadmin steht jedes Ereignis außerdem im **Protokoll** der Weboberfläche (bis zu 14 Tage) - auch wenn Discord aus ist.
 
 ---
 
@@ -159,7 +180,8 @@ MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr 
 | Kachel **Duelle** auf der Spielerseite der Weboberfläche: Statistik, laufende und letzte Runden, Sperre | MRadmin |
 | Eigene Duell-Statistik, letzte Runden und Duell-Ranglisten für Spieler im Browser (`/web`) | MRadmin |
 | **Kit-Editor im Web** mit Item-Bildern und Item-Editor | MRadmin (ab der Version mit Item-Editor) |
-| Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand, auffällige Runden im Discord-Log | MRadmin |
+| Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand | MRadmin |
+| Ereignisse im **Protokoll** der MRadmin-Weboberfläche, Discord-Log über MRadmins Webhook (`discord.use-mradmin-webhook`) | MRadmin |
 | Im Admin-Modus kann man kein Duell starten | MRadmin |
 | Die Werkzeugleiste pausiert im Duell, die Gürtel werden mitgesichert | MRadmin + MRtoolbar |
 | Die Arena-Welt erscheint nicht auf der Karte der MRadmin-Spielerseite | MRadmin (blendet sie automatisch aus) |

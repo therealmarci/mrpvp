@@ -100,7 +100,7 @@ public record Settings(
      * @param borderTries      this many tries to leave the arena in one round
      * @param idleSeconds      a round at least this long without any hit
      */
-    public record MonitorSettings(boolean enabled, boolean discord, at.marcelr.mrpvp.game.FarmingCheck.Rules farming,
+    public record MonitorSettings(boolean enabled, at.marcelr.mrpvp.game.FarmingCheck.Rules farming,
                                   double maxHitHearts,
                                   int borderTries, int idleSeconds) {
     }
@@ -191,7 +191,6 @@ public record Settings(
 
         MonitorSettings monitor = new MonitorSettings(
                 c.getBoolean("monitor.enabled", true),
-                c.getBoolean("monitor.discord", true),
                 new at.marcelr.mrpvp.game.FarmingCheck.Rules(
                         Math.clamp(c.getInt("monitor.farming.rounds", 8), 2, 1000),
                         Math.clamp(c.getInt("monitor.farming.minutes", 60), 1, 24 * 60) * 60_000L,

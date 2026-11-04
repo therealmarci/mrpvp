@@ -79,6 +79,7 @@ public final class ArenaMenu extends Menu {
                     plugin.templates().delete(id);
                     plugin.slots().templateChanged(id);
                     plugin.getLogger().info(viewer.getName() + " deleted arena template '" + id + "'.");
+                    plugin.discord().log("arena-deleted", "admin", viewer.getName(), "arena", id);
                     m.send(viewer, "arena-deleted", tag("id", id));
                     new ArenaListMenu(plugin, viewer).open();
                 }, this::open).open());

@@ -188,6 +188,7 @@ public final class KitEditorMenu extends Menu {
                             plugin.kits().delete(draft.id);
                             m.send(viewer, "kit-deleted", tag("id", draft.id));
                             plugin.getLogger().info(viewer.getName() + " deleted kit '" + draft.id + "'.");
+                            plugin.discord().log("kit-deleted", "admin", viewer.getName(), "kit", draft.id);
                         } catch (IOException e) {
                             m.send(viewer, "editor-error-io", tag("error", e.getMessage()));
                         }
@@ -229,6 +230,7 @@ public final class KitEditorMenu extends Menu {
             draft.changed = false;
             m.send(viewer, "kit-saved", tag("id", draft.id), tag("count", draft.items.size()));
             plugin.getLogger().info(viewer.getName() + " saved kit '" + draft.id + "'.");
+            plugin.discord().log("kit-saved", "admin", viewer.getName(), "kit", draft.id);
             successSound();
             new KitListMenu(plugin, viewer).open();
         } catch (IOException e) {

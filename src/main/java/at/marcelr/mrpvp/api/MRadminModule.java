@@ -376,6 +376,7 @@ final class MRadminModule implements AdminModule, WebModule {
         }
         return new WebConfig(new File(plugin.getDataFolder(), "config.yml"), form, defaults, by -> {
             plugin.reload();
+            plugin.discord().log("admin-reload", "admin", by);
         });
     }
 
@@ -384,6 +385,14 @@ final class MRadminModule implements AdminModule, WebModule {
             return in == null ? null : new String(in.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
             return null;
+        }
+    }
+
+    /** Into MRadmin's log (only with API 13 or newer). */
+    static void log(String event, String text, int color) {
+        MRadminService service = MRadminService.get();
+        if (service != null && service.apiVersion() >= 13) {
+            service.log(ID, event, text, color);
         }
     }
 }

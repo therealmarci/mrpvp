@@ -518,6 +518,9 @@ final class WebData {
                         duration <= 0 ? null : System.currentTimeMillis() + duration, reason, admin);
                 plugin.games().invites().removeAll(uuid);
                 plugin.getLogger().info(admin + " (web) banned " + target.getName() + " from duels.");
+                plugin.discord().log("ban", "admin", admin, "player", MRPvp.logName(uuid),
+                        "until", plugin.logUntil(duration <= 0 ? null : System.currentTimeMillis() + duration),
+                        "reason", reason.isEmpty() ? "-" : reason);
                 return null;
             }
             case "unban" -> {
@@ -527,6 +530,7 @@ final class WebData {
                 }
                 plugin.bans().unban(uuid);
                 plugin.getLogger().info(admin + " (web) lifted a duel ban (" + uuid + ").");
+                plugin.discord().log("unban", "admin", admin, "player", MRPvp.logName(uuid));
                 return null;
             }
             case "reset" -> {
@@ -540,6 +544,7 @@ final class WebData {
                     return null;
                 });
                 plugin.getLogger().info(admin + " (web) reset the duel statistics of " + uuid + ".");
+                plugin.discord().log("stats-reset", "admin", admin, "player", MRPvp.logName(uuid));
                 return null;
             }
             case "count", "discard" -> {
@@ -575,6 +580,7 @@ final class WebData {
                     return "database-error";
                 }
                 plugin.getLogger().info(admin + " (web) gave " + online.getName() + " their saved state back.");
+                plugin.discord().log("inventory-returned", "admin", admin, "player", online.getName());
                 return null;
             }
             default -> {

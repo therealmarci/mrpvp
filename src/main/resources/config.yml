@@ -15,7 +15,7 @@
 # ==============================================================================
 
 # Do not change - used for automatic config updates.
-config-version: 13
+config-version: 14
 
 
 # ------------------------------------------------------------------------------
@@ -177,13 +177,10 @@ history:
 # ------------------------------------------------------------------------------
 #   7) MONITORING
 # ------------------------------------------------------------------------------
-# Suspicious rounds: in the admin menu, in MRadmin (server status, web interface) and - if wanted - in
-# MRadmin's Discord admin log. They are remembered for 24 hours.
+# Suspicious rounds: in the admin menu, in MRadmin (server status, web interface) and in the Discord log
+# (discord.events.alert). They are remembered for 24 hours.
 monitor:
   enabled: true
-  # Also send them to MRadmin's Discord admin log (including rounds waiting for review; only if MRadmin is
-  # installed and Discord is set up there).
-  discord: true
   # Statistic farming: the same two players many times in a short time AND one-sided - the same player (nearly)
   # always wins and the other hardly fights back. Even fights between friends are never suspicious, however many.
   farming:
@@ -204,7 +201,102 @@ monitor:
 
 
 # ------------------------------------------------------------------------------
-#   8) UPDATES
+#   8) DISCORD LOGS
+# ------------------------------------------------------------------------------
+# Create a webhook: Discord channel -> Edit Channel -> Integrations -> Webhooks
+#                   -> New Webhook -> Copy Webhook URL.
+# The texts of the events are in the language file (lang/<language>.yml, section discord).
+# An event with "enabled: false" or an empty text is not sent.
+# With MRadmin every event also goes into the log of its web interface - even while Discord is off.
+# Not working? -> /mrpvp discord shows the status, /mrpvp discord test sends a test message.
+discord:
+  enabled: false
+  # Full URL in quotes, e.g. "https://discord.com/api/webhooks/123456/abcdef"
+  webhook-url: ""
+  # Without a webhook of its own (webhook-url empty): true = send the events to MRadmin's Discord log instead
+  # (needs MRadmin with its Discord log set up).
+  use-mradmin-webhook: false
+  # Name and avatar of the webhook (empty = settings from Discord).
+  username: "MRpvp"
+  avatar-url: ""
+  # true = coloured embeds, false = plain text messages.
+  use-embeds: true
+  # Footer of the embeds, e.g. the server name (empty = none).
+  footer: "Minecraft-Server"
+  events:
+    duel-ended:
+      enabled: false
+      color: "#2ECC71"
+    alert:
+      enabled: true
+      color: "#E67E22"
+    review-waiting:
+      enabled: true
+      color: "#F1C40F"
+    review-counted:
+      enabled: true
+      color: "#27AE60"
+    review-discarded:
+      enabled: true
+      color: "#C0392B"
+    game-stopped:
+      enabled: true
+      color: "#9B59B6"
+    game-winner:
+      enabled: true
+      color: "#9B59B6"
+    game-paused:
+      enabled: true
+      color: "#9B59B6"
+    game-resumed:
+      enabled: true
+      color: "#9B59B6"
+    round-uncounted:
+      enabled: true
+      color: "#C0392B"
+    round-recounted:
+      enabled: true
+      color: "#27AE60"
+    kit-saved:
+      enabled: true
+      color: "#3498DB"
+    kit-deleted:
+      enabled: true
+      color: "#E74C3C"
+    kit-imported:
+      enabled: true
+      color: "#3498DB"
+    arena-published:
+      enabled: true
+      color: "#1ABC9C"
+    arena-deleted:
+      enabled: true
+      color: "#E74C3C"
+    draft-discarded:
+      enabled: true
+      color: "#95A5A6"
+    ban:
+      enabled: true
+      color: "#C0392B"
+    unban:
+      enabled: true
+      color: "#27AE60"
+    stats-reset:
+      enabled: true
+      color: "#E67E22"
+    inventory-returned:
+      enabled: true
+      color: "#3498DB"
+    defaults-restored:
+      enabled: true
+      color: "#9B59B6"
+    admin-reload:
+      enabled: true
+      color: "#3498DB"
+
+
+# ------------------------------------------------------------------------------
+#   9) UPDATES
 # ------------------------------------------------------------------------------
 updates:
   enabled: true
@@ -218,7 +310,7 @@ updates:
 
 
 # ------------------------------------------------------------------------------
-#   9) MENUS
+#   10) MENUS
 # ------------------------------------------------------------------------------
 gui:
   # How often open menus are refreshed (in ticks, 20 = 1 second).

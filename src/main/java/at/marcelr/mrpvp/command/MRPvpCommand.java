@@ -1,5 +1,6 @@
 package at.marcelr.mrpvp.command;
 
+import at.marcelr.mrpvp.DiscordWebhook;
 import at.marcelr.mrpvp.MRPvp;
 import at.marcelr.mrpvp.Messages;
 import at.marcelr.mrpvp.UpdateChecker;
@@ -37,6 +38,7 @@ public final class MRPvpCommand implements TabExecutor {
 
     public static final String PERM_RELOAD = "mrpvp.admin.reload";
     public static final String PERM_DEBUG = "mrpvp.admin.debug";
+    public static final String PERM_DISCORD = "mrpvp.admin.discord";
 
     private final MRPvp plugin;
 
@@ -71,6 +73,14 @@ public final class MRPvpCommand implements TabExecutor {
                 plugin.reload();
                 messages.send(sender, "reloaded");
                 plugin.getLogger().info(sender.getName() + " reloaded the configuration.");
+                plugin.discord().log("admin-reload", "admin", sender.getName());
+            }
+            case "discord" -> {
+                if (sender.hasPermission(PERM_DISCORD)) {
+                    discord(sender, args);
+                } else {
+                    messages.send(sender, "no-permission");
+                }
             }
             case "debug" -> {
                 if (!sender.hasPermission(PERM_DEBUG)) {
@@ -185,6 +195,41 @@ public final class MRPvpCommand implements TabExecutor {
         return Component.text(label, NamedTextColor.AQUA, TextDecoration.UNDERLINED).clickEvent(ClickEvent.openUrl(url));
     }
 
+    /** /mrpvp discord - status; /mrpvp discord test - sends a test message and reports Discord's answer. */
+    private void discord(CommandSender sender, String[] args) {
+        Messages messages = plugin.messages();
+        DiscordWebhook discord = plugin.discord();
+        if (discord.enabled()) {
+            int[] counts = discord.eventCounts();
+            messages.send(sender, discord.viaMradmin() ? "discord-status-mradmin" : "discord-status-active",
+                    tag("events", counts[0]), tag("total", counts[1]));
+        } else {
+            messages.send(sender, "discord-status-inactive", tag("reason", discord.disabledReason()));
+        }
+        if (!discord.viaMradmin()) {
+            String last = discord.lastResult();
+            messages.send(sender, "discord-status-last", tag("result", last == null ? messages.plain("discord-status-never") : last));
+        }
+        if (args.length < 2 || !args[1].equalsIgnoreCase("test")) {
+            if (discord.enabled()) {
+                messages.send(sender, "discord-test-hint");
+            }
+            return;
+        }
+        if (!discord.enabled()) {
+            return;
+        }
+        messages.send(sender, "discord-test-sending");
+        discord.test(sender).whenComplete((error, throwable) -> Bukkit.getScheduler().runTask(plugin, () -> {
+            String problem = throwable != null ? throwable.getMessage() : error;
+            if (problem == null) {
+                messages.send(sender, "discord-test-ok");
+            } else {
+                messages.send(sender, "discord-test-failed", tag("reason", problem));
+            }
+        }));
+    }
+
     @Override
     public List<String> onTabComplete(@NonNull CommandSender sender, @NonNull Command command, @NonNull String label,
                                       String @NonNull [] args) {
@@ -196,6 +241,9 @@ public final class MRPvpCommand implements TabExecutor {
             }
             if (sender.hasPermission(PERM_DEBUG)) {
                 options.add("debug");
+            }
+            if (sender.hasPermission(PERM_DISCORD)) {
+                options.add("discord");
             }
         } else if (args.length == 2 && args[0].equalsIgnoreCase("debug") && sender.hasPermission(PERM_DEBUG)) {
             options.addAll(List.of("arena", "leave", "state"));
