@@ -4,6 +4,7 @@ import at.marcelr.mradmin.api.AdminModule;
 import at.marcelr.mradmin.api.HealthEntry;
 import at.marcelr.mradmin.api.MRadminService;
 import at.marcelr.mradmin.api.WebAlert;
+import at.marcelr.mradmin.api.WebConfig;
 import at.marcelr.mradmin.api.WebModule;
 import at.marcelr.mradmin.api.WebUser;
 import at.marcelr.mrpvp.MRPvp;
@@ -25,6 +26,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 import org.jspecify.annotations.Nullable;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -359,5 +364,26 @@ final class MRadminModule implements AdminModule, WebModule {
             });
         }
         return flags;
+    }
+
+    /** config.yml in MRadmin's web interface (API 12): form from web-config.yml, saved and reloaded like the reload command. */
+    @Override
+    public @Nullable WebConfig webConfig() {
+        String form = resource("web-config.yml");
+        String defaults = resource("config.yml");
+        if (form == null || defaults == null) {
+            return null;
+        }
+        return new WebConfig(new File(plugin.getDataFolder(), "config.yml"), form, defaults, by -> {
+            plugin.reload();
+        });
+    }
+
+    private @Nullable String resource(String name) {
+        try (InputStream in = plugin.getResource(name)) {
+            return in == null ? null : new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

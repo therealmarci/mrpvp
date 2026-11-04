@@ -9,8 +9,14 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+### Neu
+- **Einstellen im Browser:** Mit MRadmin (ab der Version mit „Konfiguration im Browser“) lässt sich die ganze `config.yml` unter **Plugins → MRpvp → Konfiguration** als Formular einstellen - jede Einstellung mit Erklärung auf Deutsch und Englisch, Speichern lädt MRpvp sofort neu (wie `/mrpvp reload`). Die Datei bleibt von Hand bearbeitbar.
+
 ### Entfernt
 - **Arena-Welt auf der Webkarte:** MRpvp schreibt nicht mehr selbst in die squaremap-Config, der Schlüssel `arena-world.hide-on-squaremap` entfällt (config-version 12). Die Webkarte gehört jetzt zu MRadmin, das die Arena-Welt von sich aus weglässt (`map.hide-module-worlds` in MRadmin). Ohne MRadmin erscheint die Arena-Welt auf squaremap, bis du sie dort selbst ausblendest.
+
+### Behoben & geändert
+- **Config neu gegliedert** (gleicher Aufbau wie alle MRtechnology-Plugins; `config-version` 13): `language`, `fallback-language`, `server-language` → `general.*`, `update-checker` → `updates`. Bestehende Einstellungen werden beim Update automatisch übernommen (Sicherung `config.v12.backup.yml`).
 
 ## [0.9.12] - 2026-11-02
 

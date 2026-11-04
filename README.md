@@ -126,13 +126,13 @@ Auffällige Runden zählen nicht einfach nicht - sie **warten auf eine Entscheid
 | `mrpvp.admin.reload` · `debug` · `update` | OP | `/mrpvp reload` · `/mrpvp debug` · Update-Hinweis beim Betreten |
 
 ## Konfiguration
-Alles steht kommentiert in `plugins/MRpvp/config.yml`. Änderungen übernimmst du mit `/mrpvp reload`.
+Am einfachsten im Browser: Mit **MRadmin** (ab der Version mit „Konfiguration im Browser“) unter **Plugins → MRpvp → Konfiguration** - jede Einstellung mit Erklärung, Speichern lädt MRpvp sofort neu (Permission `mradmin.config`). Alles steht außerdem kommentiert in `plugins/MRpvp/config.yml`; Änderungen von Hand übernimmst du mit `/mrpvp reload`.
 
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
-| `language` | `auto` | `auto` = wie im Minecraft-Client des Spielers, sonst `de` oder `en` für alle |
-| `fallback-language` | `en` | Für Spieler, deren Minecraft-Sprache keine eigene Datei hat |
-| `server-language` | `en` | Texte ohne einzelnen Empfänger: Discord-Meldungen zu auffälligen Runden (über MRadmin) |
+| `general.language` | `auto` | `auto` = wie im Minecraft-Client des Spielers, sonst `de` oder `en` für alle |
+| `general.fallback-language` | `en` | Für Spieler, deren Minecraft-Sprache keine eigene Datei hat |
+| `general.server-language` | `en` | Texte ohne einzelnen Empfänger: Discord-Meldungen zu auffälligen Runden (über MRadmin) |
 | `duel.options.wins` · `.minutes` | `[1,2,3,5]` · `[3,5,10,15]` | Auswahl im Einladungsmenü |
 | `duel.reconnect-seconds` | `20` | Wartezeit bei Verbindungsabbruch, `0` = sofort verloren |
 | `duel.allowed-commands` | `msg`, `r` … | Befehle, die im Duell erlaubt sind |
@@ -144,7 +144,7 @@ Alles steht kommentiert in `plugins/MRpvp/config.yml`. Änderungen übernimmst d
 | `protection.restore-statistics` | `true` | Minecraft-Statistik nach der Runde auf den Stand davor |
 | `history.days` · `.snapshot-days` | `30` · `90` | Wie lange Kampf-Logs und gesicherte Inventare bleiben |
 | `gui.ban-durations` | `1d`, `7d`, `permanent` | Schnellauswahl für Duell-Sperren auf der Spielerseite der MRadmin-Weboberfläche |
-| `update-checker.*` | an, `github`, alle 6 h | Hinweis auf neue Versionen (Quelle, Vorabversionen, Prüfintervall) |
+| `updates.*` | an, `github`, alle 6 h | Hinweis auf neue Versionen (Quelle, Vorabversionen, Prüfintervall) |
 
 Alle Texte stehen in `plugins/MRpvp/lang/<sprache>.yml` ([MiniMessage](https://docs.advntr.dev/minimessage/format.html)), die Kits in `kits.yml`, die Arenen unter `templates/`, Runden und Statistik in der Datenbank `mrpvp.db`.
 
