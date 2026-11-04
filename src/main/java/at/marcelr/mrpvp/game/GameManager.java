@@ -862,6 +862,13 @@ public final class GameManager {
             GameStore.finishMatch(c, match, rounds, one, two, winner, reason, startedAt, endedAt);
             return null;
         });
+        String winnerName = winner == null ? null : winner.equals(one) ? game.one().name() : game.two().name();
+        String score = match.single() ? "" : " " + match.wins(1) + ":" + match.wins(2);
+        long seconds = (endedAt - startedAt) / 1000;
+        plugin.discord().log("duel-ended", "one", game.one().name(), "two", game.two().name(),
+                "result", plugin.messages().server(() -> winnerName == null ? plugin.messages().plain("discord-duel-no-winner")
+                        : plugin.messages().plain("discord-duel-won", "winner", winnerName)) + score,
+                "kit", plugin.logName(game.kit()), "rounds", rounds, "duration", seconds / 60 + ":" + String.format("%02d", seconds % 60));
         if (!match.single()) {
             plugin.getLogger().info("Match #" + match.id() + " ended " + match.wins(1) + ":" + match.wins(2) + " after "
                     + rounds + " rounds" + (winner == null ? "" : ", winner " + (winner.equals(one) ? game.one().name()
@@ -1041,6 +1048,7 @@ public final class GameManager {
             return;
         }
         plugin.getLogger().info(admin + " stopped round #" + game.id() + ".");
+        plugin.discord().log("game-stopped", "admin", admin, "id", game.id(), "one", game.one().name(), "two", game.two().name());
         end(game, Game.Result.ABORTED, Game.EndReason.ADMIN, null, admin);
     }
 
@@ -1055,6 +1063,7 @@ public final class GameManager {
         }
         game.adminPause(admin);
         plugin.getLogger().info(admin + " paused round #" + game.id() + ".");
+        plugin.discord().log("game-paused", "admin", admin, "id", game.id(), "one", game.one().name(), "two", game.two().name());
         forEachOnline(game, p -> p.showTitle(Title.title(messages().get("admin-pause-title"),
                 messages().get("admin-pause-subtitle", tag("admin", admin)),
                 Title.Times.times(Duration.ofMillis(200), Duration.ofSeconds(3), Duration.ofMillis(500)))));
@@ -1070,6 +1079,7 @@ public final class GameManager {
         }
         game.resume(Math.max(3, settings().countdown()));
         plugin.getLogger().info(admin + " resumed round #" + game.id() + ".");
+        plugin.discord().log("game-resumed", "admin", admin, "id", game.id(), "one", game.one().name(), "two", game.two().name());
         showCountdown(game);
         plugin.admin().webEvent("game", String.valueOf(game.id()), false);
         return null;
@@ -1085,6 +1095,7 @@ public final class GameManager {
         }
         game.match().forfeit(game.opponent(winner.uuid()).uuid());
         plugin.getLogger().info(admin + " declared " + winner.name() + " the winner of round #" + game.id() + ".");
+        plugin.discord().log("game-winner", "admin", admin, "id", game.id(), "one", game.one().name(), "two", game.two().name(), "winner", winner.name());
         end(game, Game.Result.WIN, Game.EndReason.ADMIN_WIN, winner, admin);
     }
 

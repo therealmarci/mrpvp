@@ -53,7 +53,7 @@ public record Settings(
      * @param difficulty never peaceful (players would heal all the time)
      * @param time       fixed time of day in ticks (6000 = noon)
      */
-    public record ArenaWorldSettings(String name, Difficulty difficulty, long time, boolean hideOnSquaremap) {
+    public record ArenaWorldSettings(String name, Difficulty difficulty, long time) {
     }
 
     /**
@@ -100,7 +100,7 @@ public record Settings(
      * @param borderTries      this many tries to leave the arena in one round
      * @param idleSeconds      a round at least this long without any hit
      */
-    public record MonitorSettings(boolean enabled, boolean discord, at.marcelr.mrpvp.game.FarmingCheck.Rules farming,
+    public record MonitorSettings(boolean enabled, at.marcelr.mrpvp.game.FarmingCheck.Rules farming,
                                   double maxHitHearts,
                                   int borderTries, int idleSeconds) {
     }
@@ -139,8 +139,7 @@ public record Settings(
             difficulty = Difficulty.EASY;
         }
         ArenaWorldSettings arenaWorld = new ArenaWorldSettings(worldName, difficulty,
-                Math.floorMod(c.getLong("arena-world.time", 6000), 24_000L),
-                c.getBoolean("arena-world.hide-on-squaremap", true));
+                Math.floorMod(c.getLong("arena-world.time", 6000), 24_000L));
 
         ArenaSettings arenas = new ArenaSettings(
                 Math.clamp(c.getInt("arenas.pool-per-template", 1), 0, 16),
@@ -192,7 +191,6 @@ public record Settings(
 
         MonitorSettings monitor = new MonitorSettings(
                 c.getBoolean("monitor.enabled", true),
-                c.getBoolean("monitor.discord", true),
                 new at.marcelr.mrpvp.game.FarmingCheck.Rules(
                         Math.clamp(c.getInt("monitor.farming.rounds", 8), 2, 1000),
                         Math.clamp(c.getInt("monitor.farming.minutes", 60), 1, 24 * 60) * 60_000L,
@@ -202,17 +200,17 @@ public record Settings(
                 Math.clamp(c.getInt("monitor.border-tries", 10), 1, 1000),
                 Math.clamp(c.getInt("monitor.idle-seconds", 90), 10, 3600));
 
-        String source = c.getString("update-checker.source", "github").toLowerCase(Locale.ROOT);
+        String source = c.getString("updates.source", "github").toLowerCase(Locale.ROOT);
         if (!source.equals("modrinth") && !source.equals("github")) {
-            log.warning("Invalid update-checker.source '" + source + "', using github.");
+            log.warning("Invalid updates.source '" + source + "', using github.");
             source = "github";
         }
         UpdateSettings update = new UpdateSettings(
-                c.getBoolean("update-checker.enabled", true),
+                c.getBoolean("updates.enabled", true),
                 source,
-                c.getBoolean("update-checker.include-prereleases", false),
-                Math.max(1, c.getInt("update-checker.interval-hours", 6)),
-                c.getBoolean("update-checker.notify-on-join", true));
+                c.getBoolean("updates.include-prereleases", false),
+                Math.max(1, c.getInt("updates.interval-hours", 6)),
+                c.getBoolean("updates.notify-on-join", true));
 
         GuiSettings gui = new GuiSettings(
                 Math.max(5, c.getInt("gui.refresh-ticks", 20)),

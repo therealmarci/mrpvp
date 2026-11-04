@@ -179,6 +179,7 @@ final class KitImportMenu extends Menu {
             }
         }
         plugin.getLogger().info(viewer.getName() + " imported " + imported + " kit(s) from " + file.getName() + ".");
+        plugin.discord().log("kit-imported", "admin", viewer.getName(), "count", imported, "file", file.getName());
         m.send(viewer, "kit-imported", tag("count", imported), tag("file", file.getName()));
         successSound();
         new KitListMenu(plugin, viewer).open();

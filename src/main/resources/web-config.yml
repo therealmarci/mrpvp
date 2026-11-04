@@ -1,0 +1,469 @@
+# Form of config.yml for MRadmin's web interface (Plugins -> MRpvp -> Configuration).
+# Every field names a key of config.yml, its type and limits, and a name and help text in German and English.
+# Format: MRadmin docs/MODULE-API.md, section "Konfiguration im Browser". Texts with a comma need quotes.
+sections:
+  - id: general
+    name: {de: Allgemein, en: General}
+    help: {de: Sprache der Texte im Spiel und in Discord., en: Language of the texts in game and on Discord.}
+    fields:
+      - key: general.language
+        type: choice
+        name: {de: Sprache der Spieler, en: Language of the players}
+        help: {de: "Automatisch = jeder Spieler bekommt die Sprache seines Minecraft-Clients.", en: "Automatic = every player gets the language of their Minecraft client."}
+        options:
+          - {value: auto, de: Automatisch, en: Automatic}
+          - {value: de, de: Deutsch, en: German}
+          - {value: en, de: Englisch, en: English}
+      - key: general.fallback-language
+        type: choice
+        name: {de: Ersatzsprache, en: Fallback language}
+        help: {de: Für Spieler mit einer Sprache ohne eigene Datei., en: For players whose language has no file of its own.}
+        when: general.language=auto
+        options:
+          - {value: de, de: Deutsch, en: German}
+          - {value: en, de: Englisch, en: English}
+      - key: general.server-language
+        type: choice
+        name: {de: Sprache für Discord, en: Language for Discord}
+        help: {de: Discord-Logs und auffällige Runden (über MRadmin)., en: Discord logs and suspicious rounds (through MRadmin).}
+        options:
+          - {value: de, de: Deutsch, en: German}
+          - {value: en, de: Englisch, en: English}
+
+  - id: arena-world
+    name: {de: Arena-Welt, en: Arena world}
+    help: {de: "MRpvp legt die leere Welt selbst an und setzt bei jedem Start ihre Regeln (keine Mobs, kein Wetter, PvP an).", en: "MRpvp creates the empty world itself and sets its rules on every start (no mobs, no weather, PvP on)."}
+    fields:
+      - key: arena-world.name
+        type: string
+        max-length: 64
+        restart: true
+        name: {de: Ordnername der Welt, en: Folder name of the world}
+        help: {de: Die alte Welt bleibt liegen., en: The old world stays where it is.}
+      - key: arena-world.difficulty
+        type: choice
+        name: {de: Schwierigkeit, en: Difficulty}
+        help: {de: "Friedlich geht nicht - Spieler würden im Kampf heilen.", en: "Peaceful does not work - players would heal during the fight."}
+        options:
+          - {value: easy, de: Einfach, en: Easy}
+          - {value: normal, de: Normal, en: Normal}
+          - {value: hard, de: Schwer, en: Hard}
+      - key: arena-world.time
+        type: int
+        min: 0
+        max: 23999
+        unit: {de: Ticks, en: ticks}
+        name: {de: Feste Uhrzeit, en: Fixed time of day}
+        help: {de: "0 = Morgen, 6000 = Mittag, 13000 = Abend, 18000 = Mitternacht.", en: "0 = morning, 6000 = noon, 13000 = evening, 18000 = midnight."}
+
+  - id: arenas
+    name: {de: Arenen, en: Arenas}
+    help: {de: Fertig aufgebaute Arenen und ihre Grenzen., en: Ready-built arenas and their limits.}
+    fields:
+      - key: arenas.pool-per-template
+        type: int
+        min: 0
+        max: 16
+        name: {de: Bereit pro Vorlage, en: Ready per template}
+        help: {de: "So viele Arenen stehen fertig - ein Duell startet ohne Warten. 0 = erst beim Start bauen. Pro Arena im Admin-Menü änderbar.", en: "That many arenas stand ready - a duel starts without waiting. 0 = build on start. Changeable per arena in the admin menu."}
+      - key: arenas.max-slots
+        type: int
+        min: 1
+        max: 512
+        name: {de: Höchstens gleichzeitig, en: At most at the same time}
+        help: {de: "Alle Vorlagen zusammen - weitere Duelle warten.", en: "All templates together - further duels wait."}
+      - key: arenas.spacing
+        type: int
+        min: 200
+        max: 10000
+        unit: {de: Blöcke, en: blocks}
+        restart: true
+        name: {de: Abstand zwischen Arenen, en: Distance between arenas}
+      - key: arenas.max-width
+        type: int
+        min: 8
+        max: 256
+        unit: {de: Blöcke, en: blocks}
+        name: {de: Größte Breite, en: Largest width}
+        help: {de: Bis 64 × 48 × 64 baut eine Arena ohne spürbare Wartezeit., en: Up to 64 × 48 × 64 an arena builds without a noticeable wait.}
+      - key: arenas.max-height
+        type: int
+        min: 8
+        max: 200
+        unit: {de: Blöcke, en: blocks}
+        name: {de: Größte Höhe, en: Largest height}
+      - key: arenas.headroom
+        type: int
+        min: 0
+        max: 200
+        unit: {de: Blöcke, en: blocks}
+        name: {de: Luft nach oben, en: Headroom}
+        help: {de: "Für Elytren und Streitkolben - wer höher fliegt, wird zurückgesetzt.", en: "For elytras and maces - whoever flies higher is reset."}
+
+  - id: duel
+    name: {de: Duelle, en: Duels}
+    help: {de: "Einladung, Countdown und was während der Runde gilt.", en: "Invite, countdown and what applies during the round."}
+    fields:
+      - key: duel.invite-seconds
+        type: int
+        min: 5
+        max: 600
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Einladung gilt, en: Invite lasts}
+      - key: duel.invite-cooldown-seconds
+        type: int
+        min: 0
+        max: 600
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Wartezeit zwischen Einladungen, en: Wait between invites}
+        help: {de: Ohne Wartezeit mit mrpvp.bypass.cooldown., en: No wait with mrpvp.bypass.cooldown.}
+      - key: duel.countdown-seconds
+        type: int
+        min: 0
+        max: 30
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Countdown vor dem Kampf, en: Countdown before the fight}
+        help: {de: "Spieler sind dabei eingefroren, 0 = sofort.", en: "Players are frozen meanwhile, 0 = right away."}
+      - key: duel.end-delay-seconds
+        type: int
+        min: 0
+        max: 30
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Pause nach dem Ende, en: Pause after the end}
+        help: {de: Bevor beide ihre Sachen zurückbekommen., en: Before both get their things back.}
+      - key: duel.reconnect-seconds
+        type: int
+        min: 0
+        max: 300
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Warten auf Wiederverbindung, en: Wait for reconnect}
+        help: {de: "Einmal pro Match und Spieler, der Gegner ist so lange eingefroren. 0 = sofort verloren.", en: "Once per match and player, the opponent is frozen meanwhile. 0 = lost right away."}
+      - key: duel.totems
+        type: bool
+        name: {de: Totems retten, en: Totems save}
+        help: {de: Aus = wer ein Totem auslöst gilt als besiegt., en: Off = whoever triggers a totem counts as defeated.}
+      - key: duel.allowed-commands
+        type: strings
+        name: {de: Erlaubte Befehle im Duell, en: Commands allowed in a duel}
+        help: {de: "Ohne /. /duel geht immer (aufgeben), alle anderen sind gesperrt. Ausnahme: mrpvp.bypass.commands.", en: "Without /. /duel always works (give up), all others are blocked. Exception: mrpvp.bypass.commands."}
+
+  - id: duel-options
+    name: {de: Wahl beim Herausfordern, en: Choices when challenging}
+    help: {de: Was Spieler nach der Wahl des Kits einstellen können., en: What players can set after picking the kit.}
+    fields:
+      - key: duel.options.wins
+        type: ints
+        min: 1
+        max: 20
+        name: {de: Siege zur Auswahl, en: Wins to choose from}
+        help: {de: "„First to“ - 1 = eine Runde.", en: "\"First to\" - 1 = one round."}
+      - key: duel.options.default-wins
+        type: int
+        min: 1
+        max: 20
+        name: {de: Standard-Siege, en: Default wins}
+      - key: duel.options.minutes
+        type: ints
+        min: 1
+        max: 120
+        unit: {de: min, en: min}
+        name: {de: Zeitlimits zur Auswahl, en: Time limits to choose from}
+        help: {de: "Pro Runde - danach Unentschieden.", en: "Per round - then it is a draw."}
+      - key: duel.options.default-minutes
+        type: int
+        min: 1
+        max: 120
+        unit: {de: Minuten, en: minutes}
+        name: {de: Standard-Zeitlimit, en: Default time limit}
+      - key: duel.options.default-hunger
+        type: bool
+        name: {de: Hunger standardmäßig an, en: Hunger on by default}
+        help: {de: Kits können es fest vorgeben., en: Kits can fix it.}
+      - key: duel.options.default-regen
+        type: bool
+        name: {de: Natürliche Regeneration standardmäßig an, en: Natural regeneration on by default}
+        help: {de: "Kits können es fest vorgeben (z.B. UHC ohne Regeneration).", en: "Kits can fix it (e.g. UHC without regeneration)."}
+
+  - id: stats
+    name: {de: Statistik, en: Statistics}
+    help: {de: "Eigene Duell-Statistik (K/D, Siege, Serien, Rangliste) - getrennt von der Minecraft-Statistik.", en: "Own duel statistics (K/D, wins, streaks, leaderboard) - apart from the Minecraft statistics."}
+    fields:
+      - key: stats.min-duration-seconds
+        type: int
+        min: 0
+        max: 600
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Kürzere Runden ohne Treffer sind auffällig, en: Shorter rounds without a hit are suspicious}
+      - key: stats.max-counted-per-opponent-per-day
+        type: int
+        min: 0
+        max: 1000
+        name: {de: Runden pro Gegner und Tag, en: Rounds per opponent and day}
+        help: {de: "Mehr innerhalb von 24 Stunden ist auffällig (Statistik-Farming). 0 = keine Grenze.", en: "More within 24 hours is suspicious (statistic farming). 0 = no limit."}
+      - key: stats.quit-counts-as-death
+        type: bool
+        name: {de: Verlassen zählt als Tod, en: Leaving counts as a death}
+      - key: stats.surrender-counts-as-death
+        type: bool
+        name: {de: Aufgeben zählt als Tod, en: Giving up counts as a death}
+      - key: stats.border-counts-as-kill
+        type: bool
+        name: {de: Aus der Arena stoßen zählt als Kill, en: Knocking out of the arena counts as a kill}
+      - key: stats.min-games-for-ratio
+        type: int
+        min: 0
+        max: 1000
+        name: {de: Runden bis K/D und Siegquote, en: Rounds until K/D and win rate}
+        help: {de: Erst ab so vielen Runden in der Rangliste., en: Only in the leaderboard from that many rounds.}
+
+  - id: review
+    name: {de: Prüfen, en: Review}
+    help: {de: "Auffällige Runden warten auf eine Entscheidung (Admin-Menü → Prüfen, Weboberfläche). Bis dahin zählen sie nicht.", en: "Suspicious rounds wait for a decision (admin menu → Review, web interface). Until then they do not count."}
+    fields:
+      - key: review.hold
+        type: choices
+        name: {de: Zurückhalten bei, en: Hold back on}
+        help: {de: Nicht gewählte Gründe werden nur gemeldet - die Runde zählt normal., en: Reasons not chosen are only reported - the round counts normally.}
+        options:
+          - {value: farming, de: Einseitige Serie, en: One-sided series}
+          - {value: limit, de: Zu viele Runden am Tag, en: Too many rounds a day}
+          - {value: short, de: Kurz ohne Treffer, en: Short without a hit}
+          - {value: hit, de: Zu starker Treffer, en: Too strong hit}
+          - {value: border, de: Oft am Rand, en: Often at the border}
+          - {value: idle, de: Lange ohne Treffer, en: Long without a hit}
+          - {value: quit, de: Server verlassen, en: Left the server}
+      - key: review.auto-days
+        type: int
+        min: 1
+        max: 365
+        unit: {de: Tage, en: days}
+        name: {de: Automatisch entscheiden nach, en: Decide automatically after}
+      - key: review.auto-decision
+        type: choice
+        name: {de: Automatische Entscheidung, en: Automatic decision}
+        options:
+          - {value: count, de: Zählt, en: Counts}
+          - {value: discard, de: Zählt nie, en: Never counts}
+          - {value: none, de: Warten, en: Wait}
+      - key: review.notify
+        type: bool
+        name: {de: Team benachrichtigen, en: Notify the team}
+        help: {de: "Online-Admins mit mrpvp.admin.review bekommen eine Nachricht - beim Betreten, wie viele warten.", en: "Online admins with mrpvp.admin.review get a message - on joining, how many are waiting."}
+
+  - id: protection
+    name: {de: Schutz, en: Protection}
+    help: {de: Was eine Runde an der Spielwelt nicht verändern soll., en: What a round should not change in the game world.}
+    fields:
+      - key: protection.revoke-advancements
+        type: bool
+        name: {de: Keine Fortschritte in der Arena, en: No advancements in the arena}
+        help: {de: "Z.B. durch Kit-Rüstung - ohne Einblendung, ohne Nachricht.", en: "E.g. from kit armour - no toast, no message."}
+      - key: protection.restore-statistics
+        type: bool
+        name: {de: Minecraft-Statistik zurücksetzen, en: Reset the Minecraft statistics}
+        help: {de: Schaden und Sprünge auf den Stand vor der Runde. Tode und Kills zählen sowieso nie., en: Damage and jumps back to the state before the round. Deaths and kills never count anyway.}
+
+  - id: history
+    name: {de: Verlauf, en: History}
+    help: {de: Ergebnisse und Zahlen der Runden bleiben immer für die Statistik., en: Results and numbers of the rounds are always kept for the statistics.}
+    fields:
+      - key: history.days
+        type: int
+        min: 1
+        max: 3650
+        unit: {de: Tage, en: days}
+        name: {de: Kampfprotokoll aufheben, en: Keep the combat log}
+        help: {de: "Kampfprotokoll, Positionen (Mini-Karte) und Inventar am Ende.", en: "Combat log, positions (mini map) and inventory at the end."}
+      - key: history.snapshot-days
+        type: int
+        min: 1
+        max: 3650
+        unit: {de: Tage, en: days}
+        name: {de: Gespeicherte Inventare aufheben, en: Keep saved inventories}
+        help: {de: Stand beim Betreten. Nicht zurückgegebene werden nie gelöscht., en: State when entering. Ones not yet returned are never deleted.}
+
+  - id: monitor
+    name: {de: Überwachung, en: Monitoring}
+    help: {de: "Auffällige Runden im Admin-Menü, in MRadmin und auf Wunsch im Discord-Admin-Log von MRadmin (24 Stunden gemerkt).", en: "Suspicious rounds in the admin menu, in MRadmin and if wanted in MRadmin's Discord admin log (remembered for 24 hours)."}
+    fields:
+      - key: monitor.enabled
+        type: bool
+        name: {de: Überwachung an, en: Monitoring on}
+      - key: monitor.farming.rounds
+        type: int
+        when: monitor.enabled
+        min: 2
+        max: 1000
+        name: {de: "Farming: mindestens Runden", en: "Farming: at least rounds"}
+        help: {de: Desselben Paares in der Zeit unten., en: Of the same pair within the time below.}
+      - key: monitor.farming.minutes
+        type: int
+        when: monitor.enabled
+        min: 1
+        max: 1440
+        unit: {de: Minuten, en: minutes}
+        name: {de: "Farming: innerhalb von", en: "Farming: within"}
+      - key: monitor.farming.winner-percent
+        type: int
+        when: monitor.enabled
+        min: 50
+        max: 100
+        unit: {de: "%", en: "%"}
+        name: {de: "Farming: gleicher Sieger in", en: "Farming: same winner in"}
+      - key: monitor.farming.max-loser-damage-percent
+        type: int
+        when: monitor.enabled
+        min: 0
+        max: 100
+        unit: {de: "%", en: "%"}
+        name: {de: "Farming: Verlierer teilt höchstens aus", en: "Farming: loser deals at most"}
+        help: {de: Anteil am gesamten Schaden dieser Runden. Ausgeglichene Runden unter Freunden sind nie auffällig., en: Share of all damage in these rounds. Even fights between friends are never suspicious.}
+      - key: monitor.max-hit-hearts
+        type: int
+        when: monitor.enabled
+        min: 1
+        max: 1000
+        unit: {de: Herzen, en: hearts}
+        name: {de: Auffällig starker Treffer ab, en: Suspiciously strong hit from}
+        help: {de: Außer mit dem Streitkolben., en: Except with the mace.}
+      - key: monitor.border-tries
+        type: int
+        when: monitor.enabled
+        min: 1
+        max: 1000
+        name: {de: Versuche die Arena zu verlassen, en: Tries to leave the arena}
+      - key: monitor.idle-seconds
+        type: int
+        when: monitor.enabled
+        min: 10
+        max: 3600
+        unit: {de: Sekunden, en: seconds}
+        name: {de: Ohne Treffer auffällig ab, en: Suspicious without a hit from}
+
+  - id: discord
+    name: {de: Discord-Logs, en: Discord logs}
+    help: {de: "Ereignisse in einen Discord-Kanal schicken. Webhook: Kanal bearbeiten → Integrationen → Webhooks → Neuer Webhook → URL kopieren.", en: "Send events to a Discord channel. Webhook: Edit channel → Integrations → Webhooks → New webhook → copy URL."}
+    fields:
+      - key: discord.enabled
+        type: bool
+        name: {de: Discord-Logs senden, en: Send Discord logs}
+      - key: discord.webhook-url
+        type: secret
+        when: discord.enabled
+        max-length: 300
+        name: {de: Webhook-URL, en: Webhook URL}
+        help: {de: "Beginnt mit https://discord.com/api/webhooks/", en: "Starts with https://discord.com/api/webhooks/"}
+      - key: discord.use-mradmin-webhook
+        type: bool
+        when: discord.enabled
+        name: {de: MRadmins Webhook nutzen, en: Use MRadmin's webhook}
+        help: {de: "Ohne eigene Webhook-URL gehen die Ereignisse in MRadmins Discord-Log.", en: "Without a webhook URL of its own, the events go to MRadmin's Discord log."}
+      - key: discord.username
+        type: string
+        when: discord.enabled
+        max-length: 80
+        name: {de: Name im Kanal, en: Name in the channel}
+        help: {de: Leer = Einstellung aus Discord., en: Empty = setting from Discord.}
+      - key: discord.avatar-url
+        type: string
+        when: discord.enabled
+        max-length: 300
+        name: {de: Bild-URL, en: Avatar URL}
+        help: {de: Leer = Einstellung aus Discord., en: Empty = setting from Discord.}
+      - key: discord.use-embeds
+        type: bool
+        when: discord.enabled
+        name: {de: Farbige Karten, en: Coloured embeds}
+        help: {de: Aus = einfache Textnachrichten., en: Off = plain text messages.}
+      - key: discord.footer
+        type: string
+        when: discord.enabled
+        max-length: 120
+        name: {de: Fußzeile, en: Footer}
+        help: {de: "Z.B. der Servername (leer = keine).", en: "E.g. the server name (empty = none)."}
+      - key: discord.events
+        type: table
+        when: discord.enabled
+        name: {de: Ereignisse, en: Events}
+        help: {de: Welche Ereignisse gesendet werden und in welcher Farbe. Die Texte stehen in den Sprachdateien., en: Which events are sent and in which colour. The texts are in the language files.}
+        columns:
+          - {key: enabled, type: bool, name: {de: Senden, en: Send}}
+          - {key: color, type: color, name: {de: Farbe, en: Colour}}
+        rows:
+          duel-ended: {de: Duell beendet, en: Duel ended}
+          alert: {de: Auffälligkeit, en: Suspicious round}
+          review-waiting: {de: Runde wartet auf Prüfung, en: Round waits for review}
+          review-counted: {de: "Prüfung: gewertet", en: "Review: counted"}
+          review-discarded: {de: "Prüfung: verworfen", en: "Review: discarded"}
+          game-stopped: {de: "Team: Runde abgebrochen", en: "Team: round stopped"}
+          game-winner: {de: "Team: Sieger erklärt", en: "Team: winner declared"}
+          game-paused: {de: "Team: Runde pausiert", en: "Team: round paused"}
+          game-resumed: {de: "Team: Runde fortgesetzt", en: "Team: round resumed"}
+          round-uncounted: {de: "Team: aus der Wertung", en: "Team: out of the statistics"}
+          round-recounted: {de: "Team: wieder gewertet", en: "Team: counted again"}
+          kit-saved: {de: Kit gespeichert, en: Kit saved}
+          kit-deleted: {de: Kit gelöscht, en: Kit deleted}
+          kit-imported: {de: Kits importiert, en: Kits imported}
+          arena-published: {de: Arena veröffentlicht, en: Arena published}
+          arena-deleted: {de: Arena gelöscht, en: Arena deleted}
+          draft-discarded: {de: Arena-Entwurf verworfen, en: Arena draft discarded}
+          ban: {de: Duell-Sperre, en: Duel ban}
+          unban: {de: Sperre aufgehoben, en: Ban lifted}
+          stats-reset: {de: Statistik zurückgesetzt, en: Statistics reset}
+          inventory-returned: {de: Inventar zurückgegeben, en: Inventory given back}
+          defaults-restored: {de: Standard wiederhergestellt, en: Defaults restored}
+          admin-reload: {de: "Team: neu geladen", en: "Team: reloaded"}
+  - id: updates
+    name: {de: Updates, en: Updates}
+    help: {de: Nach neuen Versionen von MRpvp suchen., en: Look for new versions of MRpvp.}
+    fields:
+      - key: updates.enabled
+        type: bool
+        name: {de: Nach Updates suchen, en: Look for updates}
+        help: {de: Beim Start und danach regelmäßig. Ein Hinweis erscheint in der Konsole., en: On start and regularly afterwards. A notice appears in the console.}
+      - key: updates.source
+        type: choice
+        when: updates.enabled
+        name: {de: Quelle, en: Source}
+        options:
+          - {value: github, de: GitHub, en: GitHub}
+          - {value: modrinth, de: Modrinth, en: Modrinth}
+      - key: updates.include-prereleases
+        type: bool
+        when: updates.enabled
+        name: {de: Auch Vorabversionen, en: Pre-releases too}
+        help: {de: "Läuft eine Vorabversion (0.x), werden sie immer gemeldet.", en: "When a pre-release (0.x) runs they are always reported."}
+      - key: updates.interval-hours
+        type: int
+        when: updates.enabled
+        min: 1
+        max: 168
+        unit: {de: Stunden, en: hours}
+        name: {de: Prüfen alle, en: Check every}
+      - key: updates.notify-on-join
+        type: bool
+        when: updates.enabled
+        name: {de: Team beim Betreten informieren, en: Tell the team on join}
+        help: {de: Spieler mit mrpvp.admin.update bekommen einen Hinweis., en: Players with mrpvp.admin.update get a notice.}
+
+  - id: gui
+    name: {de: Menüs, en: Menus}
+    help: {de: Die Menüs von /duel., en: The menus of /duel.}
+    fields:
+      - key: gui.refresh-ticks
+        type: int
+        min: 5
+        max: 200
+        unit: {de: Ticks, en: ticks}
+        name: {de: Aktualisieren alle, en: Refresh every}
+        help: {de: 20 Ticks = 1 Sekunde., en: 20 ticks = 1 second.}
+      - key: gui.sounds
+        type: bool
+        name: {de: Klickgeräusche, en: Click sounds}
+      - key: gui.ban-durations
+        type: strings
+        count: 3
+        item: duration
+        permanent: true
+        name: {de: Schnellwahl Duell-Sperre, en: Quick choices duel ban}
+        help: {de: "Genau drei Dauern auf der Spielerseite von MRadmin, „permanent“ = für immer.", en: "Exactly three durations on MRadmin's player page, \"permanent\" = forever."}

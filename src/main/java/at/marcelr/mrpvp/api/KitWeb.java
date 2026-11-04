@@ -272,6 +272,7 @@ final class KitWeb {
             return "kit-save-failed";
         }
         plugin.getLogger().info("Kit '" + id + "' " + (original == null ? "created" : "changed") + " by " + admin + " (web).");
+        plugin.discord().log("kit-saved", "admin", admin, "kit", id);
         return null;
     }
 
@@ -348,6 +349,7 @@ final class KitWeb {
             return "kit-save-failed";
         }
         plugin.getLogger().info("Kit '" + id + "' deleted by " + admin + " (web).");
+        plugin.discord().log("kit-deleted", "admin", admin, "kit", id);
         return null;
     }
 

@@ -217,6 +217,7 @@ public final class GameMenu extends Menu {
                     } else if (plugin.stateKeeper().giveBackNow(online, join)) {
                         m.send(viewer, "give-back-done", tag("player", online.getName()));
                         plugin.getLogger().info(viewer.getName() + " gave " + online.getName() + " snapshot " + join.id() + " back.");
+                        plugin.discord().log("inventory-returned", "admin", viewer.getName(), "player", online.getName());
                     }
                     reload();
                     open();

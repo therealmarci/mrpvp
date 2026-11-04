@@ -9,6 +9,20 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+## [0.9.13] - 2026-11-04
+
+### Neu
+- **Eigenes Discord-Log:** MRpvp meldet Runden (Duell beendet - anfangs aus, Auffälligkeit, wartet auf Prüfung, Prüfung entschieden), Team-Eingriffe (abgebrochen, Sieger bestimmt, pausiert, fortgesetzt, aus der Wertung genommen, wieder gewertet), Kits und Arenen (gespeichert, gelöscht, importiert, veröffentlicht, Entwurf verworfen) sowie Sperren, zurückgesetzte Statistiken, zurückgegebene Inventare, wiederhergestellte Standards und Reloads. Einrichten unter `discord` in der `config.yml` (`config-version` 14, auch im Browser), prüfen mit **`/mrpvp discord [test]`** - neue Permission `mrpvp.admin.discord` (in `mrpvp.groups.admin`). Ohne eigenen Webhook geht es mit `discord.use-mradmin-webhook: true` über MRadmins Discord-Log.
+- **Ereignisse im MRadmin-Protokoll:** Jedes dieser Ereignisse steht mit MRadmin (Modul-API 13) zusätzlich im Protokoll der Weboberfläche (bis zu 14 Tage) - auch wenn Discord aus ist.
+- **Einstellen im Browser:** Mit MRadmin (ab der Version mit „Konfiguration im Browser“) lässt sich die ganze `config.yml` unter **Plugins → MRpvp → Konfiguration** als Formular einstellen - jede Einstellung mit Erklärung auf Deutsch und Englisch, Speichern lädt MRpvp sofort neu (wie `/mrpvp reload`). Die Datei bleibt von Hand bearbeitbar.
+
+### Entfernt
+- **`monitor.discord`:** Auffällige Runden und wartende Prüfungen gehen jetzt über das eigene Discord-Log (`discord.events.alert`, `review-waiting`). Wer `monitor.discord` an hatte (das war der Standard), bekommt beim Update `discord.enabled: true` und `discord.use-mradmin-webhook: true` - die Meldungen landen also weiter in MRadmins Discord-Log, dazu die neuen Ereignisse. Wer das nicht will, schaltet einzelne Ereignisse unter `discord.events` ab.
+- **Arena-Welt auf der Webkarte:** MRpvp schreibt nicht mehr selbst in die squaremap-Config, der Schlüssel `arena-world.hide-on-squaremap` entfällt (config-version 12). Die Webkarte gehört jetzt zu MRadmin, das die Arena-Welt von sich aus weglässt (`map.hide-module-worlds` in MRadmin). Ohne MRadmin erscheint die Arena-Welt auf squaremap, bis du sie dort selbst ausblendest.
+
+### Behoben & geändert
+- **Config neu gegliedert** (gleicher Aufbau wie alle MRtechnology-Plugins; `config-version` 13): `language`, `fallback-language`, `server-language` → `general.*`, `update-checker` → `updates`. Bestehende Einstellungen werden beim Update automatisch übernommen (Sicherung `config.v12.backup.yml`).
+
 ## [0.9.12] - 2026-11-02
 
 ### Behoben & geändert

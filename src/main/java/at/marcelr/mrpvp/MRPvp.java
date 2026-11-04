@@ -90,6 +90,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
     private final Spectators spectators = new Spectators(this);
     private final Bans bans = new Bans(this);
     private final MRadminLink admin = new MRadminLink(this);
+    private final DiscordWebhook discord = new DiscordWebhook(this);
     private final Monitor monitor = new Monitor(this);
     private final Reviews reviews = new Reviews(this);
     private Database database;
@@ -198,6 +199,7 @@ public final class MRPvp extends JavaPlugin implements Listener {
             database.close();
             database = null;
         }
+        discord.shutdown();
     }
 
     /** Reloads config.yml and the language files and applies the arena world rules again. */
@@ -214,9 +216,10 @@ public final class MRPvp extends JavaPlugin implements Listener {
 
     private void loadConfiguration() {
         config = ConfigUpdater.load(this);
-        messages.load(this, config.getString("language", "auto"), config.getString("fallback-language", "en"),
-                config.getString("server-language", "en"));
+        messages.load(this, config.getString("general.language", "auto"), config.getString("general.fallback-language", "en"),
+                config.getString("general.server-language", "en"));
         settings = Settings.from(config, getLogger());
+        discord.load(config.getConfigurationSection("discord"));
     }
 
     /** Deletes old combat logs, positions and states that were given back long ago (history.*). */
@@ -289,6 +292,28 @@ public final class MRPvp extends JavaPlugin implements Listener {
 
     public Spectators spectators() {
         return spectators;
+    }
+
+    /** Discord log (and with MRadmin its log in the web interface). */
+    public DiscordWebhook discord() {
+        return discord;
+    }
+
+    /** Name of a kit without formatting, in the server language (Discord log, MRadmin's log). */
+    public String logName(at.marcelr.mrpvp.kit.Kit kit) {
+        return messages.server(() -> net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer.plainText()
+                .serialize(net.kyori.adventure.text.minimessage.MiniMessage.miniMessage().deserialize(kit.name())));
+    }
+
+    /** Name of a player for the logs (the UUID if the server never saw them). */
+    public static String logName(java.util.UUID uuid) {
+        String name = Bukkit.getOfflinePlayer(uuid).getName();
+        return name == null ? uuid.toString() : name;
+    }
+
+    /** End of a duel ban for the logs: date and time or "permanent", in the server language. */
+    public String logUntil(Long until) {
+        return messages.server(() -> until == null ? messages.plain("ban-permanent") : messages.dateTime(until));
     }
 
     public MRadminLink admin() {

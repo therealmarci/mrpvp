@@ -22,16 +22,23 @@ import java.util.logging.Level;
  */
 public final class ConfigUpdater {
 
-    public static final int CURRENT_VERSION = 11;
+    public static final int CURRENT_VERSION = 14;
     public static final String BOM = "\uFEFF";
     /** Texts whose content changed with new features; the new default replaces the old value. */
     private static final Set<String> REPLACED_KEYS = Set.of(
             // (noch keine)
             );
     /** Keys that were renamed: old path -> new path (the value is carried over). */
-    private static final Map<String, String> RENAMED_KEYS = Map.of(
-            // (noch keine)
-            );
+    private static final Map<String, String> RENAMED_KEYS = Map.ofEntries(
+            // v13: same layout as all MRtechnology plugins (general, features, updates, gui)
+            Map.entry("language", "general.language"),
+            Map.entry("fallback-language", "general.fallback-language"),
+            Map.entry("server-language", "general.server-language"),
+            Map.entry("update-checker.enabled", "updates.enabled"),
+            Map.entry("update-checker.source", "updates.source"),
+            Map.entry("update-checker.include-prereleases", "updates.include-prereleases"),
+            Map.entry("update-checker.interval-hours", "updates.interval-hours"),
+            Map.entry("update-checker.notify-on-join", "updates.notify-on-join"));
 
     private ConfigUpdater() {
     }
@@ -77,13 +84,19 @@ public final class ConfigUpdater {
             if (version < 7) {
                 String old = existing.getString("language", "auto").trim();
                 if (!old.isEmpty() && !old.equalsIgnoreCase("auto")) {
-                    template.set("server-language", old);
+                    template.set("general.server-language", old);
                 }
-                template.set("language", "auto");
+                template.set("general.language", "auto");
             }
             // v9: the old default of 5 rounds per opponent and day held back normal play between friends.
             if (version < 9 && existing.getInt("stats.max-counted-per-opponent-per-day", 5) == 5) {
                 template.set("stats.max-counted-per-opponent-per-day", 50);
+            }
+            // v14: monitor.discord (alerts into MRadmin's Discord log, on by default) became the own Discord log -
+            // whoever had it on keeps MRadmin's webhook through the fallback.
+            if (version < 14 && existing.getBoolean("monitor.discord", true)) {
+                template.set("discord.enabled", true);
+                template.set("discord.use-mradmin-webhook", true);
             }
             template.set("config-version", CURRENT_VERSION);
             // Keep long messages on one line instead of folding them.

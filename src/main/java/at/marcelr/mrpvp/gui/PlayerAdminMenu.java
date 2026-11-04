@@ -76,6 +76,7 @@ public final class PlayerAdminMenu extends Menu {
                     plugin.bans().unban(target);
                     m.send(viewer, "unbanned", tag("player", name));
                     plugin.getLogger().info(viewer.getName() + " lifted the duel ban of " + name + ".");
+                    plugin.discord().log("unban", "admin", viewer.getName(), "player", name);
                     successSound();
                     render();
                 }
@@ -92,6 +93,7 @@ public final class PlayerAdminMenu extends Menu {
                             });
                             m.send(viewer, "stats-reset", tag("player", name));
                             plugin.getLogger().info(viewer.getName() + " reset the duel statistics of " + name + ".");
+                            plugin.discord().log("stats-reset", "admin", viewer.getName(), "player", name);
                             open();
                         }, this::open).open();
                     }
@@ -135,6 +137,8 @@ public final class PlayerAdminMenu extends Menu {
                         ? plugin.messages().plain("ban-permanent") : plugin.messages().dateTime(until)));
                 plugin.getLogger().info(viewer.getName() + " banned " + name + " from duels"
                         + (until == null ? " permanently" : " until " + until) + ".");
+                plugin.discord().log("ban", "admin", viewer.getName(), "player", name, "until", plugin.logUntil(until),
+                        "reason", reason.isBlank() ? "-" : reason);
                 open();
             }, this::open);
         }, this::open);

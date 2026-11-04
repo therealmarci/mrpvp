@@ -17,7 +17,7 @@ commands:
     aliases: [pvp, duell]
   mrpvp:
     description: Management of MRpvp for the console (in game everything runs through the menus).
-    usage: /mrpvp <version|reload|debug>
+    usage: /mrpvp <version|reload|debug|discord>
 
 permissions:
   # ------------------------------------------------------------------ Groups
@@ -51,7 +51,7 @@ permissions:
       mrpvp.admin.arena: true
       mrpvp.admin.ban: true
   mrpvp.groups.admin:
-    description: "Group admin: everything of MRpvp - reset statistics, return saved states, restore defaults, reload, debug, update notice, no invite cooldown."
+    description: "Group admin: everything of MRpvp - reset statistics, return saved states, restore defaults, reload, debug, Discord log, update notice, no invite cooldown."
     default: op
     children:
       mrpvp.groups.staff: true
@@ -60,6 +60,7 @@ permissions:
       mrpvp.admin.defaults: true
       mrpvp.admin.reload: true
       mrpvp.admin.debug: true
+      mrpvp.admin.discord: true
       mrpvp.admin.update: true
       mrpvp.bypass.cooldown: true
 
@@ -120,6 +121,9 @@ permissions:
     default: op
   mrpvp.admin.debug:
     description: /mrpvp debug - test saving/returning the state and view saved states.
+    default: op
+  mrpvp.admin.discord:
+    description: /mrpvp discord [test] - status of the Discord log, send a test message.
     default: op
   mrpvp.admin.update:
     description: Notice when joining the server if an update is available.

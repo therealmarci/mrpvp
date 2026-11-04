@@ -72,10 +72,8 @@ public final class Reviews {
         String reasons = flags.stream().sorted().collect(Collectors.joining(", "));
         plugin.getLogger().info("Round #" + id + " (" + one + " vs " + two + ") waits for a review: " + reasons + ".");
         plugin.admin().webEvent("review", String.valueOf(id), false);
-        if (plugin.settings().monitor().discord()) {
-            plugin.admin().adminLog(plugin.messages().server(() -> plugin.messages().plain("review-discord", "id", id,
-                    "one", one, "two", two, "flags", flagNames(flags))));
-        }
+        plugin.discord().log("review-waiting", "id", id, "one", one, "two", two,
+                "flags", plugin.messages().server(() -> flagNames(flags)));
         if (!plugin.settings().review().notifyAdmins()) {
             return;
         }
@@ -125,6 +123,7 @@ public final class Reviews {
         return plugin.database().submit(c -> StatsStore.decide(c, id, count, by, now)).thenApply(changed -> {
             if (changed) {
                 plugin.getLogger().info(by + (count ? " counted" : " discarded") + " the reviewed round #" + id + ".");
+                plugin.discord().log(count ? "review-counted" : "review-discarded", "admin", by, "id", id);
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     refresh();
                     plugin.admin().webEvent("review", String.valueOf(id), false);
@@ -150,11 +149,8 @@ public final class Reviews {
                 plugin.getLogger().info(by + (count ? " counted round #" + id + " again"
                         : " took round #" + id + " out of the statistics") + (stored.isEmpty() ? "." : ": " + stored));
                 Bukkit.getScheduler().runTask(plugin, () -> {
-                    String key = count ? "admin-log-recounted" : "admin-log-uncounted";
-                    Object[] values = {"id", id, "admin", by, "note", stored.isEmpty() ? "-" : stored};
-                    if (plugin.settings().monitor().discord()) {
-                        plugin.admin().adminLog(plugin.messages().server(() -> plugin.messages().plain(key, values)));
-                    }
+                    plugin.discord().log(count ? "round-recounted" : "round-uncounted", "admin", by, "id", id,
+                            "note", stored.isEmpty() ? "-" : stored);
                     plugin.admin().webEvent("game", String.valueOf(id), false);
                 });
             }

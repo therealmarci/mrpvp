@@ -121,6 +121,8 @@ public final class AdminMenu extends Menu {
             m.send(viewer, "defaults-restored", tag("kits", kits.isEmpty() ? "-" : String.join(", ", kits)),
                     tag("arena", arenas.isEmpty() ? "-" : String.join(", ", arenas)));
             plugin.getLogger().info(viewer.getName() + " restored defaults (kits: " + kits + ", arenas: " + arenas + ").");
+            plugin.discord().log("defaults-restored", "admin", viewer.getName(),
+                    "kits", kits.isEmpty() ? "-" : String.join(", ", kits), "arenas", arenas.isEmpty() ? "-" : String.join(", ", arenas));
         } catch (IOException e) {
             m.send(viewer, "editor-error-io", tag("error", e.getMessage()));
         }
