@@ -9,6 +9,8 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+## [0.9.13] - 2026-11-04
+
 ### Neu
 - **Eigenes Discord-Log:** MRpvp meldet Runden (Duell beendet - anfangs aus, Auffälligkeit, wartet auf Prüfung, Prüfung entschieden), Team-Eingriffe (abgebrochen, Sieger bestimmt, pausiert, fortgesetzt, aus der Wertung genommen, wieder gewertet), Kits und Arenen (gespeichert, gelöscht, importiert, veröffentlicht, Entwurf verworfen) sowie Sperren, zurückgesetzte Statistiken, zurückgegebene Inventare, wiederhergestellte Standards und Reloads. Einrichten unter `discord` in der `config.yml` (`config-version` 14, auch im Browser), prüfen mit **`/mrpvp discord [test]`** - neue Permission `mrpvp.admin.discord` (in `mrpvp.groups.admin`). Ohne eigenen Webhook geht es mit `discord.use-mradmin-webhook: true` über MRadmins Discord-Log.
 - **Ereignisse im MRadmin-Protokoll:** Jedes dieser Ereignisse steht mit MRadmin (Modul-API 13) zusätzlich im Protokoll der Weboberfläche (bis zu 14 Tage) - auch wenn Discord aus ist.
