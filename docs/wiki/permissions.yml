@@ -1,0 +1,53 @@
+# Texte der Permission-Tabellen im Wiki (Platzhalter <!-- auto:permissions --> und <!-- auto:permission-groups -->).
+# Die Tabelle selbst (Permissions, Standard, Gruppe) erzeugt die Website aus plugin.yml - hier steht nur, wofür eine
+# Permission ist, auf Deutsch (de) und optional Englisch (en). Ohne Eintrag gilt die description aus plugin.yml.
+mrpvp.player:
+  de: "Duelle: herausfordern, annehmen, eigene Statistik, `/mrpvp version`"
+mrpvp.groups.support:
+  de: "Spieler + Admin-Menü, alle Runden ansehen, auffällige Runden prüfen und werten, zusehen, Duelle abbrechen oder Sieger bestimmen, pausieren, Spieler-Verwaltung"
+mrpvp.groups.staff:
+  de: "Support + Kits und Arenen bearbeiten, Spieler sperren"
+mrpvp.groups.admin:
+  de: "Alles: Staff + Statistik zurücksetzen, gesicherte Stände zurückgeben, Standard wiederherstellen, Reload, Discord, Debug, Update-Hinweis, keine Einladungs-Wartezeit"
+mrpvp.version:
+  de: "`/mrpvp version`"
+mrpvp.use:
+  de: "Duelle spielen"
+mrpvp.bypass.cooldown:
+  de: "Keine Wartezeit zwischen Einladungen"
+mrpvp.bypass.commands:
+  de: "Alle Befehle auch im Duell (sonst nur `duel.allowed-commands`) - in keiner Gruppe"
+mrpvp.admin.gui:
+  de: "Admin-Menü öffnen (Aktionen darin brauchen ihr eigenes Recht)"
+mrpvp.admin.arena:
+  de: "Arenen bauen, bearbeiten, aktivieren, löschen"
+mrpvp.admin.games:
+  de: "Alle Runden mit Kampf-Log und gesicherten Inventaren"
+mrpvp.admin.restore:
+  de: "Offene Rückgabe sofort ausführen"
+mrpvp.admin.spectate:
+  de: "Laufenden Duellen im Zuschauermodus zusehen (Admin-Menü → Live)"
+mrpvp.admin.stop:
+  de: "Laufende Duelle abbrechen (zählen nicht, beide bekommen alles zurück) oder den Sieger bestimmen"
+mrpvp.admin.pause:
+  de: "Duelle pausieren und fortsetzen"
+mrpvp.admin.kits:
+  de: "Kit-Editor (im Spiel und im Web)"
+mrpvp.admin.players:
+  de: "Spieler-Verwaltung im Admin-Menü öffnen"
+mrpvp.admin.ban:
+  de: "Spieler von Duellen sperren und Sperren aufheben"
+mrpvp.admin.reset:
+  de: "Duell-Statistik eines Spielers zurücksetzen"
+mrpvp.admin.review:
+  de: "Auffällige Runden prüfen (bekommt auch die Hinweise), Runden nachträglich aus der Wertung nehmen oder wieder werten"
+mrpvp.admin.defaults:
+  de: "Standard-Kits und -Arenen wiederherstellen"
+mrpvp.admin.reload:
+  de: "`/mrpvp reload`"
+mrpvp.admin.debug:
+  de: "`/mrpvp debug` - Sichern und Zurückgeben des Spielerzustands testen, gesicherte Stände ansehen"
+mrpvp.admin.discord:
+  de: "`/mrpvp discord [test]`"
+mrpvp.admin.update:
+  de: "Hinweis beim Betreten des Servers, wenn ein Update da ist"

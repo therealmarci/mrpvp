@@ -1,0 +1,30 @@
+# Seitenbaum des Wikis (https://mrtechnology.marcelr.at/wiki/mrpvp/).
+# Abschnitte mit Seiten; "file" relativ zu docs/wiki/, mit "/" am Anfang relativ zum Repo.
+# id "" = Einstieg. audience: player | admin | dev (Etikett und Einordnung auf der Wiki-Startseite).
+# Seitentitel bewusst wie die alten README-Überschriften: alte Links (#kits, #arenen …) landen so auf der richtigen Seite.
+sections:
+  - title: {de: Einstieg, en: Getting started}
+    pages:
+      - {id: "", file: einstieg.md, title: {de: Überblick, en: Overview}}
+      - {id: schnellstart, file: schnellstart.md, title: {de: Schnellstart, en: Quick start}}
+  - title: {de: Für Spieler, en: For players}
+    audience: player
+    pages:
+      - {id: duell, file: duell.md, title: {de: So läuft ein Duell, en: How a duel works}}
+      - {id: statistik, file: statistik.md, title: {de: Statistik & Bestenliste, en: Stats & leaderboard}}
+  - title: {de: Für Admins, en: For admins}
+    audience: admin
+    pages:
+      - {id: admin-menue, file: admin-menue.md, title: {de: Admin-Menü, en: Admin menu}}
+      - {id: kits, file: kits.md, title: {de: Kits, en: Kits}}
+      - {id: arenen, file: arenen.md, title: {de: Arenen, en: Arenas}}
+      - {id: pruefen, file: pruefen.md, title: {de: Auffällige Runden prüfen, en: Reviewing suspicious rounds}}
+      - {id: befehle, file: befehle.md, title: {de: Befehle, en: Commands}}
+      - {id: permissions, file: permissions.md, title: {de: Permissions, en: Permissions}}
+      - {id: konfiguration, file: konfiguration.md, title: {de: Konfiguration, en: Configuration}}
+      - {id: discord, file: discord.md, title: {de: Discord-Log, en: Discord log}}
+      - {id: zusammenarbeit, file: zusammenarbeit.md, title: {de: Zusammenarbeit mit anderen Plugins, en: Working with other plugins}}
+      - {id: faq, file: faq.md, title: {de: Häufige Fragen, en: FAQ}}
+  - title: {de: Mehr, en: More}
+    pages:
+      - {id: changelog, file: /CHANGELOG.md, title: {de: Changelog, en: Changelog}}
