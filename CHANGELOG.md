@@ -9,6 +9,8 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+## [0.9.14] - 2026-11-06
+
 ### Behoben & geändert
 - **Anleitung als Wiki:** Die Anleitung steht jetzt im Wiki auf der Website (https://mrtechnology.marcelr.at/wiki/mrpvp/) - aufgeteilt in Seiten für Spieler (So läuft ein Duell, Statistik & Bestenliste) und für Admins (Admin-Menü, Kits, Arenen, Auffällige Runden prüfen, Befehle, Permissions, Konfiguration, Discord-Log, Häufige Fragen), mit Suche über alle Plugins. Die README ist nur noch eine kurze Übersicht. Alte Links auf `/docs/mrpvp/` führen automatisch ins Wiki. Die Seiten **Permissions** und **Konfiguration** listen jede Permission bzw. Einstellung mit Standardwert automatisch aus dem Plugin - sie sind also immer auf dem Stand der Version.
 
