@@ -202,8 +202,9 @@ public final class DefaultArena {
         for (int d = 0; d <= depth; d++) {
             double r = radius * (1 - (double) d / (depth + 1)) + 0.5;
             Material type = d == 0 ? Material.GRASS_BLOCK : d < 3 ? Material.DIRT : Material.STONE;
-            for (int x = (int) -r; x <= r; x++) {
-                for (int z = (int) -r; z <= r; z++) {
+            int reach = (int) r; // r > 0: same blocks as before (-floor(r) .. floor(r))
+            for (int x = -reach; x <= reach; x++) {
+                for (int z = -reach; z <= reach; z++) {
                     // A bit uneven at the edge so it does not look like a cylinder.
                     double edge = r - ((x * 7 + z * 13 + d * 5) & 1) * 0.6;
                     if (x * x + z * z <= edge * edge) {
