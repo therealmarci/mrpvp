@@ -15,6 +15,7 @@
 - **Verbindung weg?** Die Runde pausiert 20 Sekunden, der Gegner ist eingefroren. Wer rechtzeitig zurückkommt, spielt weiter (einmal pro Match).
 - Im Duell gehen nur wenige Befehle (z.B. `/msg`) - welche, legt der Server fest.
 - Das Team kann ein Duell pausieren, abbrechen oder bei einem Bug den Sieger bestimmen.
+- **Kurz vor einem Neustart** des Servers (10 Minuten vorher) beginnen keine neuen Duelle. Läuft dein Duell über mehrere Runden, ist die laufende Runde dann die letzte: Wer mehr Runden gewonnen hat, gewinnt, sonst ist es unentschieden. Die Ankündigung des Neustarts siehst du im Duell nur als Zeile über der Hotbar.
 
 ## Nichts geht verloren
 Inventar, Rüstung, Enderchest, XP, Leben, Hunger, Effekte, Spielmodus und Position werden **vor** dem Duell sicher gespeichert und danach zurückgegeben - auch nach einem Server-Absturz. Wer bei der Rückgabe offline ist, bekommt alles beim nächsten Login.

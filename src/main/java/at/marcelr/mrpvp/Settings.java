@@ -35,11 +35,14 @@ public record Settings(
      * @param totems          whether a totem in the kit may save a player
      * @param allowedCommands commands (without "/") players may use in a round
      * @param reconnectSeconds how long a round waits for a player who lost the connection (once per match), 0 = not
+     * @param restartBlockMinutes no new duels this many minutes before a restart or stop (from MRadmin), 0 = off
+     * @param restartShorten   a running duel with more rounds ends after the current round in that time
      */
     public record DuelSettings(int inviteSeconds, int cooldownSeconds, int countdown, int maxSeconds,
                                int endDelaySeconds, boolean totems, Set<String> allowedCommands,
                                List<Integer> winChoices, List<Integer> minuteChoices,
-                               at.marcelr.mrpvp.game.DuelOptions defaults, int reconnectSeconds) {
+                               at.marcelr.mrpvp.game.DuelOptions defaults, int reconnectSeconds,
+                               int restartBlockMinutes, boolean restartShorten) {
 
         public boolean commandAllowed(String command) {
             String name = command.toLowerCase(Locale.ROOT);
@@ -173,7 +176,9 @@ public record Settings(
                 Math.clamp(c.getInt("duel.end-delay-seconds", 3), 0, 30),
                 c.getBoolean("duel.totems", true),
                 Set.copyOf(commands), wins, minutes, defaults,
-                Math.clamp(c.getInt("duel.reconnect-seconds", 20), 0, 300));
+                Math.clamp(c.getInt("duel.reconnect-seconds", 20), 0, 300),
+                Math.clamp(c.getInt("duel.restart.block-minutes", 10), 0, 60),
+                c.getBoolean("duel.restart.shorten", true));
 
         StatsRules stats = new StatsRules(
                 Math.clamp(c.getInt("stats.min-duration-seconds", 10), 0, 600) * 1000L,

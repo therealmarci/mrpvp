@@ -134,6 +134,18 @@ public final class MRadminLink implements Listener {
         }
     }
 
+    /** When the server goes down next (restart or stop from MRadmin, epoch ms), 0 = none known or no MRadmin. */
+    public long restartAt() {
+        if (connected) {
+            try {
+                return MRadminModule.restartAt();
+            } catch (LinkageError | RuntimeException e) {
+                plugin.getLogger().warning("Could not read the next restart from MRadmin: " + e);
+            }
+        }
+        return 0;
+    }
+
     /** Into MRadmin's Discord admin log. @return false without MRadmin */
     public boolean adminLog(String text) {
         if (connected) {

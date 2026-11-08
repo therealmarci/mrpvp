@@ -87,6 +87,17 @@ public final class Match {
         return options.wins() <= 1;
     }
 
+    /** A restart is close: the current round is the last one (duel.restart.shorten). */
+    private boolean lastRound;
+
+    public boolean lastRound() {
+        return lastRound;
+    }
+
+    void lastRound(boolean value) {
+        lastRound = value;
+    }
+
     // ------------------------------------------------------------------ totals for the summary at the end
 
     private final double[] dealt = new double[3];

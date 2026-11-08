@@ -12,6 +12,7 @@ MRpvp runs **on its own**. Together with other MRtechnology plugins it can do mo
 | Button in the dashboard, player menu, waiting reviews in the server status | MRadmin |
 | Events in the **log** of the MRadmin web interface, Discord log via MRadmin's webhook (`discord.use-mradmin-webhook`) | MRadmin |
 | Nobody can start a duel in admin mode | MRadmin |
+| No new duels before a restart, running duels end after the current round (`duel.restart.*`), restart announcement in a duel without a title | MRadmin (module API 14 or newer) |
 | The tool bar pauses during a duel, the belts are saved along | MRadmin + MRtoolbar |
 | The arena world does not appear on the map of the MRadmin player page | MRadmin (hides it automatically) |
 | Players in a duel are not counted for the sleep quota | MRadmin + MRsleep |

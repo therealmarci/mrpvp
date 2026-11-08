@@ -9,6 +9,9 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+### Neu
+- **Duelle vor einem Neustart (mit MRadmin):** MRpvp kennt jetzt die Neustarts und Stopps aus MRadmin (geplante Neustarts und laufende Countdowns). In den letzten 10 Minuten davor beginnen keine neuen Duelle mehr - Einladen und Annehmen werden mit Hinweis abgelehnt (`duel.restart.block-minutes`, 0 = aus). Ein laufendes Duell mit mehreren Runden endet dann nach der laufenden Runde: Wer mehr Runden gewonnen hat, gewinnt, bei Gleichstand ist es unentschieden; beide bekommen einen Hinweis (`duel.restart.shorten`). Laufende Runden spielen ganz normal weiter. Die Neustart-Ankündigung von MRadmin erscheint im Duell nicht mehr als Titel über den ganzen Bildschirm, sondern als Zeile über der Hotbar (braucht MRadmin mit Modul-API 14). `config-version` 15.
+
 ## [BET-0.9.16-bu001] - 2026-11-08
 
 ### Behoben & geändert

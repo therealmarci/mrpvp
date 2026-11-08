@@ -17,6 +17,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.title.Title;
+import at.marcelr.mrpvp.util.DurationUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -155,6 +156,9 @@ public final class GameManager {
             m.send(from, "invite-error-adminmode", tag("player", to.getName()));
             return false;
         }
+        if (restartRefused(from)) {
+            return false;
+        }
         if (bannedMessage(from)) {
             return false;
         }
@@ -274,6 +278,9 @@ public final class GameManager {
         }
         if (!available(player)) {
             m.send(player, "invite-error-busy-self");
+            return;
+        }
+        if (restartRefused(player)) {
             return;
         }
         if (bannedMessage(player)) {
@@ -399,12 +406,60 @@ public final class GameManager {
         showBars(game);
     }
 
+    // ------------------------------------------------------------------ restarts (MRadmin)
+
+    /** Milliseconds until the next restart or stop that MRadmin knows, -1 = none (or no MRadmin). */
+    private long restartLeft() {
+        long at = plugin.admin().restartAt();
+        return at <= 0 ? -1 : Math.max(0, at - System.currentTimeMillis());
+    }
+
+    /** Whether a restart is within duel.restart.block-minutes - then no new duels. */
+    private boolean restartClose() {
+        int minutes = settings().restartBlockMinutes();
+        long left = minutes <= 0 ? -1 : restartLeft();
+        return left >= 0 && left <= minutes * 60_000L;
+    }
+
+    /** No new duel shortly before a restart: tells the player and returns true. */
+    private boolean restartRefused(Player player) {
+        if (!restartClose()) {
+            return false;
+        }
+        messages().send(player, "invite-error-restart", tag("time", DurationUtil.format(restartLeft())),
+                tag("minutes", settings().restartBlockMinutes()));
+        return true;
+    }
+
+    /** A restart came close: running duels with more rounds end after the current round (told once). */
+    private void checkRestart() {
+        if (!settings().restartShorten() || games.isEmpty() || !restartClose()) {
+            return;
+        }
+        String time = DurationUtil.format(restartLeft());
+        for (Game game : List.copyOf(games.values())) {
+            Match match = game.match();
+            if (match.single() || match.lastRound()) {
+                continue;
+            }
+            match.lastRound(true);
+            plugin.getLogger().info("Match #" + match.id() + " ends after round " + match.round() + " - the server restarts in " + time + ".");
+            for (Fighter f : List.of(game.one(), game.two())) {
+                Player p = Bukkit.getPlayer(f.uuid());
+                if (p != null) {
+                    messages().send(p, "duel-last-round", tag("time", time));
+                }
+            }
+        }
+    }
+
     // ------------------------------------------------------------------ timers
 
     private void everySecond() {
         long now = System.currentTimeMillis();
         invites.expire(now, this::expired);
         seconds++;
+        checkRestart();
         for (Game game : List.copyOf(games.values())) {
             switch (game.state()) {
                 case COUNTDOWN -> {
@@ -785,7 +840,11 @@ public final class GameManager {
         boolean broken = result == Game.Result.ABORTED || reason == Game.EndReason.QUIT
                 || reason == Game.EndReason.SURRENDER || reason == Game.EndReason.ADMIN
                 || reason == Game.EndReason.ADMIN_WIN                || reason == Game.EndReason.SHUTDOWN || reason == Game.EndReason.ERROR;
-        boolean over = broken || match.single() || match.decided() || match.roundsUsedUp()
+        // Shortly before a restart the current round is the last one (duel.restart.shorten).
+        if (!match.single() && settings().restartShorten() && restartClose()) {
+            match.lastRound(true);
+        }
+        boolean over = broken || match.single() || match.decided() || match.roundsUsedUp() || match.lastRound()
                 || Bukkit.getPlayer(game.one().uuid()) == null || Bukkit.getPlayer(game.two().uuid()) == null;
         // Leaving or giving up loses the whole match; an admin stop or a shutdown ends it without winner.
         UUID matchWinner = !over ? null

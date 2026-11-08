@@ -388,6 +388,16 @@ final class MRadminModule implements AdminModule, WebModule {
         }
     }
 
+    /** When the server goes down next (restart or stop, epoch ms) - MRadmin API 14 - or 0. */
+    static long restartAt() {
+        MRadminService service = MRadminService.get();
+        if (service == null || service.apiVersion() < 14) {
+            return 0;
+        }
+        var next = service.nextRestart();
+        return next == null ? 0 : next.at();
+    }
+
     /** Into MRadmin's log (only with API 13 or newer). */
     static void log(String event, String text, int color) {
         MRadminService service = MRadminService.get();

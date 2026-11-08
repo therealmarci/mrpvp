@@ -138,6 +138,17 @@ sections:
         unit: {de: Sekunden, en: seconds}
         name: {de: Warten auf Wiederverbindung, en: Wait for reconnect}
         help: {de: "Einmal pro Match und Spieler, der Gegner ist so lange eingefroren. 0 = sofort verloren.", en: "Once per match and player, the opponent is frozen meanwhile. 0 = lost right away."}
+      - key: duel.restart.block-minutes
+        type: int
+        min: 0
+        max: 60
+        unit: {de: Minuten, en: minutes}
+        name: {de: Keine Duelle vor Neustart, en: No duels before a restart}
+        help: {de: "So viele Minuten vor einem Neustart oder Stopp (aus MRadmin) keine neuen Duelle. 0 = aus.", en: "No new duels this many minutes before a restart or stop (from MRadmin). 0 = off."}
+      - key: duel.restart.shorten
+        type: bool
+        name: {de: Duelle vor Neustart verkürzen, en: Shorten duels before a restart}
+        help: {de: "Ein Duell mit mehreren Runden endet dann nach der laufenden Runde - wer mehr Runden hat gewinnt, sonst unentschieden.", en: "A duel with more rounds then ends after the current round - more round wins wins, otherwise a draw."}
       - key: duel.totems
         type: bool
         name: {de: Totems retten, en: Totems save}

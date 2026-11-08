@@ -15,7 +15,7 @@
 # ==============================================================================
 
 # Do not change - used for automatic config updates.
-config-version: 14
+config-version: 15
 
 
 # ------------------------------------------------------------------------------
@@ -95,6 +95,13 @@ duel:
   # works once per match and player; after that (or without returning) they have lost. 0 = lost immediately.
   # Giving up (/duel leave) is always a loss - except during the countdown before the first round.
   reconnect-seconds: 20
+  # Before a restart or stop of the server (only with MRadmin, which knows planned restarts and countdowns).
+  restart:
+    # No new duels this many minutes before it (invites and accepting are refused). 0 = off.
+    block-minutes: 10
+    # A duel with more rounds that still runs then ends after the current round: the player with more round
+    # wins wins the duel, with the same number it is a draw.
+    shorten: true
   # May a totem of undying in the kit save a player? false = they count as defeated.
   totems: true
   # Commands allowed during a duel (without "/"). /duel always works (giving up).
