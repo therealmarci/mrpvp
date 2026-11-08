@@ -93,6 +93,16 @@ gui-options-wins-lore:
   - "<gray>gewinnt das Match."
   - ""
   - "<dark_gray>Links: mehr · Rechts: weniger"
+gui-options-wins-restart-ok:
+  - "<green>✔ Passt vor den Neustart"
+  - "<dark_gray>Neustart in <time>"
+gui-options-wins-restart-maybe:
+  - "<yellow>⚠ Geht sich vielleicht aus"
+  - "<gray>Kann gekürzt werden - Neustart in <time>"
+gui-options-wins-restart-no:
+  - "<red>✖ Nicht möglich"
+  - "<gray>Zu viele Runden - Neustart in <time>"
+gui-options-send-restart: "<red><b>Zu viele Runden vor dem Neustart"
 gui-options-minutes: "<white>Zeitlimit pro Runde: <yellow><value> min"
 gui-options-minutes-lore:
   - "<gray>Danach endet die Runde unentschieden."
@@ -202,6 +212,7 @@ gui-locked-name: "<dark_gray><name>"
 gui-locked-lore: "<gray>Dafür fehlt dir die Berechtigung."
 invite-error-adminmode-self: "<prefix><hover:show_text:'<gray>Beenden: /mradmin mode off'><red>Im Admin-Modus keine Duelle.</hover>"
 invite-error-restart: "<prefix><hover:show_text:'<gray>Der Server startet in <white><time></white> neu. In den letzten <minutes> Minuten davor beginnen keine neuen Duelle.'><red>Gleich gibt es einen Neustart - keine neuen Duelle.</hover>"
+invite-error-restart-rounds: "<prefix><hover:show_text:'<gray>Der Server startet in <white><time></white> neu - ein Duell bis <wins> Siege geht sich nicht mehr aus. Wähle weniger Runden.'><red>Zu viele Runden vor dem Neustart.</hover>"
 duel-last-round: "<prefix><hover:show_text:'<gray>Der Server startet in <white><time></white> neu. Nach dieser Runde endet das Duell: Wer mehr Runden gewonnen hat, gewinnt - bei Gleichstand unentschieden.'><gold>Letzte Runde - der Server startet bald neu.</hover>"
 invite-error-adminmode: "<prefix><red><white><player></white> kann gerade nicht eingeladen werden."
 gui-admin-title: "Duelle » Admin"

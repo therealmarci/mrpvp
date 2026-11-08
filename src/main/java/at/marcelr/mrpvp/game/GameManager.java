@@ -159,6 +159,10 @@ public final class GameManager {
         if (restartRefused(from)) {
             return false;
         }
+        if (restartFit(kit, options.with(kit)) == RestartFit.NO) {
+            m.send(from, "invite-error-restart-rounds", tag("time", restartText()), tag("wins", options.wins()));
+            return false;
+        }
         if (bannedMessage(from)) {
             return false;
         }
@@ -429,6 +433,73 @@ public final class GameManager {
         messages().send(player, "invite-error-restart", tag("time", DurationUtil.format(restartLeft())),
                 tag("minutes", settings().restartBlockMinutes()));
         return true;
+    }
+
+    /**
+     * Whether a duel of so many rounds fits before a restart: {@code OK} even the longest (2N-1 rounds) ends before
+     * the restart window (duel.restart.block-minutes), {@code MAYBE} only the shortest (N rounds) - it may be
+     * shortened, {@code NO} not even that. {@code NONE} = no restart known or the feature is off.
+     */
+    public enum RestartFit { NONE, OK, MAYBE, NO }
+
+    /** kit -> {average fight time of the last rounds in ms (-1 = too few), loaded at} */
+    private final Map<String, long[]> roundTimes = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final long ROUND_TIMES_MILLIS = 10 * 60_000L;
+
+    /** Average fight time of the last 50 rounds with this kit (at least 5), cached; -1 = unknown (yet). */
+    private long averageRound(String kit) {
+        long now = System.currentTimeMillis();
+        long[] cached = roundTimes.get(kit);
+        if (cached == null || now - cached[1] > ROUND_TIMES_MILLIS) {
+            // Mark as loading so the menu does not ask the database on every click, keep the old value meanwhile.
+            roundTimes.put(kit, new long[] {cached == null ? -1 : cached[0], now});
+            plugin.database().submit(c -> {
+                try (var ps = c.prepareStatement("SELECT duration FROM games WHERE kit = ? AND duration > 0 "
+                        + "ORDER BY id DESC LIMIT 50")) {
+                    ps.setString(1, kit);
+                    long sum = 0;
+                    int n = 0;
+                    try (var rs = ps.executeQuery()) {
+                        while (rs.next()) {
+                            sum += rs.getLong(1);
+                            n++;
+                        }
+                    }
+                    return n >= 5 ? sum / n : -1L;
+                }
+            }).thenAccept(avg -> roundTimes.put(kit, new long[] {avg, System.currentTimeMillis()}));
+        }
+        return cached == null ? -1 : cached[0];
+    }
+
+    /** How a duel with these options (as they apply with the kit) fits before the next restart. */
+    public RestartFit restartFit(Kit kit, DuelOptions shown) {
+        int block = settings().restartBlockMinutes();
+        long left = block <= 0 ? -1 : restartLeft();
+        if (left < 0) {
+            return RestartFit.NONE;
+        }
+        long window = left - block * 60_000L;
+        if (window <= 0) {
+            return RestartFit.NO;
+        }
+        long avg = averageRound(kit.id());
+        if (avg <= 0) {
+            avg = shown.minutes() * 60_000L / 2;
+        }
+        long round = avg + (settings().countdown() + settings().endDelaySeconds()) * 1000L;
+        int wins = Math.max(1, shown.wins());
+        if (wins == 1) {
+            // One round is never shortened - only the restart itself could end it.
+            return round <= window ? RestartFit.OK : RestartFit.MAYBE;
+        }
+        return (2L * wins - 1) * round <= window ? RestartFit.OK : wins * round <= window ? RestartFit.MAYBE : RestartFit.NO;
+    }
+
+    /** Time until the next restart as text (for menus), empty if none. */
+    public String restartText() {
+        long left = restartLeft();
+        return left < 0 ? "" : DurationUtil.format(left);
     }
 
     /** A restart came close: running duels with more rounds end after the current round (told once). */

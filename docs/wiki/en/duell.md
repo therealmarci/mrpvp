@@ -15,7 +15,7 @@
 - **Connection lost?** The round pauses for 20 seconds, the opponent is frozen. Whoever comes back in time plays on (once per match).
 - Only few commands work in a duel (e.g. `/msg`) - the server decides which.
 - The team can pause or cancel a duel or decide the winner in case of a bug.
-- **Shortly before a restart** of the server (10 minutes before) no new duels start. If your duel has more rounds, the current round is then the last one: whoever won more rounds wins, otherwise it is a draw. In a duel you see the restart announcement only as a line above the hotbar.
+- **Shortly before a restart** of the server (10 minutes before) no new duels start. If your duel has more rounds, the current round is then the last one: whoever won more rounds wins, otherwise it is a draw. In a duel you see the restart announcement only as a line above the hotbar. When you invite, the number of rounds shows whether the duel still fits before the restart: green = fits, yellow = might fit (may be shortened), red = not possible, choose fewer rounds.
 
 ## Nothing gets lost
 Inventory, armor, ender chest, XP, health, hunger, effects, game mode and position are saved safely **before** the duel and given back afterwards - even after a server crash. Whoever is offline when things are given back gets everything on the next login.

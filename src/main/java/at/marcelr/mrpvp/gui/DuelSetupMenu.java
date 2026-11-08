@@ -152,9 +152,22 @@ public final class DuelSetupMenu extends Menu {
 
         DuelOptions shown = options.with(kit);
         var duel = plugin.settings().duel();
-        set(13, Items.of(Material.GOLDEN_SWORD).amount(Math.clamp(options.wins(), 1, 64)).flags()
+        // Before a restart: does a duel of so many rounds still fit? (ok / maybe, may be shortened / not possible)
+        var fit = plugin.games().restartFit(kit, shown);
+        List<net.kyori.adventure.text.Component> winsLore = new ArrayList<>(m.lore("gui-options-wins-lore"));
+        if (fit != at.marcelr.mrpvp.game.GameManager.RestartFit.NONE) {
+            winsLore.add(net.kyori.adventure.text.Component.empty());
+            winsLore.addAll(m.lore("gui-options-wins-restart-" + fit.name().toLowerCase(java.util.Locale.ROOT),
+                    tag("time", plugin.games().restartText())));
+        }
+        Material sword = switch (fit) {
+            case MAYBE -> Material.IRON_SWORD;
+            case NO -> Material.WOODEN_SWORD;
+            default -> Material.GOLDEN_SWORD;
+        };
+        set(13, Items.of(sword).amount(Math.clamp(options.wins(), 1, 64)).flags()
                 .name(m.item("gui-options-wins", tag("value", options.wins())))
-                .lore(m.lore("gui-options-wins-lore")).build(), click -> {
+                .lore(winsLore).build(), click -> {
             options = options.withWins(step(duel.winChoices(), options.wins(), click));
             clickSound();
             render();
@@ -191,6 +204,13 @@ public final class DuelSetupMenu extends Menu {
             }
         });
 
+        if (fit == at.marcelr.mrpvp.game.GameManager.RestartFit.NO) {
+            set(22, Items.of(Material.RED_CONCRETE).name(m.item("gui-options-send-restart"))
+                    .lore(m.lore("gui-options-wins-restart-no", tag("time", plugin.games().restartText()))).build(),
+                    click -> sound(org.bukkit.Sound.BLOCK_NOTE_BLOCK_BASS));
+            fill();
+            return;
+        }
         set(22, Items.of(Material.LIME_CONCRETE).name(m.item("gui-options-send"))
                 .lore(m.lore("gui-options-send-lore", tag("kit", m.mini(kit.name())),
                         tag("arena", plugin.games().arenaName(arena)), tag("options", plugin.games().optionsText(shown)),

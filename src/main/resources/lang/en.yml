@@ -93,6 +93,16 @@ gui-options-wins-lore:
   - "<gray>wins the match."
   - ""
   - "<dark_gray>Left: more · Right: fewer"
+gui-options-wins-restart-ok:
+  - "<green>✔ Fits before the restart"
+  - "<dark_gray>Restart in <time>"
+gui-options-wins-restart-maybe:
+  - "<yellow>⚠ Might fit"
+  - "<gray>May be shortened - restart in <time>"
+gui-options-wins-restart-no:
+  - "<red>✖ Not possible"
+  - "<gray>Too many rounds - restart in <time>"
+gui-options-send-restart: "<red><b>Too many rounds before the restart"
 gui-options-minutes: "<white>Time limit per round: <yellow><value> min"
 gui-options-minutes-lore:
   - "<gray>After that the round ends in a draw."
@@ -202,6 +212,7 @@ gui-locked-name: "<dark_gray><name>"
 gui-locked-lore: "<gray>You have no permission for this."
 invite-error-adminmode-self: "<prefix><hover:show_text:'<gray>Leave it: /mradmin mode off'><red>No duels in admin mode.</hover>"
 invite-error-restart: "<prefix><hover:show_text:'<gray>The server restarts in <white><time></white>. No new duels start in the last <minutes> minutes before.'><red>A restart is coming - no new duels.</hover>"
+invite-error-restart-rounds: "<prefix><hover:show_text:'<gray>The server restarts in <white><time></white> - a duel to <wins> wins does not fit any more. Choose fewer rounds.'><red>Too many rounds before the restart.</hover>"
 duel-last-round: "<prefix><hover:show_text:'<gray>The server restarts in <white><time></white>. The duel ends after this round: whoever won more rounds wins - the same number is a draw.'><gold>Last round - the server restarts soon.</hover>"
 invite-error-adminmode: "<prefix><red><white><player></white> cannot be invited right now."
 gui-admin-title: "Duels » Admin"
