@@ -145,6 +145,8 @@ public final class MRPvp extends JavaPlugin implements Listener {
         editor.start();
 
         updateChecker = new UpdateChecker(this);
+        // With MRadmin the join notice follows the member's choice for update notices and /mradmin mute.
+        updateChecker.gameFilter(p -> admin.teamInGame(p, "update-available"));
         updateChecker.start();
         menuListener = new MenuListener(this);
         menuListener.start();

@@ -139,6 +139,16 @@ public final class UpdateChecker {
         }
     }
 
+    /**
+     * Who gets the join notice in the game besides the permission - with MRadmin the member's choice for update
+     * notices and /mradmin mute (set by the plugin), otherwise everyone.
+     */
+    private volatile java.util.function.Predicate<Player> gameFilter = p -> true;
+
+    public void gameFilter(java.util.function.Predicate<Player> filter) {
+        this.gameFilter = filter == null ? p -> true : filter;
+    }
+
     /** Join notice for admins. */
     public void notifyIfOutdated(Player player) {
         plugin.messages().run(player, () -> notifyNow(player));
@@ -146,7 +156,7 @@ public final class UpdateChecker {
 
     private void notifyNow(Player player) {
         if (state == State.OUTDATED && plugin.settings().update().notifyOnJoin() && player.hasPermission(PERM_NOTIFY)
-                && firstNoticeFor(player)) {
+                && gameFilter.test(player) && firstNoticeFor(player)) {
             plugin.messages().send(player, "update-join-notify",
                     tag("latest", latestVersion()), tag("current", currentVersion()), tag("download", downloadLink()));
         }
