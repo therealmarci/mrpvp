@@ -146,6 +146,43 @@ public final class MRadminLink implements Listener {
         return 0;
     }
 
+    /** Kind of the team notice "a round waits for a review" (MRadmin's choices). */
+    public static final String NOTICE_REVIEW = "pvp-review";
+
+    /** A team notice through MRadmin (inbox, push; API 15): {@code texts} gives {title, body} for a language code. */
+    public void teamNotice(String kind, String ref, String link, java.util.function.Function<String, String[]> texts) {
+        if (connected) {
+            try {
+                MRadminModule.teamNotice(kind, ref, link, texts);
+            } catch (LinkageError | RuntimeException e) {
+                plugin.getLogger().warning("Could not send a team notice to MRadmin: " + e);
+            }
+        }
+    }
+
+    /** The team notices about {@code ref} are settled (e.g. the round was decided). Any thread. */
+    public void teamNoticeDone(String ref) {
+        if (connected) {
+            try {
+                MRadminModule.teamNoticeDone(ref);
+            } catch (LinkageError | RuntimeException e) {
+                plugin.getLogger().warning("Could not update a team notice in MRadmin: " + e);
+            }
+        }
+    }
+
+    /** Whether this team member wants these messages in the game (choice in MRadmin, /mradmin mute); true without it. */
+    public boolean teamInGame(Player player, String kind) {
+        if (connected) {
+            try {
+                return MRadminModule.teamInGame(player.getUniqueId(), kind);
+            } catch (LinkageError | RuntimeException e) {
+                return true;
+            }
+        }
+        return true;
+    }
+
     /** Into MRadmin's Discord admin log. @return false without MRadmin */
     public boolean adminLog(String text) {
         if (connected) {

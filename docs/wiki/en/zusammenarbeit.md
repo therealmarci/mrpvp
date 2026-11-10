@@ -17,6 +17,7 @@ MRpvp runs **on its own**. Together with other MRtechnology plugins it can do mo
 | The arena world does not appear on the map of the MRadmin player page | MRadmin (hides it automatically) |
 | Players in a duel are not counted for the sleep quota | MRadmin + MRsleep |
 | No chunk loaders can be placed in the arena world | MRadmin + MRchunks |
+| **Team notice** "Duel round waits for review" in the inbox and as push; the message in the game follows Account → Notifications and `/mradmin mute` | MRadmin |
 
 ## Several worlds (Multiverse)
 Duels can be started from any world, afterwards you go back to the same place. If the world is missing, the player lands at the spawn of the main world.

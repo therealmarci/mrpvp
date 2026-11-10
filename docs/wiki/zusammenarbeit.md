@@ -17,6 +17,7 @@ MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr 
 | Die Arena-Welt erscheint nicht auf der Karte der MRadmin-Spielerseite | MRadmin (blendet sie automatisch aus) |
 | Spieler im Duell zählen nicht zur Schlafquote | MRadmin + MRsleep |
 | In der Arena-Welt lassen sich keine Chunkloader setzen | MRadmin + MRchunks |
+| **Team-Meldung** „Duell-Runde wartet auf Prüfung“ im Posteingang und als Push; der Hinweis im Spiel richtet sich nach Konto → Benachrichtigungen und `/mradmin mute` | MRadmin |
 
 ## Mehrere Welten (Multiverse)
 Duelle lassen sich aus jeder Welt starten, danach geht es an denselben Ort zurück. Fehlt die Welt, landet der Spieler am Spawn der Hauptwelt.

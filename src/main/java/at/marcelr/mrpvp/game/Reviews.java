@@ -74,11 +74,16 @@ public final class Reviews {
         plugin.admin().webEvent("review", String.valueOf(id), false);
         plugin.discord().log("review-waiting", "id", id, "one", one, "two", two,
                 "flags", plugin.messages().server(() -> flagNames(flags)));
+        plugin.admin().teamNotice(at.marcelr.mrpvp.api.MRadminLink.NOTICE_REVIEW, "round:" + id, "/admin/features/mrpvp/" + id,
+                lang -> at.marcelr.mrpvp.Messages.in(lang, () -> new String[]{
+                        plugin.messages().plain("notice-review-title", "id", id),
+                        plugin.messages().plain("notice-review-body", "one", one, "two", two, "flags", flagNames(flags))}));
         if (!plugin.settings().review().notifyAdmins()) {
             return;
         }
         for (Player admin : Bukkit.getOnlinePlayers()) {
-            if (admin.hasPermission(PERM_REVIEW)) {
+            if (admin.hasPermission(PERM_REVIEW)
+                    && plugin.admin().teamInGame(admin, at.marcelr.mrpvp.api.MRadminLink.NOTICE_REVIEW)) {
                 plugin.messages().run(admin, () -> plugin.messages().send(admin, "review-new", tag("id", id),
                         tag("one", one), tag("two", two), tag("flags", flagNames(flags)), tag("open", openButton())));
             }
@@ -87,7 +92,8 @@ public final class Reviews {
 
     /** On join: admins hear how many rounds wait. */
     public void joined(Player player) {
-        if (pending > 0 && plugin.settings().review().notifyAdmins() && player.hasPermission(PERM_REVIEW)) {
+        if (pending > 0 && plugin.settings().review().notifyAdmins() && player.hasPermission(PERM_REVIEW)
+                && plugin.admin().teamInGame(player, at.marcelr.mrpvp.api.MRadminLink.NOTICE_REVIEW)) {
             plugin.messages().run(player, () -> plugin.messages().send(player, "review-waiting",
                     tag("count", pending), tag("open", openButton())));
         }
@@ -124,6 +130,7 @@ public final class Reviews {
             if (changed) {
                 plugin.getLogger().info(by + (count ? " counted" : " discarded") + " the reviewed round #" + id + ".");
                 plugin.discord().log(count ? "review-counted" : "review-discarded", "admin", by, "id", id);
+                plugin.admin().teamNoticeDone("round:" + id);
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     refresh();
                     plugin.admin().webEvent("review", String.valueOf(id), false);
@@ -171,6 +178,7 @@ public final class Reviews {
             long now = System.currentTimeMillis();
             for (long id : ids) {
                 StatsStore.decide(c, id, count, "auto", now);
+                plugin.admin().teamNoticeDone("round:" + id);
             }
             return ids.size();
         }).whenComplete((decided, error) -> {

@@ -6,6 +6,7 @@ import at.marcelr.mradmin.api.MRadminService;
 import at.marcelr.mradmin.api.WebAlert;
 import at.marcelr.mradmin.api.WebConfig;
 import at.marcelr.mradmin.api.WebModule;
+import at.marcelr.mradmin.api.WebPushKind;
 import at.marcelr.mradmin.api.WebUser;
 import at.marcelr.mrpvp.MRPvp;
 import at.marcelr.mrpvp.game.Bans;
@@ -404,5 +405,38 @@ final class MRadminModule implements AdminModule, WebModule {
         if (service != null && service.apiVersion() >= 13) {
             service.log(ID, event, text, color);
         }
+    }
+
+    /** Team notice "a round waits for a review" (MRadmin API 15). */
+    static final String NOTICE_REVIEW = "pvp-review";
+    private static final int NOTICE_API = 15;
+
+    @Override
+    public List<WebPushKind> pushKinds() {
+        var messages = plugin.messages();
+        return List.of(messages.server(() -> new WebPushKind(NOTICE_REVIEW, messages.plain("web-push-review"),
+                messages.plain("web-push-review-hint"), "⚖", true)));
+    }
+
+    /** A team notice in MRadmin's inbox and push (API 15). */
+    static void teamNotice(String kind, String ref, String link, java.util.function.Function<String, String[]> texts) {
+        MRadminService service = MRadminService.get();
+        if (service != null && service.apiVersion() >= NOTICE_API) {
+            service.teamNotice(ID, kind, ref, link, texts);
+        }
+    }
+
+    /** The team notices about {@code ref} are done (API 15). */
+    static void teamNoticeDone(String ref) {
+        MRadminService service = MRadminService.get();
+        if (service != null && service.apiVersion() >= NOTICE_API) {
+            service.teamNoticeDone(ID, ref);
+        }
+    }
+
+    /** Whether the member wants this kind in the game (choice in MRadmin, not muted); true before API 15. */
+    static boolean teamInGame(java.util.UUID player, String kind) {
+        MRadminService service = MRadminService.get();
+        return service == null || service.apiVersion() < NOTICE_API || service.teamNoticeInGame(player, kind);
     }
 }
