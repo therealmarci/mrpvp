@@ -51,3 +51,5 @@ mrpvp.admin.discord:
   de: "`/mrpvp discord [test]`"
 mrpvp.admin.update:
   de: "Hinweis beim Betreten des Servers, wenn ein Update da ist"
+mrpvp.groups.bots:
+  de: "Gruppe Bots (Zweitaccounts): keine Rechte in MRpvp (keine Duelle)."

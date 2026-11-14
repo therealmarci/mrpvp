@@ -9,6 +9,9 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+### Neu
+- **Gruppe Bots für Zweitaccounts:** `mrpvp.groups.bots` (nicht für OPs, in keiner Team-Gruppe) - keine Rechte in MRpvp. Fertige LuckPerms-Gruppe „bots“ im MRadmin-Wiki unter Permissions.
+
 ## [BET-0.10.1-bu001] - 2026-11-10
 
 ### Behoben & geändert

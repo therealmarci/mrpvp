@@ -30,6 +30,9 @@ permissions:
     children:
       mrpvp.version: true
       mrpvp.use: true
+  mrpvp.groups.bots:
+    description: "Group bots (second accounts): no rights in MRpvp (no duels)."
+    default: false
   mrpvp.groups.support:
     description: "Group support: player + admin menu, view all rounds (results, combat log, saved inventories), review suspicious rounds, watch duels, stop duels or declare the winner, pause duels, player management."
     default: op
