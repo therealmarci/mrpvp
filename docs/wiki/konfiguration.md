@@ -1,6 +1,6 @@
 # Konfiguration
 
-Am einfachsten im Browser: Mit **MRadmin** unter **Einstellungen → Konfiguration → MRpvp** - jede Einstellung mit Erklärung, Speichern lädt MRpvp sofort neu (Permission `mradmin.config`). Alles steht außerdem kommentiert in `plugins/MRpvp/config.yml`; Änderungen von Hand übernimmst du mit `/mrpvp reload`.
+Am einfachsten im Browser: Mit **MRadmin** unter **Server → Hauptserver → Konfiguration → MRpvp** - jede Einstellung mit Erklärung, Speichern lädt MRpvp sofort neu (Permission `mradmin.config`). Alles steht außerdem kommentiert in `plugins/MRpvp/config.yml`; Änderungen von Hand übernimmst du mit `/mrpvp reload`.
 
 | Abschnitt | Wofür | Mehr dazu |
 |---|---|---|
