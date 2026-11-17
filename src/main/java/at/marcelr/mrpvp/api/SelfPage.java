@@ -277,7 +277,7 @@ final class SelfPage {
             }
             if (viewer.has(at.marcelr.mrpvp.game.Reviews.PERM_REVIEW)) {
                 int pending = plugin.reviews().pending();
-                tiles.add(at.marcelr.mradmin.api.DeckTile.show("reviews", "review", m.plain("deck-review-title"),
+                tiles.add(at.marcelr.mradmin.api.DeckTile.team("reviews", "review", m.plain("deck-review-title"),
                         String.valueOf(pending), m.plain(pending > 0 ? "deck-review-waiting" : "deck-review-none"),
                         pending > 0 ? "warn" : "good", "/admin/plugins/mrpvp/reviews"));
             }
