@@ -9,6 +9,9 @@ Versionierung nach [Semantic Versioning](https://semver.org/lang/de/), veröffen
 
 ## [Unveröffentlicht]
 
+### Neu
+- **Stream Deck:** Mit MRadmin und dem Stream-Deck-Plugin MRstreamdeck zeigen Tasten das letzte Duell (Ergebnis, Gegner, Kit) und die eigene Bilanz (Siege, Spiele, Siegquote); fürs Team (`mrpvp.admin.review`) die Runden, die auf eine Prüfung warten. Braucht MRadmin mit Modul-API 17.
+
 ## [BET-0.10.2-bu001] - 2026-11-15
 
 ### Neu

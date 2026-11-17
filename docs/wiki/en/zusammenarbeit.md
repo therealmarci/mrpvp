@@ -7,6 +7,7 @@ MRpvp runs **on its own**. Together with other MRtechnology plugins it can do mo
 | Page **Duels** in the web interface: live with hearts and mini map, all rounds with inventories, combat log and replay, review | MRadmin |
 | Tile **Duels** on the player page of the web interface: statistics, running and last rounds, ban | MRadmin |
 | Own duel statistics, last rounds and duel rankings for players in the browser (`/web`) | MRadmin |
+| Stream Deck keys: last duel, own record, for the team the rounds to review | MRadmin + MRstreamdeck |
 | **Kit editor in the web** with item pictures and item editor | MRadmin |
 | Configure MRpvp in the browser (Plugins → MRpvp → Configuration) | MRadmin |
 | Button in the dashboard, player menu, waiting reviews in the server status | MRadmin |

@@ -225,6 +225,65 @@ final class SelfPage {
     }
 
     /** Most duels won, best win rate (from stats.min-games-for-ratio rounds) and the best streak. */
+
+    // ------------------------------------------------ Stream Deck (MRadmin API 17)
+
+    /**
+     * Keys for the Stream Deck: the player's last duel (result, opponent, kit) and their duel record (wins, win rate);
+     * for the team with the review permission the rounds waiting for a review.
+     */
+    static List<at.marcelr.mradmin.api.DeckTile> deckTiles(MRPvp plugin, SelfViewer viewer) {
+        return Messages.in(viewer.lang(), () -> {
+            Messages m = plugin.messages();
+            List<at.marcelr.mradmin.api.DeckTile> tiles = new ArrayList<>();
+            String page = "/game/mrpvp/" + AREA;
+            if (viewer.has(USE)) {
+                try {
+                    Cached data = data(plugin, viewer.player(), viewer.name());
+                    GameQueries.GameRow last = data.rows().stream().filter(r -> r.endedAt() != null).findFirst().orElse(null);
+                    if (last == null) {
+                        tiles.add(at.marcelr.mradmin.api.DeckTile.show("last-duel", "duel", m.plain("deck-last-title"), "–",
+                                m.plain("deck-last-none"), "off", page));
+                    } else {
+                        GameQueries.PlayerLine me = last.of(viewer.player());
+                        GameQueries.PlayerLine other = last.players().stream()
+                                .filter(p -> !p.uuid().equals(viewer.player())).findFirst().orElse(null);
+                        String outcome = me == null || me.outcome() == null ? "" : me.outcome();
+                        Kit kit = plugin.kits().get(last.kit());
+                        String kitName = kit == null ? last.kit() : plain(kit.name());
+                        tiles.add(at.marcelr.mradmin.api.DeckTile.show("last-duel", "duel", m.plain("deck-last-title"),
+                                switch (outcome) {
+                                    case "WIN" -> m.plain("self-result-win");
+                                    case "LOSS" -> m.plain("self-result-loss");
+                                    case "DRAW" -> m.plain("self-result-draw");
+                                    default -> m.plain("self-result-none");
+                                },
+                                (other == null ? "" : "vs " + other.name() + " · ") + kitName,
+                                switch (outcome) {
+                                    case "WIN" -> "good";
+                                    case "LOSS" -> "bad";
+                                    case "DRAW" -> "warn";
+                                    default -> "off";
+                                }, page));
+                    }
+                    PlayerStats s = data.stats();
+                    tiles.add(at.marcelr.mradmin.api.DeckTile.show("record", "duel-stats", m.plain("deck-record-title"),
+                            String.valueOf(s.wins()), m.plain("deck-record-detail", "games", s.games(),
+                                    "rate", String.format(locale(viewer.lang()), "%.0f %%", s.winRate())),
+                            s.wins() > 0 ? "good" : "info", page));
+                } catch (SQLException e) {
+                    plugin.getLogger().warning("Could not read the duels of " + viewer.name() + " for the Stream Deck: " + e.getMessage());
+                }
+            }
+            if (viewer.has(at.marcelr.mrpvp.game.Reviews.PERM_REVIEW)) {
+                int pending = plugin.reviews().pending();
+                tiles.add(at.marcelr.mradmin.api.DeckTile.show("reviews", "review", m.plain("deck-review-title"),
+                        String.valueOf(pending), m.plain(pending > 0 ? "deck-review-waiting" : "deck-review-none"),
+                        pending > 0 ? "warn" : "good", "/admin/plugins/mrpvp/reviews"));
+            }
+            return tiles;
+        });
+    }
     static List<SelfRanking> rankings(MRPvp plugin, String lang) {
         return Messages.in(lang, () -> {
             Messages m = plugin.messages();

@@ -7,6 +7,7 @@ MRpvp läuft **allein**. Zusammen mit anderen MRtechnology-Plugins kann es mehr 
 | Seite **Duelle** in der Weboberfläche: live mit Herzen und Mini-Karte, alle Runden mit Inventaren, Kampf-Log und Wiedergabe, Prüfen | MRadmin |
 | Kachel **Duelle** auf der Spielerseite der Weboberfläche: Statistik, laufende und letzte Runden, Sperre | MRadmin |
 | Eigene Duell-Statistik, letzte Runden und Duell-Ranglisten für Spieler im Browser (`/web`) | MRadmin |
+| Stream-Deck-Tasten: letztes Duell, eigene Bilanz, fürs Team die Runden zur Prüfung | MRadmin + MRstreamdeck |
 | **Kit-Editor im Web** mit Item-Bildern und Item-Editor | MRadmin |
 | MRpvp im Browser einstellen (Plugins → MRpvp → Konfiguration) | MRadmin |
 | Knopf im Dashboard, Spieler-Menü, wartende Prüfungen im Serverzustand | MRadmin |

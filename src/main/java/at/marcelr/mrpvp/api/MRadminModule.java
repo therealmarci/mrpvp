@@ -331,7 +331,14 @@ final class MRadminModule implements AdminModule, WebModule {
     /** The player's own page (/web): MRadmin checks these permissions beforehand, also while the player is offline. */
     @Override
     public Set<String> selfPermissions() {
-        return Set.of("mrpvp.use");
+        // plus the review permission for the team key of the Stream Deck (API 17)
+        return Set.of("mrpvp.use", at.marcelr.mrpvp.game.Reviews.PERM_REVIEW);
+    }
+
+    /** Last duel, own record and (team) waiting reviews for the Stream Deck (API 17). */
+    @Override
+    public List<at.marcelr.mradmin.api.DeckTile> deckTiles(at.marcelr.mradmin.api.SelfViewer viewer) {
+        return SelfPage.deckTiles(plugin, viewer);
     }
 
     /** Own duel statistics and the last rounds (read only). */
